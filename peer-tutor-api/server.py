@@ -1,10 +1,11 @@
-
+from flask import Flask
 from flask import render_template
 import connexion
 from flask_cors import CORS
 import argparse
 
 global dbType
+app = Flask(__name__)
 
 
 def parseArgs():
