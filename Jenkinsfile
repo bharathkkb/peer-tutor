@@ -5,6 +5,21 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building'
+                sh """
+                export BUILD_ID=dontKillMe
+                python3 --version
+                cd peer-tutor-api
+                python3 -m virtualenv env
+                ls
+                . env/bin/activate
+                pip install -r requirements.txt
+                pip install flask
+
+                python server.py -t &
+                pytest -q test_api.py --url=http://10.0.0.188:5000
+
+                """
+
             }
         }
         stage('Test') {
