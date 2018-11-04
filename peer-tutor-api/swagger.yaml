@@ -38,9 +38,6 @@ definitions:
   hello:
     type: object
     properties:
-      status:
+      hello:
         type: string
-        example: in-use
-      helloObj:
-        type: object
-        example: { "hello": hello"}
+        example: hello-string

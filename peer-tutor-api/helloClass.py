@@ -1,2 +1,5 @@
+import json
+
+
 def testHello():
-    return "{'hello':'hello'}"
+    return json.loads('{"hello": "hello"}')
