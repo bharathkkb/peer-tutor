@@ -24,7 +24,7 @@ prd branch is for production deployment
 Activate virtualenv
 ```
 cd peer-tutor-api/
-source peer-tutor-api/bin/activate
+source env/bin/activate
 ```
 Install dependencies
 p.s you may need to switch pip with pip3 depending on your configuration
@@ -40,9 +40,11 @@ python3 server.py -t
 ```
 
 ## Running the tests
-
+First launch the test server by following instructions to run the backend API server
+p.s pytest will be testing on port 5000 by default
 ```
 cd peer-tutor-api/
+source env/bin/activate
 pytest
 ```
 <!--
