@@ -14,8 +14,8 @@ pip
 virtualenv
 ```
 
-### Installing
-## Running the backend API server
+## Installing
+#### Running the backend API server
 Clone this repo
 dev branch is for dev will have the latest bits
 stg branch is for staging
