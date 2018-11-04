@@ -18,7 +18,9 @@ virtualenv
 #### Running the backend API server
 Clone this repo
 dev branch is for dev will have the latest bits
+
 stg branch is for staging
+
 prd branch is for production deployment
 
 Activate virtualenv
@@ -27,12 +29,15 @@ cd peer-tutor-api/
 source env/bin/activate
 ```
 Install dependencies
+
 p.s you may need to switch pip with pip3 depending on your configuration
 ```
 pip install -r requirements.txt
 ```
 Run the server
+
 -t flag launches the simulated testing dev env
+
 optional -p flag will let you run the server in a different port (ex. python3 server.py -t -p 5001)
 ```
 python3 server.py -t
@@ -41,6 +46,7 @@ python3 server.py -t
 
 ## Running the tests
 First launch the test server by following instructions to run the backend API server
+
 p.s pytest will be testing on port 5000 by default
 ```
 cd peer-tutor-api/
