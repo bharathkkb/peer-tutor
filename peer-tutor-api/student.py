@@ -17,23 +17,53 @@ class Student:
         """
         return self.student_id + " " + self.name + " " + self.enrolled_classes.__str__ + " " + self.schedule.__str__ + " " + self.meetings.__str__
 
-    def get_name(self):
-        """
-        return student's name
-        """
-        return self.name
-
     def get_student_id(self):
         """
         return student's id
         """
         return self.student_id
 
+    def get_name(self):
+        """
+        return student's name
+        """
+        return self.name
+
     def get_enrolled_classes(self):
         """
         return student's enrolled classes
         """
         return self.enrolled_classes
+
+    def get_schedule(self):
+        """
+        return student's schedule
+        """
+        return self.schedule
+
+    def get_meetings(self):
+        """
+        return student's meetings
+        """
+        return self.meetings
+
+    def add_meetings(self, meetings):
+        """
+        add a meeting
+        """
+        return True
+
+    def add_class(self):
+        """
+        add a class
+        """
+        return True
+
+    def add_schedule(self):
+        """
+        add a schedule
+        """
+        return True
 
 
 class Peer:
@@ -51,7 +81,7 @@ class Peer:
             """
             Prints the details of the peer.
             """
-            return self.student_id + " " + self.name + " " + self.enrolled_classes.__str__ + " " + self.schedule.__str__ + " " + self.meetings.__str__
+            return self.student_id + " " + self.name + " " + self.enrolled_classes.__str__ + " " + self.schedule.__str__ + " " + self.meetings.__str__ + " "+ self.peer_id + " " + self.peer_ratings
 
         def get_peer_id(self):
             """
@@ -59,6 +89,11 @@ class Peer:
             """
             return self.peer_id
 
+        def get_peer_ratings(self):
+            """
+            return peer_ratings
+            """
+            return self.peer_ratings
 
 class Tutor:
     """
@@ -75,10 +110,24 @@ class Tutor:
             """
             Prints the details of the tutor.
             """
-            return self.student_id + " " + self.name + " " + self.enrolled_classes.__str__ + " " + self.schedule.__str__ + " " + self.meetings.__str__
+            return self.student_id + " " + self.name + " " + self.enrolled_classes.__str__ + " " + self.schedule.__str__ + " " + self.meetings.__str__ + " " + self.tutor_id + " " + self.tutor_ratings
 
-        def get_peer_id(self):
+        def set_student(self):
             """
-            return peer_id
+            set
             """
-            return self.peer_id
+            return True
+
+        def get_tutor_id(self):
+            """
+            return tutor_id
+            """
+            return self.tutor_id
+
+        def get_tutor_ratings(self):
+            """
+            return tutor_ratings
+            """
+            return self.tutor_ratings
+
+
