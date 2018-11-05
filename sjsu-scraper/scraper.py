@@ -124,6 +124,7 @@ def getClassDetails(base):
                         print("debug")
                         break
                     max_rows = 0
+
                     # find largest table
                     for table in soup.findAll('table'):
                         number_of_rows = len(table.findAll(
