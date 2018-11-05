@@ -35,7 +35,7 @@ pipeline {
                 ls
                 . env/bin/activate
                 pip install -r requirements.txt
-                pytest -q test_api.py --url=http://\$(docker-machine ip test):5000
+                pytest -q test_api.py --url=http://\$(docker-machine ip test):5000 --junitxml=./junitResult.xml
 
                 curl http://\$(docker-machine ip test):5000/test/api/hello
                 # tear down: stop and remove 'test' environment
@@ -57,7 +57,9 @@ pipeline {
     }
     post {
         always {
-            echo 'This will always run'
+
+            archive "peer-tutor-api/*.xml"
+            junit 'peer-tutor-api/*.xml'
         }
         success {
             echo 'This will run only if successful'
