@@ -110,6 +110,7 @@ class Tutor:
             """
             Prints the details of the tutor.
             """
+            ###test
             return self.student_id + " " + self.name + " " + self.enrolled_classes.__str__ + " " + self.schedule.__str__ + " " + self.meetings.__str__ + " " + self.tutor_id + " " + self.tutor_ratings
 
         def set_student(self):
