@@ -11,6 +11,7 @@ import { DetailsComponent } from './details/details.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component'
+import { fakeBackendProvider } from 'src/app/_helpers';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,9 @@ import { LoginComponent } from './login/login.component'
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+    fakeBackendProvider,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

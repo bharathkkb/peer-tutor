@@ -1,4 +1,4 @@
-[
+const fakeUsers = [
     {
         "username": "user1",
         "password": "password1"
@@ -28,3 +28,5 @@
         "password": "password7"
     }
 ]
+
+export {fakeUsers};

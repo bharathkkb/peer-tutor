@@ -1,15 +1,10 @@
-import { Injectable } from "@angular/core/src/di/injectable";
-import { HttpInterceptor, HTTP_INTERCEPTORS } from "@angular/common/http/src/interceptor";
-import { HttpRequest } from "@angular/common/http/src/request";
-import { HttpHandler } from "@angular/common/http/src/backend";
-import { HttpEvent, HttpResponse } from "@angular/common/http/src/response";
-
+import { Injectable } from '@angular/core';
+import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
+import { fakeUsers } from '../../assets/fakedata/fakelogin'
 
-
-
-@Injectable({providedIn:"root"})
+@Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
 
     constructor(){}
@@ -19,7 +14,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // a || b is  similar to ternary operator ( bool ? t : f ) 
         //but will evaluate b for every falsy value, such as 0, "", false, etc.
         //https://softwareengineering.stackexchange.com/questions/82593/javascript-ternary-operator-vs
-        let users:any[] = JSON.parse(localStorage.getItem('users')) || []; 
+        // let users:any[] = JSON.parse(localStorage.getItem('users')) || []; 
+
+        //fake data in asset
+        console.log("qwertyyyyyyyyy")
+        let users:any[] = fakeUsers;
+        console.log("THINGYYYY!! " + users);
         
         return of(null).pipe(mergeMap(() => {
 
