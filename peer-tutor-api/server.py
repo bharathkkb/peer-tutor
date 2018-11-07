@@ -19,6 +19,7 @@ def parseArgs():
 
 if __name__ == '__main__':
     args = parseArgs()
+    print("API V1")
 
     if(args.t is True):
         app = connexion.App(__name__, specification_dir='./',

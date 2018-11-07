@@ -7,26 +7,17 @@ pipeline {
                 echo 'Building'
                 sh "ls"
                 sh """
-                # optional: record current versions of docker apps with each build
-                docker -v && docker-compose -v && docker-machine -v
 
-                # set-up: clean up any previous machine failures
-                docker-machine stop test || echo "nothing to stop" && \
-                docker-machine rm -f test   || echo "nothing to remove"
+                docker -v && docker-compose -v
+                 #stop docker containers
+                docker stop \$(docker ps -a -q)
+                # remove
+                docker rm \$(docker ps -a -q)
 
-                # use docker-machine to create and configure 'test' environment
-                # add a -D (debug) if having issues
-                docker-machine create --driver virtualbox test
-                eval "\$(docker-machine env test)"
-
-                # use docker-compose to pull and build new images and containers
-                docker-compose -p jenkins up -d
-
-                # optional: list machines, images, and containers
-                docker-machine ls && docker images && docker ps -a
-
-                # wait for containers to fully start before tests fire up
-                sleep 30
+                docker build -t peer-tutor-api -f Dockerfile-dev .
+                docker run -d -p 5000:5000 peer-tutor-api:latest
+                
+                sleep 10
 
                 # test the services
                 python3 --version
@@ -35,11 +26,12 @@ pipeline {
                 ls
                 . env/bin/activate
                 pip install -r requirements.txt
-                pytest -q test_api.py --url=http://\$(docker-machine ip test):5000 --junitxml=./junitResult.xml
+                pytest -q test_api.py --url=http://10.0.0.188:5000 --junitxml=./junitResult.xml
 
-                curl http://\$(docker-machine ip test):5000/test/api/hello
-                # tear down: stop and remove 'test' environment
-                docker-machine stop test && docker-machine rm test
+                #stop docker containers
+                docker stop \$(docker ps -a -q)
+                # remove
+                docker rm \$(docker ps -a -q)
                 """
             }
         }
