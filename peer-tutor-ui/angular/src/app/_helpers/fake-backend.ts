@@ -14,12 +14,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // a || b is  similar to ternary operator ( bool ? t : f ) 
         //but will evaluate b for every falsy value, such as 0, "", false, etc.
         //https://softwareengineering.stackexchange.com/questions/82593/javascript-ternary-operator-vs
-        // let users:any[] = JSON.parse(localStorage.getItem('users')) || []; 
+        
+        /**a list of previously registered fake users in localStorage*/
+        let storedUsers:any[] = JSON.parse(localStorage.getItem('users')) || [];
 
-        //fake data in asset
-        console.log("qwertyyyyyyyyy")
-        let users:any[] = fakeUsers;
-        console.log("THINGYYYY!! " + users);
+        /**fake data in asset + previously registered fake users*/
+        let users:any[] = fakeUsers.concat(storedUsers);
         
         return of(null).pipe(mergeMap(() => {
 
@@ -89,8 +89,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
                 // save new user
                 newUser.id = users.length + 1;
-                users.push(newUser);
-                localStorage.setItem('users', JSON.stringify(users));
+                // users.push(newUser);
+                storedUsers.push(newUser);
+
+                // localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('users', JSON.stringify(newUser));
 
                 // respond 200 OK
                 return of(new HttpResponse({ status: 200 }));
