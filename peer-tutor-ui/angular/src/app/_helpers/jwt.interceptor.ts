@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -18,3 +19,10 @@ export class JwtInterceptor implements HttpInterceptor {
         return next.handle(request);
     }
 }
+
+export let JwtInterceptorProvider = {
+    // use fake backend in place of Http service for backend-less development
+    provide: HTTP_INTERCEPTORS,
+    useClass: JwtInterceptor,
+    multi: true
+};
