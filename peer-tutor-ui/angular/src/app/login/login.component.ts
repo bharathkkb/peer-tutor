@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from 'src/app/_services';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from '../_services';
+import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -13,7 +12,7 @@ export class LoginComponent implements OnInit {
     private loginUsername:string;
     private loginPassword:string;
     private returnUrl:string;
-    private activatedRoute: ActivatedRoute;
+    // private activatedRoute: ActivatedRoute;
     private submitted = false;
     
     private loginError = false;
@@ -37,13 +36,15 @@ export class LoginComponent implements OnInit {
 
     constructor(
         private authenticationService: AuthenticationService, 
-        private router: Router) { }
+        private router: Router,
+        private activatedRoute: ActivatedRoute
+    ) { }
 
     ngOnInit() {
         // logout
         this.authenticationService.logout();
         // get return url from route parameters or default to '/'
-        this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/';
+        this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] ||  '/'; //this.activatedRoute.snapshot.queryParams['returnUrl'] ||
     }
 }
 

@@ -11,7 +11,8 @@ import { DetailsComponent } from './details/details.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component'
-import { fakeBackendProvider } from 'src/app/_helpers';
+import { fakeBackendProvider, JwtInterceptorProvider } from './_helpers';
+import { AuthGuard } from './_guards';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,9 @@ import { fakeBackendProvider } from 'src/app/_helpers';
     ReactiveFormsModule,
   ],
   providers: [
+    JwtInterceptorProvider,
     fakeBackendProvider,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })
