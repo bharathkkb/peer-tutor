@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component'
 import { fakeBackendProvider, JwtInterceptorProvider } from './_helpers';
 import { AuthGuard } from './_guards';
+import { HomePageComponent } from './home-page/home-page.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AuthGuard } from './_guards';
     UsersComponent,
     DetailsComponent,
     LoginComponent,
+    HomePageComponent,
   ],
   imports: [
     BrowserModule,

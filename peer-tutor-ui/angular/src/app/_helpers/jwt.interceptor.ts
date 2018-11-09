@@ -21,7 +21,6 @@ export class JwtInterceptor implements HttpInterceptor {
 }
 
 export let JwtInterceptorProvider = {
-    // use fake backend in place of Http service for backend-less development
     provide: HTTP_INTERCEPTORS,
     useClass: JwtInterceptor,
     multi: true

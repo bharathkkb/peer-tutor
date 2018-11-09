@@ -5,16 +5,18 @@ import { DetailsComponent } from './details/details.component';
 import { PostsComponent } from './posts/posts.component';
 import { LoginComponent } from './login/login.component'
 import { AuthGuard } from './_guards';
+import { HomePageComponent } from './home-page/home-page.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: UsersComponent,
+    component: HomePageComponent,
     canActivate: [AuthGuard]
   },
   {
     path: 'details/:id',
-    component: DetailsComponent
+    component: DetailsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'posts',

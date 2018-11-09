@@ -27,11 +27,13 @@ export class LoginComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data=>{this.router.navigate([this.returnUrl])},
-                error=>{this.loginError=true; this.loginErrorMsg=error; console.log(error)}
+                error=>{
+                    this.loginError=true; 
+                    this.loginErrorMsg=error.error.message; 
+                    // console.log(error.error.message)
+                }
             );
-        
-        console.log(this.loginUsername + " " + this.loginPassword);
-
+        // console.log(this.loginUsername + " " + this.loginPassword);
     }
 
     constructor(
@@ -48,6 +50,8 @@ export class LoginComponent implements OnInit {
     }
 }
 
+
+//=======================Reference Example===================//
 /*
 
 import { Component, OnInit } from '@angular/core';
@@ -55,7 +59,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AuthenticationService } from '../_services';
+import { AlertService, AuthenticationService } from '../_services';
 
 @Component({templateUrl: 'login.component.html'})
 export class LoginComponent implements OnInit {
@@ -68,7 +72,8 @@ export class LoginComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService) {}
+        private authenticationService: AuthenticationService,
+        private alertService: AlertService) {}
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
@@ -102,10 +107,11 @@ export class LoginComponent implements OnInit {
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
-                    // this.alertService.error(error);
+                    this.alertService.error(error);
                     this.loading = false;
                 });
     }
 }
+
 
 */

@@ -3,7 +3,7 @@
         <!-- Title: Login -->
         <h5 class="card-title">Login</h5>
         <!-- Login Error Message, if exist -->
-        <small class="text-danger" *ngIf = "loginError && submitted">{{loginErrorMsg | json}}</small>
+        <small class="text-danger" *ngIf = "loginError && submitted">{{loginErrorMsg}}</small>
         <form #loginForm="ngForm">
             <!-- Username input -->
             <div class="form-group">
