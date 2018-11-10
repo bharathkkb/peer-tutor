@@ -36,7 +36,6 @@ paths:
 #     put:
 #      get:
 #    /student/
-    post:
 
 definitions:
 

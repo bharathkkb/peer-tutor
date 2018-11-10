@@ -101,4 +101,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Wei sincerely thank Weiwei Cao, our advisor, for all the guidance and help.
+* We sincerely thank Weiwei Cao, our advisor, for all the guidance and help.

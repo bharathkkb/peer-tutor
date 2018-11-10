@@ -1,5 +1,4 @@
 import json
-from student import Student
 
 def testHello():
     return json.loads('{"hello": "hello"}')
