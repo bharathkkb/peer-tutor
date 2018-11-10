@@ -32,6 +32,10 @@ paths:
               $ref: '#/definitions/hello'
         400:
           description: bad input parameter
+#    /student/{}:
+#     put:
+#      get:
+#    /student/
 
 definitions:
 
