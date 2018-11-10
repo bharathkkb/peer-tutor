@@ -15,7 +15,7 @@ mydb = client["peer-tutor-db"]
 collist = mydb.list_collection_names()
 if "uni-class" in collist:
     print("The collection exists.")
-uniClassCol = mydb["uni-class"]
+uniClassCol = mydb["uni_class"]
 
 
 with open("../sjsu-scraper/data-allsections.json", "r") as read_file:
