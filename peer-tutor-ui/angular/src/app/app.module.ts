@@ -14,6 +14,7 @@ import { LoginComponent } from './login/login.component'
 import { fakeBackendProvider, JwtInterceptorProvider } from './_helpers';
 import { AuthGuard } from './_guards';
 import { HomePageComponent } from './home-page/home-page.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { HomePageComponent } from './home-page/home-page.component';
     DetailsComponent,
     LoginComponent,
     HomePageComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
