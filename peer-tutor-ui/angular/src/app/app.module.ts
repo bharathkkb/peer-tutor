@@ -10,7 +10,8 @@ import { UsersComponent } from './users/users.component';
 import { DetailsComponent } from './details/details.component';
 
 import { HttpClientModule } from '@angular/common/http';
-import { LoginComponent } from './login/login.component'
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 import { fakeBackendProvider, JwtInterceptorProvider } from './_helpers';
 import { AuthGuard } from './_guards';
 import { HomePageComponent } from './home-page/home-page.component';
@@ -24,6 +25,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     UsersComponent,
     DetailsComponent,
     LoginComponent,
+    RegisterComponent,
     HomePageComponent,
     NavbarComponent,
   ],

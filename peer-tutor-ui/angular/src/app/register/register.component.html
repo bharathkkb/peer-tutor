@@ -1,0 +1,74 @@
+﻿<div class="card mt-5" style="margin:auto;width: 600px;">
+    <div class="card-body">
+        <!-- Title: Login -->
+        <h5 class="card-title">Register</h5>
+        <!-- Login Error Message, if exist -->
+        <small class="text-danger" *ngIf = "registerError && submitted">{{registerErrorMsg}}</small>
+        <form #loginForm="ngForm">
+            <!-- Username input -->
+            <div class="form-group">
+                <label for="register-username">Username</label>
+                <input type="text" class="form-control" name="username" id="register-username" placeholder="Username"
+                    [(ngModel)]="registerUsername" required #registerusername="ngModel"
+                    [class.is-invalid]="registerusername.invalid && registerusername.touched">
+                <small [class.d-none]="registerusername.valid || registerusername.untouched" class="text-danger">
+                    Name is required.
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="firstname">First Name</label>
+                <input type="text" class="form-control" name="firstname" id="firstname" placeholder="Username"
+                    [(ngModel)]="firstname" required #firstname="ngModel"
+                    [class.is-invalid]="firstname.invalid && firstname.touched">
+                <small [class.d-none]="firstname.valid || firstname.untouched" class="text-danger">
+                    First Name is required.
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Username"
+                    [(ngModel)]="lastname" required #lastname="ngModel"
+                    [class.is-invalid]="lastname.invalid && lastname.touched">
+                <small [class.d-none]="lastname.valid || lastname.untouched" class="text-danger">
+                    Last Name is required.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" name="email" id="email" placeholder="Email" 
+                    [(ngModel)]="email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required #email="ngModel"
+                    [class.is-invalid]="email.invalid && email.touched">
+                <small [class.d-none]="email.valid || email.untouched" class="text-danger">
+                    email invalid format
+                </small>
+            </div>
+            <!-- Password input -->
+            <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" class="form-control" name="registerPassword" id="registerPassword" placeholder="registerPassword" 
+                    [(ngModel)]="registerPassword" pattern="^.{8,}" required #registerPassword="ngModel"
+                    [class.is-invalid]="registerPassword.invalid && registerPassword.touched">
+                <small [class.d-none]="registerPassword.valid || registerPassword.untouched" class="text-danger">
+                    Password need to be at least 8 characters long.
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" 
+                    [(ngModel)]="confirmPassword" pattern="^.{8,}" required #confirmPassword="ngModel"
+                    [class.is-invalid]="confirmPassword.invalid && confirmPassword.touched">
+                <small [class.d-none]="confirmPassword.valid || confirmPassword.untouched" class="text-danger">
+                    Password not matched.
+                </small>
+            </div>
+
+            <!-- Login submit / Registration -->
+            <div class="form-group">
+                <button [disabled]="loginForm.form.invalid" class="btn btn-primary" (click)="tryregister()">Register</button>
+                <a href="#" class="btn btn-link">Login</a>
+            </div>
+        </form>
+    </div>
+    <!-- <p>{{testUsername}},{{testPassword}}</p> -->
+</div>
