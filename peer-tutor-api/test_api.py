@@ -54,6 +54,18 @@ def test_hello_data(url):
     print(data)
     assert data["hello"] == "hello"
 
+
+# testing student endpoint
+
+
+def test_student_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/student/id/02')
+    data = json.loads(response.content)
+    print(data)
+    assert data["student_id"] == "02"
+    assert data["student_name"] == "Lifeng"
+
 # this is for debugging individual tests
 # if __name__ == "__main__":
 #     test_hello_data()

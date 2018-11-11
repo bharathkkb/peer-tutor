@@ -12,6 +12,32 @@ basePath: "{{is_testing}}/api"
 
 
 paths:
+  /student/id/{studentID}:
+    get:
+      summary: returns a student
+      operationId: student_driver.getStudent
+      tags:
+        - "student"
+      description: |
+        Get a student by passing the student ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: studentID
+        description: student obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: student obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        400:
+          description: bad input parameter
   /hello:
     get:
       summary: returns hello
@@ -32,10 +58,6 @@ paths:
               $ref: '#/definitions/hello'
         400:
           description: bad input parameter
-#    /student/{}:
-#     put:
-#      get:
-#    /student/
 
 definitions:
 
@@ -45,3 +67,12 @@ definitions:
       hello:
         type: string
         example: hello-string
+  student:
+    type: object
+    properties:
+      student_id:
+        type: string
+        example: 01
+      student_name:
+        type: string
+        example: 'Bharath Baiju'
