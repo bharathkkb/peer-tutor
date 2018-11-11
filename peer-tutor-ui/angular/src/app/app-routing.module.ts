@@ -3,16 +3,21 @@ import { Routes, RouterModule } from '@angular/router';
 import { UsersComponent } from './users/users.component';
 import { DetailsComponent } from './details/details.component';
 import { PostsComponent } from './posts/posts.component';
-import { LoginComponent } from './login/login.component'
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './_guards';
+import { HomePageComponent } from './home-page/home-page.component';
+import { RegisterComponent } from './register';
 
 const routes: Routes = [
   {
     path: '',
-    component: UsersComponent
+    component: HomePageComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'details/:id',
-    component: DetailsComponent
+    component: DetailsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'posts',
@@ -22,6 +27,10 @@ const routes: Routes = [
     path: 'login',
     component: LoginComponent
   },
+  {
+    path: 'register',
+    component: RegisterComponent
+  }
 ];
 
 @NgModule({

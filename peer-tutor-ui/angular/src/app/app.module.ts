@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -10,7 +10,12 @@ import { UsersComponent } from './users/users.component';
 import { DetailsComponent } from './details/details.component';
 
 import { HttpClientModule } from '@angular/common/http';
-import { LoginComponent } from './login/login.component'
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { fakeBackendProvider, JwtInterceptorProvider } from './_helpers';
+import { AuthGuard } from './_guards';
+import { HomePageComponent } from './home-page/home-page.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -20,14 +25,22 @@ import { LoginComponent } from './login/login.component'
     UsersComponent,
     DetailsComponent,
     LoginComponent,
+    RegisterComponent,
+    HomePageComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+    JwtInterceptorProvider,
+    fakeBackendProvider,
+    AuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

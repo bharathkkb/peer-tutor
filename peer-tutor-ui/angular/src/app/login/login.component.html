@@ -1,15 +1,60 @@
 <div class="card mt-5" style="margin:auto;width: 600px;">
     <div class="card-body">
+        <!-- Title: Login -->
         <h5 class="card-title">Login</h5>
-        <div class="form-group">
-            <label for="login-username">Username</label>
-            <input type="text" class="form-control" placeholder="Username" name="username" id="login-username" [(ngModel)]="loginUsername"><br>
-        </div>
-        <div class="form-group">
-            <label for="login-password">Password</label>
-            <input type="password" class="form-control" name="password" id="login-password" placeholder="Password" [(ngModel)]="loginPassword"><br>
-        </div>
-        <button type="submit" class="btn btn-primary" (click)="tryLogin()">Login</button>
+        <!-- Login Error Message, if exist -->
+        <small class="text-danger" *ngIf = "loginError && submitted">{{loginErrorMsg}}</small>
+        <form #loginForm="ngForm">
+            <!-- Username input -->
+            <div class="form-group">
+                <label for="login-username">Username</label>
+                <input type="text" class="form-control" name="username" id="login-username" placeholder="Username"
+                    [(ngModel)]="loginUsername" required #loginusername="ngModel"
+                    [class.is-invalid]="loginusername.invalid && loginusername.touched">
+                <small [class.d-none]="loginusername.valid || loginusername.untouched" class="text-danger">
+                    Name is required.
+                </small>
+            </div>
+            <!-- Password input -->
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" class="form-control" name="password" id="login-password" placeholder="Password" 
+                    [(ngModel)]="loginPassword" pattern="^.{8,}" required #loginpassword="ngModel"
+                    [class.is-invalid]="loginpassword.invalid && loginpassword.touched">
+                <small [class.d-none]="loginpassword.valid || loginpassword.untouched" class="text-danger">
+                    Password need to be at least 8 characters long.
+                </small>
+            </div>
+            <!-- Login submit / Registration -->
+            <div class="form-group">
+                <button [disabled]="loginForm.form.invalid" class="btn btn-primary" (click)="tryLogin()">Login</button>
+                <a href="#" class="btn btn-link">Register</a>
+            </div>
+        </form>
     </div>
-    <p>{{testUsername}},{{testPassword}}</p>
+    <!-- <p>{{testUsername}},{{testPassword}}</p> -->
 </div>
+
+
+<!-- <h2>Login</h2>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+        <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+            <div *ngIf="f.username.errors.required">Username is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+            <div *ngIf="f.password.errors.required">Password is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button [disabled]="loading" class="btn btn-primary">Login</button>
+        <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        <a [routerLink]="['/register']" class="btn btn-link">Register</a>
+    </div>
+</form> -->
