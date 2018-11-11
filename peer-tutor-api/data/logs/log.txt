@@ -1,0 +1,34 @@
+2018-11-11T22:13:31.658+0000 I CONTROL  [initandlisten] MongoDB starting : pid=1 port=27017 dbpath=/usr/data/db 64-bit host=8f101fe62caf
+2018-11-11T22:13:31.659+0000 I CONTROL  [initandlisten] db version v4.0.4
+2018-11-11T22:13:31.659+0000 I CONTROL  [initandlisten] git version: f288a3bdf201007f3693c58e140056adf8b04839
+2018-11-11T22:13:31.659+0000 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2g  1 Mar 2016
+2018-11-11T22:13:31.659+0000 I CONTROL  [initandlisten] allocator: tcmalloc
+2018-11-11T22:13:31.659+0000 I CONTROL  [initandlisten] modules: none
+2018-11-11T22:13:31.660+0000 I CONTROL  [initandlisten] build environment:
+2018-11-11T22:13:31.660+0000 I CONTROL  [initandlisten]     distmod: ubuntu1604
+2018-11-11T22:13:31.660+0000 I CONTROL  [initandlisten]     distarch: x86_64
+2018-11-11T22:13:31.660+0000 I CONTROL  [initandlisten]     target_arch: x86_64
+2018-11-11T22:13:31.660+0000 I CONTROL  [initandlisten] options: { net: { bindIpAll: true }, storage: { dbPath: "/usr/data/db", mmapv1: { smallFiles: true } }, systemLog: { destination: "file", path: "/usr/data/logs/log.txt" } }
+2018-11-11T22:13:31.667+0000 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=487M,session_max=20000,eviction=(threads_min=4,threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),statistics_log=(wait=0),verbose=(recovery_progress),
+2018-11-11T22:13:37.150+0000 I STORAGE  [initandlisten] WiredTiger message [1541974417:150084][1:0x7fc98525ca40], txn-recover: Set global recovery timestamp: 0
+2018-11-11T22:13:37.157+0000 I RECOVERY [initandlisten] WiredTiger recoveryTimestamp. Ts: Timestamp(0, 0)
+2018-11-11T22:13:37.178+0000 W STORAGE  [initandlisten] Detected configuration for non-active storage engine mmapv1 when current storage engine is wiredTiger
+2018-11-11T22:13:37.179+0000 I CONTROL  [initandlisten] 
+2018-11-11T22:13:37.179+0000 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2018-11-11T22:13:37.179+0000 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2018-11-11T22:13:37.180+0000 I CONTROL  [initandlisten] 
+2018-11-11T22:13:37.197+0000 I STORAGE  [initandlisten] createCollection: admin.system.version with provided UUID: 5200e6a5-3e9d-4f4c-abb9-e77c79b0539f
+2018-11-11T22:13:37.216+0000 I COMMAND  [initandlisten] setting featureCompatibilityVersion to 4.0
+2018-11-11T22:13:37.227+0000 I STORAGE  [initandlisten] createCollection: local.startup_log with generated UUID: f2ddf6e1-59a4-4eef-ba3f-45840ccc5a3b
+2018-11-11T22:13:37.244+0000 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/usr/data/db/diagnostic.data'
+2018-11-11T22:13:37.249+0000 I NETWORK  [initandlisten] waiting for connections on port 27017
+2018-11-11T22:13:37.251+0000 I STORAGE  [LogicalSessionCacheRefresh] createCollection: config.system.sessions with generated UUID: f68e7751-730f-4de1-b41b-87694d9f797f
+2018-11-11T22:13:37.272+0000 I INDEX    [LogicalSessionCacheRefresh] build index on: config.system.sessions properties: { v: 2, key: { lastUse: 1 }, name: "lsidTTLIndex", ns: "config.system.sessions", expireAfterSeconds: 1800 }
+2018-11-11T22:13:37.273+0000 I INDEX    [LogicalSessionCacheRefresh] 	 building index using bulk method; build may temporarily use up to 500 megabytes of RAM
+2018-11-11T22:13:37.275+0000 I INDEX    [LogicalSessionCacheRefresh] build index done.  scanned 0 total records. 0 secs
+2018-11-11T22:13:38.124+0000 I NETWORK  [listener] connection accepted from 172.18.0.1:59306 #1 (1 connection now open)
+2018-11-11T22:13:38.125+0000 I NETWORK  [listener] connection accepted from 172.18.0.1:59304 #2 (2 connections now open)
+2018-11-11T22:13:38.125+0000 I NETWORK  [conn2] Error receiving request from client: ProtocolError: Client sent an HTTP request over a native MongoDB connection. Ending connection from 172.18.0.1:59304 (connection id: 2)
+2018-11-11T22:13:38.126+0000 I NETWORK  [conn2] end connection 172.18.0.1:59304 (1 connection now open)
+2018-11-11T22:13:38.401+0000 I NETWORK  [conn1] Error receiving request from client: ProtocolError: Client sent an HTTP request over a native MongoDB connection. Ending connection from 172.18.0.1:59306 (connection id: 1)
+2018-11-11T22:13:38.401+0000 I NETWORK  [conn1] end connection 172.18.0.1:59306 (0 connections now open)
