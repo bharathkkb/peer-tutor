@@ -30,7 +30,7 @@ export class NavbarComponent implements OnInit {
       filter(event=>event instanceof NavigationEnd) //then filter for only NavigationEnd Event
     )
     .subscribe((x:NavigationEnd)=>{
-      console.log(x);
+      // console.log(x);
       if (x.url.match(/\/login|\/register/)) {this.isVisible = false;}
       else {this.isVisible = true;}
     });
