@@ -9,14 +9,14 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-    private loginUsername:string;
-    private loginPassword:string;
-    private returnUrl:string;
+    loginUsername:string;
+    loginPassword:string;
+    returnUrl:string;
     // private activatedRoute: ActivatedRoute;
-    private submitted = false;
+    submitted = false;
     
-    private loginError = false;
-    private loginErrorMsg:Object;
+    loginError = false;
+    loginErrorMsg:Object;
 
     /**
      * try to log in
