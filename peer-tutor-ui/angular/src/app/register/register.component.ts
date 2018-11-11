@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit {
             .subscribe(
                 data=>{this.router.navigate(['/login'])},
                 error=>{this.registerError=true, 
-                    console.log("err!!: "+error);
+                    // console.log("err!!: "+error);
                     this.registerErrorMsg=error.error.message
                 }
             )
