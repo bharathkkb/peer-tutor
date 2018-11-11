@@ -10,7 +10,11 @@ import { first } from 'rxjs/operators';
 })
 export class RegisterComponent implements OnInit {
     private registerUsername:string;
+    private firstname:string;
+    private lastname:string;
+    private email:string;
     private registerPassword:string;
+
     private returnUrl:string;
     // private activatedRoute: ActivatedRoute;
     private submitted = false;
@@ -36,10 +40,20 @@ export class RegisterComponent implements OnInit {
         let registrationObj:any = {
             username: this.registerUsername, 
             password: this.registerPassword, 
-            firstName: "placeholder", 
-            lastName:"placeholderlast" }
+            firstName: this.firstname, 
+            lastName: this.lastname,
+            email: this.email,
+        }
 
         this.userService.register(registrationObj)
+            .pipe(first())
+            .subscribe(
+                data=>{this.router.navigate(['/login'])},
+                error=>{this.registerError=true, 
+                    console.log("err!!: "+error);
+                    this.registerErrorMsg=error.error.message
+                }
+            )
         // console.log(this.registerUsername + " " + this.registerPassword);
     }
 
