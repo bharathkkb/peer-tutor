@@ -8,8 +8,8 @@ class mongoDriver():
     def connectToMongo(self):
         """ Connect to MongoDB """
         try:
-            # client = MongoClient('mongodb:27017')
-            client = MongoClient('localhost:27017')
+            client = MongoClient('mongodb:27017')
+            # client = MongoClient('localhost:27017')
             print("Connected successfully")
             return client
         except ConnectionFailure as e:
