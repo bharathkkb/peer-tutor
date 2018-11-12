@@ -1,4 +1,7 @@
-﻿export class User {
+﻿/**
+ * TODO: Finalize respond format
+ */
+export class User {
     id: number;
     username: string;
     password: string;
