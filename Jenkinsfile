@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Build and test backend') {
             steps {
                 echo 'Building'
                 sh "ls"
@@ -45,9 +45,16 @@ pipeline {
                 """
             }
         }
-        stage('Test') {
+        stage('Build and test front end') {
             steps {
                 echo 'Testing'
+                sh """
+                cd peer-tutor-ui
+                cd angular
+                npm install
+                ng test --browsers headlessChrome --watch=false
+                """
+
 
             }
         }
