@@ -32,7 +32,7 @@ export class HomePageComponent implements OnInit {
   constructor( private classDataService:ClassDataService, private router:Router ) { }
 
   ngOnInit() {
-    let currentUserId:string = JSON.parse(localStorage.getItem("currentUser"))["id"]
+    let currentUserId:string = localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser"))["id"] : ""
     this.classDataService.getAll(currentUserId).subscribe(
       classes => { 
         this.classes$ = classes.map((c:UniClass)=>{
