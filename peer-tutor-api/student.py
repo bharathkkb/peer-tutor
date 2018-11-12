@@ -1,15 +1,17 @@
-from uniClass import UniClass
-from meeting import Meeting
+# from uniClass import UniClass
+# from meeting import Meeting
 from timeBlock import TimeBlock
 
 # Student("123","bharath","list(class1,class2,..)", "list(timeblock1,timebl2)","list(m1,m2,m3)")
+
 
 class Student:
     """
     Returns a ```Student``` object with the given student Id, name, enrolled classes, schedule and meetings.
 
     """
-    def __init__(self, student_id, name, enrolled_classes, schedules, meetings):
+
+    def __init__(self, student_id, name, enrolled_classes=list(), schedules=list(), meetings=list()):
         self.student_id = student_id
         self.name = name
         self.enrolled_classes = enrolled_classes
@@ -27,9 +29,9 @@ class Student:
         """
         returns a json format of a student
         """
-        student_dict=dict()
+        student_dict = dict()
         student_dict["student_id"] = self.student_id
-        student_dict["name"]=self.name
+        student_dict["name"] = self.name
 
         student_dict["enrolled_classes"] = list()  # "list(class1,class2,..)"
         for enrolled_class in self.enrolled_classes:
@@ -99,9 +101,8 @@ class Student:
         """
         return True
 
-    def add_schedule(self, schedule) :
+    def add_schedule(self, schedule):
         """
         add a schedules
         """
         return True
-

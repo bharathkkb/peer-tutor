@@ -55,16 +55,63 @@ def test_hello_data(url):
     assert data["hello"] == "hello"
 
 
-# testing student endpoint
+# testing get student endpoint
 
-
-def test_student_data(url):
+# check get student by id
+def test_get_student_by_id_data(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/student/id/02')
     data = json.loads(response.content)
     print(data)
     assert data["student_id"] == "02"
-    assert data["student_name"] == "Lifeng"
+    assert data["name"] == "Lifeng"
+
+# check get student by name
+
+
+def test_get_student_by_name_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/student/name/lif')
+    data = json.loads(response.content)
+    print(data)
+    # since return is a list use data[0]
+    assert data[0]["student_id"] == "02"
+    assert data[0]["name"] == "Lifeng"
+
+# check modifying student
+
+
+def test_modify_student_data(url):
+    putStudent = dict()
+    putStudent["name"] = "Bharath"
+    putStudent["student_id"] = "07"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/student', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 201
+    data = json.loads(putResponse.content)
+    # test if insert was success
+
+    assert data["student_id"] == putStudent["student_id"]
+    assert data["name"] == putStudent["name"]
+# check adding student
+
+
+def test_put_student_data(url):
+    putStudent = dict()
+    putStudent["name"] = "BharathUpdate"
+    putStudent["student_id"] = "07"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/student', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 200
+    data = json.loads(putResponse.content)
+    # test if insert was success
+
+    assert data["student_id"] == putStudent["student_id"]
+    assert data["name"] == putStudent["name"]
 
 # this is for debugging individual tests
 # if __name__ == "__main__":
