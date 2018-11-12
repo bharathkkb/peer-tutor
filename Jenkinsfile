@@ -10,9 +10,23 @@ pipeline {
 
                 docker -v && docker-compose -v
 
+                cd peer-tutor-api
+                mkdir data
+                cd data
+                mkdir db
+                mkdir logs
+                cd logs
+                touch log.txt
+                cd ..
+                cd ..
+                chmod 777 -R data/
+                docker-compose -f MaaS-docker-compose.yml up --d
+                sleep 10
+                docker ps -a
+                cd ..
 
                 docker build -t peer-tutor-api -f Dockerfile-dev .
-                docker run -d -p 5000:5000 peer-tutor-api:latest
+                docker run -d --network="web_dev" -p 5000:5000 peer-tutor-api:latest
 
                 sleep 10
 
@@ -46,6 +60,8 @@ pipeline {
          docker stop \$(docker ps -a -q)
          # remove
          docker rm \$(docker ps -a -q)
+         docker volume prune -f
+         docker network prune -f
          """
             archive "peer-tutor-api/*.xml"
             junit 'peer-tutor-api/*.xml'

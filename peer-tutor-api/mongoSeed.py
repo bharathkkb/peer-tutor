@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-client = MongoClient('localhost:27017')
+client = MongoClient('0.0.0.0:27017')
 dblist = client.list_database_names()
 if "peer-tutor-db" in dblist:
     print("The database exists. Dropping it now")
