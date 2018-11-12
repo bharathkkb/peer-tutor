@@ -47,7 +47,7 @@ pipeline {
         }
         stage('Build and test front end') {
             steps {
-                // echo 'Testing'
+                echo 'Testing'
                 // sh """
                 // cd peer-tutor-ui
                 // cd angular
