@@ -10,6 +10,11 @@ pipeline {
 
                 docker -v && docker-compose -v
 
+                docker build -t peer-tutor-api -f Dockerfile-dev .
+                docker run -d --network="web_dev" -p 5000:5000 peer-tutor-api:latest
+
+                sleep 10
+
                 cd peer-tutor-api
                 mkdir data
                 cd data
@@ -25,10 +30,7 @@ pipeline {
                 docker ps -a
                 cd ..
 
-                docker build -t peer-tutor-api -f Dockerfile-dev .
-                docker run -d --network="web_dev" -p 5000:5000 peer-tutor-api:latest
 
-                sleep 10
 
                 # test the services
                 python3 --version
@@ -37,6 +39,8 @@ pipeline {
                 ls
                 . env/bin/activate
                 pip install -r requirements.txt
+                python mongoSeed.py
+                
                 pytest -q test_api.py --url=http://10.0.0.188:5000 --junitxml=./junitResult.xml
                 """
             }
@@ -61,7 +65,6 @@ pipeline {
          # remove
          docker rm \$(docker ps -a -q)
          docker volume prune -f
-         docker network prune -f
          """
             archive "peer-tutor-api/*.xml"
             junit 'peer-tutor-api/*.xml'
