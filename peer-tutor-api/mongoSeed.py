@@ -7,6 +7,8 @@ if "peer-tutor-db" in dblist:
 print("Starting Seeding")
 mydb = client["peer-tutor-db"]
 studentCol = mydb["student"]
-student1 = {"student_name": "Lifeng", "student_id": "02"}
-insertId = studentCol.insert_one(student1)
-print(insertId)
+student1 = {"name": "Lifeng", "student_id": "02"}
+student2 = {"name": "Albert", "student_id": "04"}
+studentCol.insert_one(student1)
+studentCol.insert_one(student2)
+print("inserted")

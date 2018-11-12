@@ -15,7 +15,7 @@ paths:
   /student/id/{studentID}:
     get:
       summary: returns a student
-      operationId: student_driver.getStudent
+      operationId: student_driver.getStudentById
       tags:
         - "student"
       description: |
@@ -31,6 +31,66 @@ paths:
       responses:
         200:
           description: student obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        400:
+          description: bad input parameter
+  /student/name/{studentName}:
+    get:
+      summary: returns an array of students
+      operationId: student_driver.getStudentsByName
+      tags:
+        - "student"
+      description: |
+        Get list of students by passing the student name
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: studentName
+        description: student array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: student array
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        400:
+          description: bad input parameter
+  /student:
+    put:
+      summary: add a new student
+      operationId: student_driver.putStudent
+      tags:
+        - "student"
+      description: |
+        Get list of students by passing the student name
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: studentData
+        description: input student obj
+        required: true
+        schema:
+            $ref: '#/definitions/student'
+      responses:
+        200:
+          description: student was updated
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        201:
+          description: student was created
           schema:
             type: object
             items:
