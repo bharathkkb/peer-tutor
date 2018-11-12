@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { UniClass } from '../_models/uniclass';
 import { environment } from '../../environments/environment';
 
@@ -12,8 +12,10 @@ export class ClassDataService {
   /**
    * Get an observable for a list of class data
    */
-  getAll() {
-    return this.http.get<UniClass[]>(`${environment.apiUrl}/class`);
+  getAll(userId: string) {
+    let params = new HttpParams().set('userId', userId);
+    console.log(params)
+    return this.http.get<UniClass[]>(`${environment.apiUrl}/class`, {params});
   }
 
   /**
@@ -21,7 +23,7 @@ export class ClassDataService {
    * @param id the id of the class you are requesting
    */
   getById(id:string) {
-    return this.http.get(`${environment.apiUrl}/class/` + id);
+    return this.http.get<UniClass>(`${environment.apiUrl}/class/` + id);
   }
 
 }

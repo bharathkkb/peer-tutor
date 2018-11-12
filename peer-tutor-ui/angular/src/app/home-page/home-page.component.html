@@ -4,9 +4,11 @@
             <div class="card-body text-center">
                 <h4 class="card-title">{{c["class-name"]}}</h4>
                 <h5 class="card-title">{{c.title}}</h5>
-                <p class="card-text">{{c["start-dates"]}}~{{c["end-dates"]}}</p>
-                <p class="card-text">{{c["start-time"]}}~{{c["end-time"]}}</p>
+                <p class="card-text">Instructor: {{c.instructor}}</p>
+                <p class="card-text">{{c["start-time"]}}~{{c["end-time"]}}, {{c.days}}</p>
+                <p class="card-text">{{c.location}}</p>
                 <a routerLink="/details/{{c._id}}" class="card-link">Class Detail</a>
+
             </div>
         </div>
     </div>

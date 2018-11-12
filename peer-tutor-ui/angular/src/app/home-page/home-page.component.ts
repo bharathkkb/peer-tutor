@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClassDataService } from '../_services';
 import { UniClass } from '../_models/uniclass';
+import { Router } from '@angular/router';
 
 /**
  * Sumary of a UniClass
@@ -28,10 +29,11 @@ export class HomePageComponent implements OnInit {
 
   classes$: ClassSum[];
 
-  constructor( private classDataService:ClassDataService ) { }
+  constructor( private classDataService:ClassDataService, private router:Router ) { }
 
   ngOnInit() {
-    this.classDataService.getAll().subscribe(
+    let currentUserId:string = JSON.parse(localStorage.getItem("currentUser"))["id"]
+    this.classDataService.getAll(currentUserId).subscribe(
       classes => { 
         this.classes$ = classes.map((c:UniClass)=>{
           let result:ClassSum = {
@@ -49,6 +51,10 @@ export class HomePageComponent implements OnInit {
           }
           return result
         }); 
+      },
+      error=>{
+        console.log(error)
+        this.router.navigate(["/login"])
       }
     )
   }

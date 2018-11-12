@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service'
 import { Observable } from 'rxjs'
 import { ActivatedRoute } from '@angular/router'
+import { ClassDataService } from '../_services';
+import { UniClass } from '../_models/uniclass';
 
 @Component({
   selector: 'app-details',
@@ -11,14 +13,20 @@ import { ActivatedRoute } from '@angular/router'
 })
 export class DetailsComponent implements OnInit {
 
-  user$: Object;
+  classId$: string;
+  uniClassDetail: UniClass;
 
-  constructor(private data:DataService, private route:ActivatedRoute) {
-    this.route.params.subscribe(x=>{this.user$=x.id;}) // "/details/:id" in app routing
+  constructor(private classDataService:ClassDataService, private route:ActivatedRoute) {
+    this.route.params.subscribe(x=>{this.classId$=x.id;) // "/details/:id" in app routing
   }
 
   ngOnInit() {
-    this.data.getOneUser(this.user$).subscribe(x=>this.user$=x);
+    // this.(this.user$).subscribe(x=>this.user$=x);
+    this.classDataService.getById(this.classId$).subscribe(
+      (uniClass:UniClass)=>{
+        this.uniClassDetail = uniClass;
+      }
+    )
   }
 
 }
