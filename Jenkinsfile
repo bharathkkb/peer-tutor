@@ -25,7 +25,7 @@ pipeline {
                 cd ..
                 cd ..
                 chmod 777 -R data/
-                docker-compose -f MaaS-docker-compose.yml up --d
+                docker-compose -f MaaS-jenkins.yml up --d
                 sleep 10
                 docker ps -a
                 cd ..
@@ -40,7 +40,7 @@ pipeline {
                 . env/bin/activate
                 pip install -r requirements.txt
                 python mongoSeed.py
-                
+
                 pytest -q test_api.py --url=http://10.0.0.188:5000 --junitxml=./junitResult.xml
                 """
             }
