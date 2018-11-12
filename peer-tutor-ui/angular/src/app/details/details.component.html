@@ -1,5 +1,10 @@
 
 
-<div class="card mt-4">
-  <p>{{uniClassDetail | json}}</p>
+<div class="jumbotron mt-4">
+  <div class="text-center">
+    <h3 class="title">{{uniClassDetail["class-name"]}}</h3>
+    <h4 class="title">{{uniClassDetail["title"]}}</h4>
+    <p>TODO: add more detail later</p>
+  </div>
+  <button class="btn btn-primary" (click)="goBack()">&lt; Go Back</button>
 </div>
