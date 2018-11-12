@@ -1,32 +1,14 @@
 const fakeclasses = [
-    {
-        "class": "CS160",
-        "section": "1",
-        "professor": "Prof1",
-        "scheduel": "MW 12:00~13:45",
-        "id": 1
-    },
-    {
-        "class": "CS166",
-        "section": "2",
-        "professor": "Prof2",
-        "scheduel": "TR 12:00~13:45",
-        "id": 2
-    },
-    {
-        "class": "CS154",
-        "section": "4",
-        "professor": "Prof1",
-        "scheduel": "F 10:00~13:15",
-        "id": 3
-    },
-    {
-        "class": "KIN 22A",
-        "section": "1",
-        "professor": "Profx",
-        "scheduel": "MW 12:00~12:45",
-        "id": 7
-    },
+    { "_id": "5be76e1817a06cb2fcb0fb2b", "dept-name": "ADVERTISING", "dept-id": "d83887", "class-name": "ADV 125", "class-code": "21726", "dates": "01/24/19 05/13/19", "days": "MW", "instructor": "J Delacruz", "location": "DBH 117D", "time": "1200 1315", "title": "Ad Layout & Prod", "units": "3", "section": "01" },
+    { "_id": "5be76e1817a06cb2fcb0fb2c", "dept-name": "ADVERTISING", "dept-id": "d83887", "class-name": "ADV 125", "class-code": "23300", "dates": "01/24/19 05/13/19", "days": "MW", "instructor": "J Delacruz", "location": "DBH 117D", "time": "1630 1745", "title": "Ad Layout & Prod", "units": "3", "section": "02" },
+    { "_id": "5be76e1817a06cb2fcb0fb2d", "dept-name": "ADVERTISING", "dept-id": "d83887", "class-name": "ADV 126", "class-code": "20006", "dates": "01/24/19 05/13/19", "days": "TR", "instructor": "T Hendrick", "location": "DBH 202", "time": "1630 1745", "title": "Media Planning & Buying", "units": "3", "section": "01" },
+    { "_id": "5be76e1817a06cb2fcb0fb2e", "dept-name": "ADVERTISING", "dept-id": "d83887", "class-name": "ADV 128", "class-code": "20322", "dates": "01/24/19 05/13/19", "days": "MW", "instructor": "T Hendrick", "location": "DBH 225", "time": "1630 1745", "title": "Integrtd Mktg Comm", "units": "3", "section": "01" },
+    { "_id": "5be76e1817a06cb2fcb0fb2f", "dept-name": "ADVERTISING", "dept-id": "d83887", "class-name": "ADV 129", "class-code": "20993", "dates": "01/24/19 05/13/19", "days": "TR", "instructor": "J Delacruz", "location": "DBH 117D", "time": "1200 1315", "title": "Campaigns Mgmt", "units": "3", "section": "01" },
+    { "_id": "5be76e1817a06cb2fcb0fb30", "dept-name": "AEROSPACE ENGINEERING", "dept-id": "d83821", "class-name": "AE 015", "class-code": "26915", "dates": "01/24/19 05/13/19", "days": "R", "instructor": "S Montgomery", "location": "ENG 327", "time": "1630 1720", "title": "Air & Space Flight", "units": "1", "section": "01" },
+    { "_id": "5be76e1817a06cb2fcb0fb31", "dept-name": "AEROSPACE ENGINEERING", "dept-id": "d83821", "class-name": "AE 020", "class-code": "26916", "dates": "01/24/19 05/13/19", "days": "T", "instructor": "R Benzio", "location": "ENG 339", "time": "1630 1720", "title": "CAD for AEs", "units": "2", "section": "01" },
+    { "_id": "5be76e1817a06cb2fcb0fb32", "dept-name": "AEROSPACE ENGINEERING", "dept-id": "d83821", "class-name": "AE 020", "class-code": "26921", "dates": "01/24/19 05/13/19", "days": "T", "instructor": "R Benzio", "location": "ENG 407", "time": "1800 2045", "title": "CAD for AEs", "units": "0", "section": "02" },
+    { "_id": "5be76e1817a06cb2fcb0fb33", "dept-name": "AEROSPACE ENGINEERING", "dept-id": "d83821", "class-name": "AE 020", "class-code": "26922", "dates": "01/24/19 05/13/19", "days": "R", "instructor": "R Benzio", "location": "ENG 407", "time": "1800 2045", "title": "CAD for AEs", "units": "0", "section": "03" },
+    { "_id": "5be76e1817a06cb2fcb0fb34", "dept-name": "AEROSPACE ENGINEERING", "dept-id": "d83821", "class-name": "AE 030", "class-code": "26924", "dates": "01/24/19 05/13/19", "days": "W", "instructor": "L Lu", "location": "CL 222", "time": "1800 1850", "title": "Program. for AEs", "units": "2", "section": "01" },
 ]
 
-export {fakeclasses};
+export { fakeclasses };

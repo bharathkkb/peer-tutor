@@ -1,46 +1,14 @@
 <div class="row mt-4">
-    <div class="col-sm-12 col-md-4">
+    <div *ngFor="let c of classes$" class="col-sm-12 col-md-4">
         <div class="card mb-4">
             <div class="card-body text-center">
-                <h5 class="card-title">Card Title</h5>
-                <p class="card-text">Left Left Left Left Left Left Left </p>
-                <a href="#" class="card-link">another link</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-4">
-        <div class="card mb-4">
-            <div class="card-body text-center">
-                <h5 class="card-title">Card Title</h5>
-                <p class="card-text">Center Center Center Center Center Center </p>
-                <a href="#" class="card-link">another link</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-4">
-        <div class="card mb-4">
-            <div class="card-body text-center">
-                <h5 class="card-title">Card Title</h5>
-                <p class="card-text">right right right right right right</p>
-                <a href="#" class="card-link">another link</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-4">
-        <div class="card mb-4">
-            <div class="card-body text-center">
-                <h5 class="card-title">Card Title</h5>
-                <p class="card-text">Left Left Left Left Left Left Left </p>
-                <a href="#" class="card-link">another link</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-4">
-        <div class="card mb-4">
-            <div class="card-body text-center">
-                <h5 class="card-title">Card Title</h5>
-                <p class="card-text">Center Center Center Center Center Center </p>
-                <a href="#" class="card-link">another link</a>
+                <h4 class="card-title">{{c ? c["class-name"] : ""}}</h4>
+                <h5 class="card-title">{{c ? c.title : ""}}</h5>
+                <p class="card-text">Instructor: {{c ? c.instructor : ""}}</p>
+                <p class="card-text">{{c ? c["start-time"] : ""}}~{{c ? c["end-time"] : ""}}, {{c ? c.days : ""}}</p>
+                <p class="card-text">{{c ? c.location : ""}}</p>
+                <a routerLink="/details/{{c ? c._id : ''}}" class="card-link">Class Detail</a>
+
             </div>
         </div>
     </div>
