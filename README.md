@@ -9,9 +9,8 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 ```
-Python3
-pip
-virtualenv
+docker
+docker-compose
 ```
 
 ## Installing
@@ -23,35 +22,29 @@ stg branch is for staging
 
 prd branch is for production deployment
 
-Activate virtualenv
 ```
-cd peer-tutor-api/
-source env/bin/activate
+cd peer-tutor-api
+docker-compose -f deploy-api.yml up --d
 ```
-Install dependencies
+This will get all the dependencies, build the system and run the server
+The endpoint will be http://localhost:5000/test/api
 
-p.s you may need to switch pip with pip3 depending on your configuration
-```
-pip install -r requirements.txt
-```
-Run the server
+To see the API documentation please go to
+http://localhost:5000/test/api/ui/
 
--t flag launches the simulated testing dev env
-
-optional -p flag will let you run the server in a different port (ex. python3 server.py -t -p 5001)
+To stop the API server
 ```
-python3 server.py -t
-
+cd peer-tutor-api
+docker-compose -f deploy-api.yml down
 ```
-
+P.S This server will be ephemeral i.e data inserted into mongodb will lost when you run docker-compose -f deploy-api.yml down
+For production we have persistent docker volumes and replica sets
 ## Running the tests
 First launch the test server by following instructions to run the backend API server
 
-p.s pytest will be testing on port 5000 by default
 ```
-cd peer-tutor-api/
-source env/bin/activate
-pytest
+cd peer-tutor-api
+pytest -q test_api.py --url=http://localhost:5000
 ```
 
 <!--
