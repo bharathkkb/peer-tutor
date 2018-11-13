@@ -38,6 +38,7 @@ cd peer-tutor-api
 docker-compose -f deploy-api.yml down
 ```
 P.S This server will be ephemeral i.e data inserted into mongodb will lost when you run docker-compose -f deploy-api.yml down
+
 For production we have persistent docker volumes and replica sets
 ## Running the tests
 First launch the test server by following instructions to run the backend API server
