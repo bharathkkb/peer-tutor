@@ -40,7 +40,6 @@ class mongoDriver():
             if query:
                 return collection.find_one(query)
             else:
-                print("in here")
                 return collection.find_one()
         except ConnectionFailure as e:
             sys.stderr.write(

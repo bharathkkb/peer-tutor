@@ -36,12 +36,13 @@ def getStudentsByName(studentName):
 
 
 def putStudent(studentData):
+
     # check if old student exists in db
     if getStudentById(studentData["student_id"]):
         updateStudent = getStudentById(studentData["student_id"])
         # make new student with the same student id
         newStudentData = Student(
-            updateStudent["student_id"], studentData["name"])
+            updateStudent["student_id"], studentData["name"], studentData["username"], studentData["password"])
         # update the student info in db
         mongoDriver().updateDict("peer-tutor-db", "student",
                                  updateStudent, newStudentData.get_json())
@@ -49,7 +50,9 @@ def putStudent(studentData):
         return getStudentById(studentData["student_id"]), 200
     else:
         # make a new student
-        s = Student(studentData["student_id"], studentData["name"])
+        s = Student(studentData["student_id"], studentData["name"],
+                    studentData["username"], studentData["password"])
+
         # add the new student to db
         mongoDriver().putDict("peer-tutor-db", "student", s.get_json())
         # return new student obj with 201 status code

@@ -64,6 +64,82 @@ paths:
               $ref: '#/definitions/student'
         400:
           description: bad input parameter
+  /login:
+    post:
+      summary: returns a student obj if login success else returns False
+      operationId: auth_driver.login
+      tags:
+        - "login"
+      description: |
+        Authenticate a student login
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: loginData
+        description: login info username(email) and pass
+        required: true
+        schema:
+            $ref: '#/definitions/login'
+      responses:
+        200:
+          description: student obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        404:
+          description: student not found
+          schema:
+            type: object
+            items:
+              type: object
+              properties:
+                authorization:
+                  type: boolean
+                  example: false
+        400:
+          description: bad input parameter
+
+
+  /register:
+    post:
+      summary: returns a student obj if successful
+      operationId: auth_driver.register
+      tags:
+        - "register"
+      description: |
+        Register a new student
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: registerData
+        description: info for making a new student
+        required: true
+        schema:
+            $ref: '#/definitions/student'
+      responses:
+        201:
+          description: student obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        403:
+          description: student already exists
+          schema:
+            type: object
+            items:
+              type: object
+              properties:
+                accountExists:
+                  type: boolean
+                  example: true
+        400:
+          description: bad input parameter
   /student:
     put:
       summary: add a new student
@@ -127,12 +203,24 @@ definitions:
       hello:
         type: string
         example: hello-string
+  login:
+    type: object
+    properties:
+      username:
+        type: string
+        example: bharath@gmail.com
+      password:
+        type: string
+        example: password123
   student:
     type: object
     properties:
       student_id:
         type: string
         example: 01
-      student_name:
+      name:
         type: string
         example: 'Bharath Baiju'
+      username:
+        type: string
+        example: 'bharath@gmail.com'
