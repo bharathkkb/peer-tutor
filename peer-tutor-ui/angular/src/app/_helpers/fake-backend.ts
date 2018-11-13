@@ -87,34 +87,46 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
             // get Uni classes
             if (request.url.endsWith('/class') && request.method === 'GET') {
-                // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
-                if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-                    if(request.params.get("userId") === "1") {
-                        let cherrypickArr = [uniClasses[0], uniClasses[2], uniClasses[4]];
-                        return of(new HttpResponse({ status: 200, body: cherrypickArr }));
+                /* 
+                    // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
+                    if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+                        if(request.params.get("userId") === "1") {
+                            let cherrypickArr = [uniClasses[0], uniClasses[2], uniClasses[4]];
+                            return of(new HttpResponse({ status: 200, body: cherrypickArr }));
+                        }
+                        return of(new HttpResponse({ status: 200, body: uniClasses }));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        return throwError({ status: 401, error: { message: 'Unauthorised1-uniclass' } });
                     }
-                    return of(new HttpResponse({ status: 200, body: uniClasses }));
-                } else {
-                    // return 401 not authorised if token is null or invalid
-                    return throwError({ status: 401, error: { message: 'Unauthorised1-uniclass' } });
-                }
+                */
+                return of(new HttpResponse({ status: 200, body: uniClasses }));
             }
 
             // get one Uni class by id
             if (request.url.match(/\/class\/[a-z0-9]+$/) && request.method === 'GET') {
                 // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
-                if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-                    // find user by id in users array
-                    let urlParts = request.url.split('/');
-                    let classId = urlParts[urlParts.length - 1];
-                    let matchedClasses = uniClasses.filter(c => { return c["_id"] === classId; });
-                    let resultClass = matchedClasses.length ? matchedClasses[0] : null;
+                /* 
+                    if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+                        // find user by id in users array
+                        let urlParts = request.url.split('/');
+                        let classId = urlParts[urlParts.length - 1];
+                        let matchedClasses = uniClasses.filter(c => { return c["_id"] === classId; });
+                        let resultClass = matchedClasses.length ? matchedClasses[0] : null;
 
-                    return of(new HttpResponse({ status: 200, body: resultClass }));
-                } else {
-                    // return 401 not authorised if token is null or invalid
-                    return throwError({ status: 401, error: { message: 'Unauthorised2-uniclass' } });
-                }
+                        return of(new HttpResponse({ status: 200, body: resultClass }));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        return throwError({ status: 401, error: { message: 'Unauthorised2-uniclass' } });
+                    }
+                */
+
+                let urlParts = request.url.split('/');
+                let classId = urlParts[urlParts.length - 1];
+                let matchedClasses = uniClasses.filter(c => { return c["_id"] === classId; });
+                let resultClass = matchedClasses.length ? matchedClasses[0] : null;
+
+                return of(new HttpResponse({ status: 200, body: resultClass }));
             }
 
 
