@@ -78,13 +78,15 @@ def test_get_student_by_name_data(url):
     assert data[0]["student_id"] == "02"
     assert data[0]["name"] == "Lifeng"
 
-# check modifying student
+# check adding student
 
 
-def test_modify_student_data(url):
+def test_put_student_data(url):
     putStudent = dict()
-    putStudent["name"] = "Bharath"
+    putStudent["name"] = "BharathUpdate"
     putStudent["student_id"] = "07"
+    putStudent["username"] = "bharathupdate@gmail.com"
+    putStudent["password"] = "pass123"
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.put(
@@ -95,13 +97,18 @@ def test_modify_student_data(url):
 
     assert data["student_id"] == putStudent["student_id"]
     assert data["name"] == putStudent["name"]
-# check adding student
+    assert data["password"] == putStudent["password"]
+    assert data["username"] == putStudent["username"]
+
+# check modifying the student added above
 
 
-def test_put_student_data(url):
+def test_modify_student_data(url):
     putStudent = dict()
-    putStudent["name"] = "BharathUpdate"
+    putStudent["name"] = "Bharath"
     putStudent["student_id"] = "07"
+    putStudent["username"] = "bharathupdate2@gmail.com"
+    putStudent["password"] = "pass12345"
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.put(
@@ -112,6 +119,82 @@ def test_put_student_data(url):
 
     assert data["student_id"] == putStudent["student_id"]
     assert data["name"] == putStudent["name"]
+    assert data["password"] == putStudent["password"]
+    assert data["username"] == putStudent["username"]
+# check registering student
+
+
+def test_register(url):
+    putStudent = dict()
+    putStudent["name"] = "newstudent"
+    putStudent["student_id"] = "17"
+    putStudent["username"] = "newstudent@gmail.com"
+    putStudent["password"] = "pass123"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.post(
+        testAPIBasePath + '/register', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 201
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["student_id"] == putStudent["student_id"]
+    assert data["name"] == putStudent["name"]
+    assert data["username"] == putStudent["username"]
+    assert data["password"] == putStudent["password"]
+
+# test logging in with the above student
+
+
+def test_login(url):
+    putStudent = dict()
+    putStudent["username"] = "newstudent@gmail.com"
+    putStudent["password"] = "pass123"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.post(
+        testAPIBasePath + '/login', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 200
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["student_id"] == "17"
+    assert data["name"] == "newstudent"
+    assert data["username"] == putStudent["username"]
+    assert data["password"] == putStudent["password"]
+
+# test logging in with the wrong password for the above student
+
+
+def test_login_fail(url):
+    putStudent = dict()
+    putStudent["username"] = "newstudent@gmail.com"
+    putStudent["password"] = "pass1234"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.post(
+        testAPIBasePath + '/login', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 404
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["authorization"] == False
+
+# test registering with the same student id again
+
+
+def test_register_fail(url):
+    putStudent = dict()
+    putStudent["name"] = "newstudent"
+    putStudent["student_id"] = "17"
+    putStudent["username"] = "newstudent@gmail.com"
+    putStudent["password"] = "pass123"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.post(
+        testAPIBasePath + '/register', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 403
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["accountExists"] == True
+
 
 # this is for debugging individual tests
 # if __name__ == "__main__":
