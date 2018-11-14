@@ -5,11 +5,11 @@ import sys
 pp = pprint.PrettyPrinter(indent=4)
 client = MongoClient('localhost:27017')
 dblist = client.list_database_names()
-if "peer-tutor-db" in dblist:
-    print("The database exists. dropping")
-    client.drop_database("peer-tutor-db")
+# if "peer-tutor-db" in dblist:
+#     print("The database exists. dropping")
+#     client.drop_database("peer-tutor-db")
 
-    # sys.exit(0)
+# sys.exit(0)
 
 mydb = client["peer-tutor-db"]
 collist = mydb.list_collection_names()
