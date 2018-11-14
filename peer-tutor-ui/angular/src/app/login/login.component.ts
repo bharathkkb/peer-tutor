@@ -9,6 +9,7 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+    /**Use email for user name instead */
     loginUsername:string;
     loginPassword:string;
     returnUrl:string;
@@ -26,11 +27,13 @@ export class LoginComponent implements OnInit {
         this.authenticationService.login(this.loginUsername, this.loginPassword)
             .pipe(first())
             .subscribe(
-                data=>{this.router.navigate([this.returnUrl])},
+                data=>{
+                    this.loginError=false;
+                    this.router.navigate([this.returnUrl])
+                },
                 error=>{
                     this.loginError=true; 
-                    this.loginErrorMsg=error.error.message; 
-                    // console.log(error.error.message)
+                    this.loginErrorMsg="Email or Password not matched!"; 
                 }
             );
         // console.log(this.loginUsername + " " + this.loginPassword);
