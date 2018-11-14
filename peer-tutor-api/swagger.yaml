@@ -12,6 +12,110 @@ basePath: "{{is_testing}}/api"
 
 
 paths:
+  /uniclass/name/{className}:
+    get:
+      summary: returns an array of university classes which match the name
+      operationId: uniclass_driver.getClassByName
+      tags:
+        - "uniclass"
+      description: |
+        Get list of university classes by passing the class name
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: className
+        description: uniclass array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass array is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/title/{classTitle}:
+    get:
+      summary: returns an array of university classes which match the title
+      operationId: uniclass_driver.getClassByTitle
+      tags:
+        - "uniclass"
+      description: |
+        Get list of university classes by passing the class title
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: classTitle
+        description: uniclass array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass array is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/instructor/{instructorName}:
+    get:
+      summary: returns an array of university classes which match the instructorName
+      operationId: uniclass_driver.getClassByInstructor
+      tags:
+        - "uniclass"
+      description: |
+        Get list of university classes by passing the class instructorName
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: instructorName
+        description: uniclass array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass array is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/department/{deptName}:
+    get:
+      summary: returns an array of university classes which match the departmentName
+      operationId: uniclass_driver.getClassByDept
+      tags:
+        - "uniclass"
+      description: |
+        Get list of university classes by passing the class departmentName
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: deptName
+        description: uniclass array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass array is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
   /student/id/{studentID}:
     get:
       summary: returns a student
@@ -224,3 +328,42 @@ definitions:
       username:
         type: string
         example: 'bharath@gmail.com'
+  uniclass:
+    type: object
+    properties:
+      class-code:
+        type: string
+        example: 28013
+      class-name:
+        type: string
+        example: 'CS 160'
+      dates:
+        type: string
+        example: '01/24/19 05/13/19'
+      days:
+        type: string
+        example: 'TR'
+      dept-id:
+        type: string
+        example: 'd83848'
+      dept-name:
+        type: string
+        example: 'COMPUTER SCIENCE'
+      instructor:
+        type: string
+        example: 'W Cao'
+      location:
+        type: string
+        example: 'MH 222'
+      section:
+        type: string
+        example: '05'
+      time:
+        type: string
+        example: '1930 2045'
+      title:
+        type: string
+        example: 'Software Engr'
+      units:
+        type: string
+        example: '3'
