@@ -60,8 +60,7 @@ def putMeeting(meetingData):
         return getMeetingById(meetingData["meeting_id"]), 201
 
 def getAllMeeting(studentID):
-
-
+    return getMeetingsByPeer(studentID).append(getMeetingsByTutor(studentID))
 
 # just for testing purpose
 if __name__ == "__main__":
