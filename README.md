@@ -11,6 +11,8 @@ These instructions will get you a copy of the project up and running on your loc
 ```
 docker
 docker-compose
+Node.js
+Angular CLI
 ```
 
 ## Installing
@@ -40,6 +42,20 @@ docker-compose -f deploy-api.yml down
 P.S This server will be ephemeral i.e data inserted into mongodb will lost when you run docker-compose -f deploy-api.yml down
 
 For production we have persistent docker volumes and replica sets
+
+#### Running the frontend
+To run the Angular frontend. First, go to the Angular directory:
+
+    cd peer-tutor-ui/angular
+
+Then, install the required node modules:
+
+    npm install
+    
+Finally, run this command to run the Angular frontend on browser:
+
+    ng serve -o
+
 ## Running the tests
 First launch the test server by following instructions to run the backend API server
 
