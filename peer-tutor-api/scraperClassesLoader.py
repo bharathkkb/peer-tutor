@@ -13,7 +13,7 @@ if "peer-tutor-db" in dblist:
 
 mydb = client["peer-tutor-db"]
 collist = mydb.list_collection_names()
-if "uni-class" in collist:
+if "uni_class" in collist:
     print("The collection exists.")
 uniClassCol = mydb["uni_class"]
 
