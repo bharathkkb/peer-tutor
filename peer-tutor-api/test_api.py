@@ -86,22 +86,31 @@ def test_get_student_by_id_data(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/student/id/02')
     data = json.loads(response.content)
-    print(data)
+    assert response.status_code == 200
     assert data["student_id"] == "02"
     assert data["name"] == "Lifeng"
     assert len(data["enrolled_classes"]) == 3
     for enrolled_class in data["enrolled_classes"]:
         assert str(enrolled_class["class-code"]) in ["24778", "30053", "29567"]
 
+# check get student by wrong id
+
+
+def test_get_student_by_id_data_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/student/id/9999')
+    data = json.loads(response.content)
+    assert response.status_code == 404
+    assert data["found"] == False
+
+
 # check get student by name
-
-
 def test_get_student_by_name_data(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/student/name/lif')
     data = json.loads(response.content)
-    print(data)
     # since return is a list use data[0]
+    assert response.status_code == 200
     assert data[0]["student_id"] == "02"
     assert data[0]["name"] == "Lifeng"
 
@@ -198,6 +207,18 @@ def test_get_uniclass_by_id_data(url):
     for uniclass in data:
         assert "CS 16".lower() in uniclass["class-name"].lower()
 
+# test getting a class by wrong name
+
+
+def test_get_uniclass_by_id_data_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/name/Bharath')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    for uniclass in data:
+        assert "Bharath".lower() not in uniclass["class-name"].lower()
+
+
 # test getting a class by title
 
 
@@ -209,16 +230,17 @@ def test_get_uniclass_by_id_title(url):
     for uniclass in data:
         assert "Software E".lower() in uniclass["title"].lower()
 
-# test getting a class by wrong name
+# test getting a class by wrong title
 
 
-def test_get_uniclass_by_id_data_fail(url):
+def test_get_uniclass_by_id_title_fail(url):
     testAPIBasePath = "{}/test/api".format(url)
-    response = requests.get(testAPIBasePath + '/uniclass/name/Bharath')
+    response = requests.get(testAPIBasePath + '/uniclass/title/Fortnite')
     data = json.loads(response.content)
     assert response.status_code == 200
     for uniclass in data:
-        assert "Bharath".lower() not in uniclass["class-name"].lower()
+        assert "Fortnite".lower() not in uniclass["title"].lower()
+
 
 # test getting a class by instructor
 

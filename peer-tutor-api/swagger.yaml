@@ -145,7 +145,7 @@ paths:
   /student/id/{studentID}:
     get:
       summary: returns a student
-      operationId: student_driver.getStudentById
+      operationId: student_driver.getStudentByIdWrapperResponse
       tags:
         - "student"
       description: |

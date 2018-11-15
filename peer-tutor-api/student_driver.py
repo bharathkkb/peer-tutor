@@ -38,6 +38,13 @@ def getStudentById(studentID):
     return json.loads(json_util.dumps(dbStudent))
 
 
+def getStudentByIdWrapperResponse(studentID):
+    data = getStudentById(studentID)
+    if(data):
+        return data, 200
+    else:
+        return json.loads(json.dumps({"found": False})), 404
+
 # returns a list of students whose name matches with the given string
 # loosely matches for example "lif" would return lifeng
 
