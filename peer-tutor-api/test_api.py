@@ -7,6 +7,22 @@ import pprint
 import pytest
 import json
 import sys
+import os
+from mongoSeed import seedUsersMeetings
+from scraperClassesLoader import seedUniClasses
+"""
+**************************************
+Setup
+**************************************
+"""
+seedUsersMeetings()
+seedUniClasses()
+
+"""
+**************************************
+Swagger Infra Tests
+**************************************
+"""
 
 
 def validateSwagger(url):
@@ -55,29 +71,46 @@ def test_hello_data(url):
     assert data["hello"] == "hello"
 
 
+"""
+**************************************
+Student Driver Tests
+**************************************
+"""
+
 # testing get student endpoint
 
 # check get student by id
+
+
 def test_get_student_by_id_data(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/student/id/02')
     data = json.loads(response.content)
-    print(data)
+    assert response.status_code == 200
     assert data["student_id"] == "02"
     assert data["name"] == "Lifeng"
     assert len(data["enrolled_classes"]) == 3
     for enrolled_class in data["enrolled_classes"]:
         assert str(enrolled_class["class-code"]) in ["24778", "30053", "29567"]
 
+# check get student by wrong id
+
+
+def test_get_student_by_id_data_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/student/id/9999')
+    data = json.loads(response.content)
+    assert response.status_code == 404
+    assert data["found"] == False
+
+
 # check get student by name
-
-
 def test_get_student_by_name_data(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/student/name/lif')
     data = json.loads(response.content)
-    print(data)
     # since return is a list use data[0]
+    assert response.status_code == 200
     assert data[0]["student_id"] == "02"
     assert data[0]["name"] == "Lifeng"
 
@@ -134,6 +167,119 @@ def test_modify_student_data(url):
     for enrolled_class in data["enrolled_classes"]:
         assert str(enrolled_class["class-code"]
                    ) in putStudent["enrolled_classes"]
+
+
+"""
+**************************************
+University Class Driver Tests
+**************************************
+"""
+
+# test getting a class by id
+
+
+def test_get_uniclass_by_id_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/id/28013')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert data["class-code"] == "28013"
+    assert data["class-name"] == "CS 160"
+    assert data["dates"] == "01/24/19 05/13/19"
+    assert data["days"] == "TR"
+    assert data["dept-id"] == "d83848"
+    assert data["dept-name"] == "COMPUTER SCIENCE"
+    assert data["instructor"] == "W Cao"
+    assert data["section"] == "05"
+    assert data["location"] == "MH 222"
+    assert data["time"] == "1930 2045"
+    assert data["title"] == "Software Engr"
+    assert data["units"] == "3"
+
+# test getting a class by name
+
+
+def test_get_uniclass_by_id_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/name/CS 16')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    for uniclass in data:
+        assert "CS 16".lower() in uniclass["class-name"].lower()
+
+# test getting a class by wrong name
+
+
+def test_get_uniclass_by_id_data_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/name/Bharath')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    for uniclass in data:
+        assert "Bharath".lower() not in uniclass["class-name"].lower()
+
+
+# test getting a class by title
+
+
+def test_get_uniclass_by_id_title(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/title/Software E')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    for uniclass in data:
+        assert "Software E".lower() in uniclass["title"].lower()
+
+# test getting a class by wrong title
+
+
+def test_get_uniclass_by_id_title_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/title/Fortnite')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    for uniclass in data:
+        assert "Fortnite".lower() not in uniclass["title"].lower()
+
+
+# test getting a class by instructor
+
+
+def test_get_uniclass_by_instructor_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/instructor/W Cao')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    for uniclass in data:
+        assert "W Cao".lower() in uniclass["instructor"].lower()
+
+# test getting classes by dept
+
+
+def test_get_uniclass_by_dept_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/department/computer')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    for uniclass in data:
+        assert "computer".lower() in uniclass["dept-name"].lower()
+# test getting classes by dept fail
+
+
+def test_get_uniclass_by_dept_data_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/department/apple')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    for uniclass in data:
+        assert "apple".lower() not in uniclass["dept-name"].lower()
+
+
+"""
+**************************************
+Authentication Driver Tests
+**************************************
+"""
 # check registering student
 
 

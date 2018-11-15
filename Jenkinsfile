@@ -39,8 +39,6 @@ pipeline {
                 ls
                 . env/bin/activate
                 pip install -r requirements.txt
-                python mongoSeed.py
-                python scraperClassesLoader.py
                 pytest -q test_api.py --url=http://10.0.0.188:5000 --junitxml=./junitResult.xml
                 """
             }
