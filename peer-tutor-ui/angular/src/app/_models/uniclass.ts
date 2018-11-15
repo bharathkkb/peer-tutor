@@ -1,4 +1,5 @@
 /**Example for a UniClass instance:
+ * 
  * ```
  * {
  *      "_id": "5be76e1817a06cb2fcb0fb2b", 

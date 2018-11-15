@@ -54,7 +54,7 @@ export class HomePageComponent implements OnInit {
       },
       error=>{
         console.log(error)
-        this.router.navigate(["/login"])
+        // this.router.navigate(["/login"])
       }
     )
   }

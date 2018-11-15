@@ -86,7 +86,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             */
 
             // get Uni classes
-            if (request.url.endsWith('/class') && request.method === 'GET') {
+            if (request.url.endsWith('/uniclass/all') && request.method === 'GET') {
                 /* 
                     // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
                     if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
@@ -104,7 +104,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             }
 
             // get one Uni class by id
-            if (request.url.match(/\/class\/[a-z0-9]+$/) && request.method === 'GET') {
+            if (request.url.match(/\/uniclass\/[a-z0-9]+$/) && request.method === 'GET') {
                 // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
                 /* 
                     if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
