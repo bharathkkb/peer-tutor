@@ -15,8 +15,8 @@ student2 = {"name": "Albert", "student_id": "04",
             "username": "albert@gmail.com", "password": "pass123"}
 student3 = {"name": "Sheldon", "student_id": "06",
             "username": "sheldon@gmail.com", "password": "sheldon123"}
-studentCol.insert_one(student1)	studentCol.insert_one(student1)
-studentCol.insert_one(student2)	studentCol.insert_one(student2)
+studentCol.insert_one(student1)
+studentCol.insert_one(student2)
 studentCol.insert_one(student3)
 
 meetingCol = mydb["meeting"]
