@@ -59,4 +59,8 @@ export class HomePageComponent implements OnInit {
     )
   }
 
+  addClassButton(){
+    console.log("Add button clicked!")
+  }
+
 }
