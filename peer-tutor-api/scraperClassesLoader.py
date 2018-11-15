@@ -3,7 +3,7 @@ import pprint
 import json
 import sys
 pp = pprint.PrettyPrinter(indent=4)
-client = MongoClient('localhost:27017')
+client = MongoClient('0.0.0.0:27017')
 dblist = client.list_database_names()
 # if "peer-tutor-db" in dblist:
 #     print("The database exists. dropping")
@@ -22,7 +22,7 @@ with open("../sjsu-scraper/data-allsections.json", "r") as read_file:
     data = json.load(read_file)
     # pp.pprint(data)
 
-
+print("Starting to seed university classes")
 for deptName, deptDict in data.items():
     deptId = deptDict["dept-id"]
     # pp.pprint(deptDict["classes"].items())
@@ -43,11 +43,11 @@ for deptName, deptDict in data.items():
         uniClass["units"] = uni_class["units"]
         uniClass["section"] = uni_class["section"]
         insertUniClass = uniClassCol.insert_one(uniClass)
-        pp.pprint("{} was inserted".format(uniClass["class-name"]))
-
-cursor = uniClassCol.find({})
-for uniClass in cursor:
-    pp.pprint(uniClass)
-print("Testing CS 160 classes")
-for csclass in uniClassCol.find({"class-name": "CS 160"}):
-    pp.pprint(csclass)
+        # pp.pprint("{} was inserted".format(uniClass["class-name"]))
+print("Finished seeding university classes")
+# cursor = uniClassCol.find({})
+# for uniClass in cursor:
+#     pp.pprint(uniClass)
+# print("Testing CS 160 classes")
+# for csclass in uniClassCol.find({"class-name": "CS 160"}):
+#     pp.pprint(csclass)

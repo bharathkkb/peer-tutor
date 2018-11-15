@@ -1,8 +1,8 @@
 import json
 from mongoDriver import mongoDriver
-
 from bson import json_util, ObjectId
 from student import Student
+from uniclass_driver import getClassById
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -11,13 +11,32 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         return json.JSONEncoder.default(self, o)
 
+
+# given a student with class id in enrolled classes this unfurls it into a full uni class
+def unfurl_enrolled_classes(dbStudent):
+    if(dbStudent and dbStudent.get("enrolled_classes", False)):
+        unfurl_enrolled_classes = list()
+        for enrolled_class in dbStudent["enrolled_classes"]:
+            try:
+                uniclass = getClassById(str(enrolled_class))
+                unfurl_enrolled_classes.append(uniclass)
+            except Exception as ex:
+                print("Error retriving a class {}".format(enrolled_class))
+                continue
+        dbStudent["enrolled_classes"] = unfurl_enrolled_classes
+    return dbStudent
+
 # returns one student with that id
 
 
 def getStudentById(studentID):
     query = dict()
     query["student_id"] = studentID
-    return json.loads(json_util.dumps(mongoDriver().getFindOne("peer-tutor-db", "student", query)))
+    dbStudent = mongoDriver().getFindOne("peer-tutor-db", "student", query)
+    # unfurl each class object and discard old ids
+    dbStudent = unfurl_enrolled_classes(dbStudent)
+    return json.loads(json_util.dumps(dbStudent))
+
 
 # returns a list of students whose name matches with the given string
 # loosely matches for example "lif" would return lifeng
@@ -29,7 +48,11 @@ def getStudentsByName(studentName):
     query["name"]["$regex"] = studentName
     # to make it case insensitive
     query["name"]["$options"] = 'i'
-    return json.loads(json_util.dumps(mongoDriver().getFind("peer-tutor-db", "student", query)))
+    allStudents = mongoDriver().getFind("peer-tutor-db", "student", query)
+    unfurled_students = list()
+    for student in allStudents:
+        unfurled_students.append(unfurl_enrolled_classes(student))
+    return json.loads(json_util.dumps(unfurled_students))
 
 # inserts new student
 # if a student with the given id is found then the data is updated
@@ -42,7 +65,7 @@ def putStudent(studentData):
         updateStudent = getStudentById(studentData["student_id"])
         # make new student with the same student id
         newStudentData = Student(
-            updateStudent["student_id"], studentData["name"], studentData["username"], studentData["password"])
+            updateStudent["student_id"], studentData["name"], studentData["username"], studentData["password"], studentData["enrolled_classes"])
         # update the student info in db
         mongoDriver().updateDict("peer-tutor-db", "student",
                                  updateStudent, newStudentData.get_json())
@@ -51,8 +74,8 @@ def putStudent(studentData):
     else:
         # make a new student
         s = Student(studentData["student_id"], studentData["name"],
-                    studentData["username"], studentData["password"])
-
+                    studentData["username"], studentData["password"], studentData.get("enrolled_classes", list()))
+        print(s.get_json())
         # add the new student to db
         mongoDriver().putDict("peer-tutor-db", "student", s.get_json())
         # return new student obj with 201 status code

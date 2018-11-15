@@ -16,7 +16,7 @@ class JSONEncoder(json.JSONEncoder):
 
 def getClassById(classId):
     query = dict()
-    query["class-id"] = classId
+    query["class-code"] = classId
     return json.loads(json_util.dumps(mongoDriver().getFindOne("peer-tutor-db", "uni_class", query)))
 
 # returns a list of classes whose name matches with the given string
