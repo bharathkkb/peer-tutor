@@ -82,8 +82,33 @@ pipeline {
 
         }
         success {
-            echo 'This will run only if successful'
+            script {
+            echo 'This build was successful.'
+            if( (GIT_PREVIOUS_SUCCESSFUL_COMMIT == GIT_PREVIOUS_COMMIT) & GIT_BRANCH == 'dev'){
+            echo 'Promoting to staging'
+            withCredentials([usernamePassword(credentialsId: 'github-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+            sh"""
+            rm -rf git-push-stg
+            mkdir git-push-stg
+            cd git-push-stg
+            git config --global user.email \"bharath.baiju@sjsu.edu\"
+            git config --global user.name \"jenkins-bot\"
+            git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/bharathkkb/peer-tutor.git
+            cd peer-tutor
+            git checkout stg
+            git branch
+            git pull --commit --rebase origin dev
+
+            git push origin stg
+
+            """
+            }
+            }
+            else{
+                echo 'Not eligible for promoting to staging'
+            }
         }
+    }
         failure {
             echo 'This will run only if failed'
         }
