@@ -18,19 +18,55 @@
 <!-- Modal for selecting class -->
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    
         <!-- Modal content-->
         <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Modal Header</h4>
-        </div>
-        <div class="modal-body">
-            <p>Some text in the modal.</p>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+            <div class="modal-header">
+                <h4 class="modal-title">Add a Class You Are Enrolling</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                    <form #loginForm="ngForm">
+                        <div class="form-group">
+                            <label for="login-username">Email</label>
+                            <input type="text" class="form-control" name="username" id="login-username" placeholder="Email"
+                                [(ngModel)]="loginUsername" required #loginusername="ngModel"
+                                [class.is-invalid]="loginusername.invalid && loginusername.touched">
+                            <small [class.d-none]="loginusername.valid || loginusername.untouched" class="text-danger">
+                                Email is required.
+                            </small>
+                        </div>
+                        <!-- Username input -->
+                        <!-- <select class='select-option' required [(ngModel)]='optionSelected' (ngModelChange)='onOptionsSelected($event)'>
+                            <option class='option' *ngFor='let option of options' [value]="option">{{option}}</option>
+                        </select> -->
+                        <select class='select-option' required >
+                            <option value="" selected disabled hidden>Choose here</option>
+                            <option class='option'>TEST1</option>
+                            <option class='option'>TEST2</option>
+                            <option class='option'>TEST3</option>
+                            <option class='option'>TEST4</option>
+                            <option class='option'>TEST5</option>
+                        </select>
+                        <!-- Password input -->
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" class="form-control" name="password" id="login-password" placeholder="Password" 
+                                [(ngModel)]="loginPassword" pattern="^.{8,}" required #loginpassword="ngModel"
+                                [class.is-invalid]="loginpassword.invalid && loginpassword.touched">
+                            <small [class.d-none]="loginpassword.valid || loginpassword.untouched" class="text-danger">
+                                Password need to be at least 8 characters long.
+                            </small>
+                        </div>
+                        <!-- Login submit / Registration -->
+                        <div class="form-group">
+                            <button [disabled]="loginForm.form.invalid" class="btn btn-primary" (click)="tryLogin()">Login</button>
+                            <a href="#" class="btn btn-link" routerLink="/register">Register</a>
+                        </div>
+                    </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
         
     </div>
