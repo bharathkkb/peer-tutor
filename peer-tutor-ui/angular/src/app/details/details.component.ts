@@ -33,7 +33,23 @@ class UniClassDetail{
 export class DetailsComponent implements OnInit {
 
   classId$: string;
-  uniClassDetail: UniClassDetail;
+  uniClassDetail: UniClassDetail = {
+    "_id": "",
+    "dept-name": "",
+    "dept-id": "",
+    "class-name": "",
+    "class-code": "",
+    "start-dates": "",
+    "end-dates": "",
+    "days": "",
+    "instructor": "",
+    "location": "",
+    "start-time": "",
+    "end-time": "",
+    "title": "",
+    "units": "",
+    "section": "",
+  };
 
   constructor(private classDataService:ClassDataService, private route:ActivatedRoute, private router:Router) {
     this.route.params.subscribe(x=>{this.classId$=x.id;}) // "/details/:id" in app routing
