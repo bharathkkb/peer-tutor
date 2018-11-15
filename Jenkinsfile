@@ -79,6 +79,8 @@ pipeline {
          """
             archive "peer-tutor-api/*.xml"
             junit 'peer-tutor-api/*.xml'
+            archive "peer-tutor-ui/angular/src/reports/*.xml"
+            junit 'peer-tutor-ui/angular/src/reports/*.xml'
 
         }
         success {
