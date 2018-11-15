@@ -10,18 +10,18 @@ import { first } from 'rxjs/operators';
 })
 export class RegisterComponent implements OnInit {
     // private registerUsername:string;
-    private firstname:string;
-    private lastname:string;
-    private email:string;
-    private registerPassword:string;
-    private studentId:string;
+    firstname:string;
+    lastname:string;
+    email:string;
+    registerPassword:string;
+    studentId:string;
 
-    private returnUrl:string;
+    returnUrl:string;
     // private activatedRoute: ActivatedRoute;
-    private submitted = false;
+    submitted = false;
     
-    private registerError = false;
-    private registerErrorMsg:Object;
+    registerError = false;
+    registerErrorMsg:Object;
 
     /**
      * try to log in
