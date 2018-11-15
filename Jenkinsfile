@@ -48,8 +48,15 @@ pipeline {
         stage('Build and test front end') {
             steps {
                 echo 'Testing'
+                // sh """
+                // docker build -t peer-tutor-ui -f Dockerfile-ui .
+                // """
                 sh """
-                docker build -t peer-tutor-ui -f Dockerfile-ui .
+                cd peer-tutor-ui
+                cd angular
+                npm install
+                npm rebuild node-sass
+                ng test --browsers headlessChrome --watch=false
                 """
 
 
@@ -72,6 +79,8 @@ pipeline {
          """
             archive "peer-tutor-api/*.xml"
             junit 'peer-tutor-api/*.xml'
+            archive "peer-tutor-ui/angular/src/reports/*.xml"
+            junit 'peer-tutor-ui/angular/src/reports/*.xml'
 
         }
         success {
