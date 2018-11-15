@@ -1,0 +1,21 @@
+##### Stage 1
+
+FROM node:8.11.4 as node
+
+COPY . /peer-tutor
+
+WORKDIR /peer-tutor/peer-tutor-ui/angular
+
+
+RUN npm install -g @angular/cli
+
+RUN npm install
+
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list
+RUN apt-get update && apt-get install --no-install-recommends -y google-chrome-stable
+ENV CHROMIUM_BIN=/usr/bin/google-chrome
+RUN ng test --browsers headlessChrome --watch=false
+
+
+EXPOSE 4200

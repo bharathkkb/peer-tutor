@@ -48,12 +48,9 @@ pipeline {
         stage('Build and test front end') {
             steps {
                 echo 'Testing'
-                // sh """
-                // cd peer-tutor-ui
-                // cd angular
-                // npm install
-                // ng test --browsers headlessChrome --watch=false
-                // """
+                sh """
+                docker build -t peer-tutor-ui -f Dockerfile-ui .
+                """
 
 
             }
