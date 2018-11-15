@@ -65,6 +65,9 @@ def test_get_student_by_id_data(url):
     print(data)
     assert data["student_id"] == "02"
     assert data["name"] == "Lifeng"
+    assert len(data["enrolled_classes"]) == 3
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]) in ["24778", "30053", "29567"]
 
 # check get student by name
 
@@ -78,7 +81,7 @@ def test_get_student_by_name_data(url):
     assert data[0]["student_id"] == "02"
     assert data[0]["name"] == "Lifeng"
 
-# check adding student
+# check adding student with pre defined classes
 
 
 def test_put_student_data(url):
@@ -87,6 +90,7 @@ def test_put_student_data(url):
     putStudent["student_id"] = "07"
     putStudent["username"] = "bharathupdate@gmail.com"
     putStudent["password"] = "pass123"
+    putStudent["enrolled_classes"] = ["22271", "28363", "22363", "21299"]
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.put(
@@ -99,6 +103,10 @@ def test_put_student_data(url):
     assert data["name"] == putStudent["name"]
     assert data["password"] == putStudent["password"]
     assert data["username"] == putStudent["username"]
+    assert len(data["enrolled_classes"]) == 4
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]
+                   ) in putStudent["enrolled_classes"]
 
 # check modifying the student added above
 
@@ -109,6 +117,7 @@ def test_modify_student_data(url):
     putStudent["student_id"] = "07"
     putStudent["username"] = "bharathupdate2@gmail.com"
     putStudent["password"] = "pass12345"
+    putStudent["enrolled_classes"] = ["22271"]
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.put(
@@ -121,6 +130,10 @@ def test_modify_student_data(url):
     assert data["name"] == putStudent["name"]
     assert data["password"] == putStudent["password"]
     assert data["username"] == putStudent["username"]
+    assert len(data["enrolled_classes"]) == 1
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]
+                   ) in putStudent["enrolled_classes"]
 # check registering student
 
 

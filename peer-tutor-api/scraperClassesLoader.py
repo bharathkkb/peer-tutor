@@ -43,11 +43,11 @@ for deptName, deptDict in data.items():
         uniClass["units"] = uni_class["units"]
         uniClass["section"] = uni_class["section"]
         insertUniClass = uniClassCol.insert_one(uniClass)
-        pp.pprint("{} was inserted".format(uniClass["class-name"]))
+        # pp.pprint("{} was inserted".format(uniClass["class-name"]))
 
-cursor = uniClassCol.find({})
-for uniClass in cursor:
-    pp.pprint(uniClass)
-print("Testing CS 160 classes")
-for csclass in uniClassCol.find({"class-name": "CS 160"}):
-    pp.pprint(csclass)
+# cursor = uniClassCol.find({})
+# for uniClass in cursor:
+#     pp.pprint(uniClass)
+# print("Testing CS 160 classes")
+# for csclass in uniClassCol.find({"class-name": "CS 160"}):
+#     pp.pprint(csclass)

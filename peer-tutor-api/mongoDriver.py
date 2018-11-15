@@ -9,8 +9,8 @@ class mongoDriver():
         """ Connect to MongoDB """
         try:
             # if you are running loccally comment the line below with mongodb:27017 and uncomment localhost:27017
-            client = MongoClient('mongodb:27017')
-            # client = MongoClient('localhost:27017')
+            # client = MongoClient('mongodb:27017')
+            client = MongoClient('localhost:27017')
             print("Connected successfully")
             return client
         except ConnectionFailure as e:

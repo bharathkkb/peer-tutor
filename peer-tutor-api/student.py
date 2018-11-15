@@ -38,7 +38,7 @@ class Student:
         student_dict["password"] = self.password
         student_dict["enrolled_classes"] = list()  # "list(class1,class2,..)"
         for enrolled_class in self.enrolled_classes:
-            student_dict["enrolled_classes"].append(enrolled_class.get_json())
+            student_dict["enrolled_classes"].append(str(enrolled_class))
 
         student_dict["schedules"] = list()      # list(timeblock1,timeblock2)
         for schedule in self.schedules:
