@@ -55,6 +55,7 @@ pipeline {
                 cd peer-tutor-ui
                 cd angular
                 npm install
+                npm rebuild node-sass
                 ng test --browsers headlessChrome --watch=false
                 """
 
