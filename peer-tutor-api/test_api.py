@@ -9,6 +9,13 @@ import json
 import sys
 
 
+"""
+**************************************
+Swagger Infra Tests
+**************************************
+"""
+
+
 def validateSwagger(url):
     testAPIBasePath = "{}/test/api".format(url)
     validate_spec_url(testAPIBasePath + '/swagger.json')
@@ -55,9 +62,17 @@ def test_hello_data(url):
     assert data["hello"] == "hello"
 
 
+"""
+**************************************
+Student Driver Tests
+**************************************
+"""
+
 # testing get student endpoint
 
 # check get student by id
+
+
 def test_get_student_by_id_data(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/student/id/02')
@@ -134,6 +149,20 @@ def test_modify_student_data(url):
     for enrolled_class in data["enrolled_classes"]:
         assert str(enrolled_class["class-code"]
                    ) in putStudent["enrolled_classes"]
+
+
+"""
+**************************************
+University Class Driver Tests
+**************************************
+"""
+
+
+"""
+**************************************
+Authentication Driver Tests
+**************************************
+"""
 # check registering student
 
 

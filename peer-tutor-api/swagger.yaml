@@ -12,6 +12,32 @@ basePath: "{{is_testing}}/api"
 
 
 paths:
+  /uniclass/id/{classId}:
+    get:
+      summary: returns an single university class with matching class code
+      operationId: uniclass_driver.getClassById
+      tags:
+        - "uniclass"
+      description: |
+        Get university class by id
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: classId
+        description: uniclass  is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass  is returned
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
   /uniclass/name/{className}:
     get:
       summary: returns an array of university classes which match the name
