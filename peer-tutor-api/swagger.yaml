@@ -123,7 +123,7 @@ paths:
       tags:
         - "uniclass"
       description: |
-        Get list of university classes by passing the class departmentName
+        Get list of university classes by passing the  departmentName
       produces:
       - application/json
       parameters:
@@ -140,6 +140,52 @@ paths:
             items:
               type: object
               $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/department/id/{deptId}:
+    get:
+      summary: returns an array of university classes which match the deptId
+      operationId: uniclass_driver.getClassByDeptId
+      tags:
+        - "uniclass"
+      description: |
+        Get list of university classes by passing the deptId
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: deptId
+        description: uniclass array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass array is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/department/all:
+    get:
+      summary: returns an array of all departments and their ids
+      operationId: uniclass_driver.getDepartments
+      tags:
+        - "uniclass"
+      description: |
+        Get list of all departments and their ids by passing the deptId
+      produces:
+      - application/json
+      responses:
+        200:
+          description:  array of deptnames and their ids is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/deptObj'
         400:
           description: bad input parameter
   /student/id/{studentID}:
@@ -545,3 +591,12 @@ definitions:
       peer_id:
         type: string
         example: "03"
+  deptObj:
+    type: object
+    properties:
+      dept-id:
+        type: string
+        example: "d83848"
+      dept-name:
+        type: string
+        example: "COMPUTER SCIENCE"
