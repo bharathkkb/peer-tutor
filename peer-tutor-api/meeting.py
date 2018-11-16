@@ -1,14 +1,9 @@
-from timeBlock import TimeBlock
-from student import Student
-from peer import Peer
-from tutor import Tutor
-
 class Meeting:
     """
     Returns a ```Meeting``` object with the given id, peer, tutor, time, meetingTitle, Location
 
     """
-    def __init__(self, meeting_id, peer, tutor, time, meeting_title, location):
+    def __init__(self, meeting_id, peer, tutor, time=None, meeting_title=None, location=None):
         self.meeting_id = meeting_id
         self.peer = peer
         self.tutor = tutor
@@ -29,11 +24,13 @@ class Meeting:
         """
         meeting_dict=dict()
         meeting_dict["meeting_id"]=self.meeting_id
-        meeting_dict["peer"] = self.peer.get_json() # one meeting one peer
-        meeting_dict["tutor"] = self.tutor.get_json() # one meeting one tutor
-        meeting_dict["time"] = self.time.get_json()  # one meeting one timeBlock
-        meeting_dict["meeting_title"] = self.meeting_title
-        meeting_dict["location"] = self.location
+        meeting_dict["peer"] = self.peer
+        meeting_dict["tutor"] = self.tutor
+        # meeting_dict["peer"] = self.peer.get_json() # one meeting one peer
+        # meeting_dict["tutor"] = self.tutor.get_json() # one meeting one tutor
+        # meeting_dict["time"] = self.time.get_json()  # one meeting one timeBlock
+        # meeting_dict["meeting_title"] = self.meeting_title
+        # meeting_dict["location"] = self.location
         return meeting_dict
 
     def get_meeting_id(self):
