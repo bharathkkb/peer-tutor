@@ -97,17 +97,17 @@ pipeline {
         always {
           //cleanup all containers
           sh """
-          result=\$( docker ps -a -q )
+            result=\$( docker ps -a -q )
 
-          if [ -n "\$result" ]; then
-            docker stop \$(docker ps -a -q)
-             docker rm \$(docker ps -a -q)
-          else
-            echo "No containers left"
-          fi
-         """
-         sh """
-         docker volume prune -f
+            if [ -n "\$result" ]; then
+              docker stop \$(docker ps -a -q)
+               docker rm \$(docker ps -a -q)
+            else
+              echo "No containers left"
+            fi
+           """
+           sh """
+           docker volume prune -f
          """
             archive "peer-tutor-api/*.xml"
             junit 'peer-tutor-api/*.xml'
