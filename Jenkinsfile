@@ -10,8 +10,8 @@ pipeline {
 
                 docker -v && docker-compose -v
 
-                docker build -t peer-tutor-api -f Dockerfile-dev .
-                docker run -d --network="web_dev" -p 5000:5000 peer-tutor-api:latest
+                docker build -t peer-tutor-api-test -f Dockerfile-dev .
+                docker run -d --network="web_dev" -p 5000:5000 peer-tutor-api-test:latest
 
                 sleep 10
 
@@ -62,17 +62,44 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying'
+                echo 'Test Deployment'
+                script {
+                  if(GIT_BRANCH == 'stg'){
+                    echo 'Test building deployment package'
+                    sh """
+                    #stop docker containers
+                   docker stop \$(docker ps -a -q)
+                   # remove
+                   docker rm \$(docker ps -a -q)
+                   docker volume prune -f
+                   """
+                    sh"""
+                    docker-compose -f compose-peer-tutor-prd-pkg.yml  up --d --build
+                    curl http://10.0.0.188:8080/login
+                    docker-compose -f compose-peer-tutor-prd-pkg.yml  down
+                    """
+
+                  }
+                  else{
+                    echo 'Not Testing in dev'
+                  }
+                }
             }
         }
     }
     post {
         always {
           sh """
-          #stop docker containers
-         docker stop \$(docker ps -a -q)
-         # remove
-         docker rm \$(docker ps -a -q)
+          result=\$( docker ps -a -q )
+
+          if [[ -n "\$result" ]]; then
+            docker stop \$(docker ps -a -q)
+             docker rm \$(docker ps -a -q)
+          else
+            echo "No containers left"
+          fi
+         """
+         sh """
          docker volume prune -f
          """
             archive "peer-tutor-api/*.xml"

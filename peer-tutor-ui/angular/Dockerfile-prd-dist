@@ -1,0 +1,26 @@
+##### Stage 1
+# Build peer-tutor-ui
+FROM node:8.11.4 as node
+
+WORKDIR /app
+
+COPY . .
+
+
+RUN npm install -g @angular/cli
+
+RUN npm install
+RUN npm rebuild node-sass
+
+RUN ng build --prod
+
+##### Stage 2
+# Deploy peer-tutor-ui
+
+
+FROM nginx:alpine
+
+COPY --from=node /app/dist/projv1-angular /usr/share/nginx/html
+COPY --from=node /app/nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
