@@ -4,6 +4,7 @@ import { UniClass } from '../_models/uniclass';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/internal/Observable';
+import {map, startWith} from 'rxjs/operators';
 
 /**
  * Sumary of a UniClass
@@ -33,7 +34,6 @@ export class HomePageComponent implements OnInit {
   filteredDeptName : Observable<any[]>;
   modalClassInputCtrl = new FormControl();
   filteredClassName : Observable<any[]>;
-
 
   classes$: ClassSum[];
 
@@ -71,10 +71,19 @@ export class HomePageComponent implements OnInit {
         // this.router.navigate(["/login"])
       }
     )
+
+    this.filteredDeptName = this.modalDeptInputCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value)),
+    )
   }
 
-  private initHomePage(){
-    
+  options: string[] = ['One', 'Two', 'Three'];
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
   
 
@@ -85,3 +94,54 @@ export class HomePageComponent implements OnInit {
   }
 
 }
+
+
+/* Reference:
+HTML:
+vvvvvvvvvvvvv
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+    <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
+^^^^^^^^^^^^^
+ts:
+vvvvvvvvvvvvv
+import {Component, OnInit} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
+@Component({
+  selector: 'autocomplete-filter-example',
+  templateUrl: 'autocomplete-filter-example.html',
+  styleUrls: ['autocomplete-filter-example.css'],
+})
+export class AutocompleteFilterExample implements OnInit {
+  myControl = new FormControl();
+  options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: Observable<string[]>;
+
+  ngOnInit() {
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+}
+^^^^^^^^^^^^^
+
+
+*/

@@ -28,20 +28,18 @@
                 <form>
                     <!-- Select Department -->
                     <mat-form-field>
-                        <label for="dept-input">Select the Department</label>
-                        <input type="text" placeholder="Select the Department" 
+                        <input type="text" placeholder="Select the Department" aria-label="Number"
                             matInput [formControl]="modalDeptInputCtrl" id="dept-input"
                             [matAutocomplete]="auto">
                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <mat-option *ngFor="let optDept of filteredDeptName | async" [value]="optDept['dept-name']">
-                                {{optDept['dept-name']}}
+                            <mat-option *ngFor="let optDept of filteredDeptName | async" [value]="optDept">
+                                {{optDept}}
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>
 
                     <!-- Select Class -->
                     <mat-form-field>
-                        <label for="class-input">Select the Class</label>
                         <input type="text" placeholder="Select the Class" 
                             matInput [formControl]="modalClassInputCtrl" id="class-input"
                             [matAutocomplete]="auto">

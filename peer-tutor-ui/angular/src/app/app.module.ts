@@ -38,9 +38,9 @@ import { NavbarComponent } from './navbar/navbar.component';
     FormsModule,
     ReactiveFormsModule,
     //Material Auto Complete mess
-    MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
+    MatAutocompleteModule,
     BrowserAnimationsModule,
   ],
   providers: [
