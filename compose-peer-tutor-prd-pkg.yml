@@ -19,7 +19,7 @@ services:
     image: peer-tutor-ui
     container_name: peer-tutor-ui
     ports:
-      - 8081:80
+      - 8083:80
 networks:
   default:
    name: web_dev
