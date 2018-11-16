@@ -354,6 +354,21 @@ def test_register_fail(url):
     # test if insert was success
     assert data["accountExists"] == True
 
+# check get meeting by id
+def test_get_meeting_by_peer_id_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/meeting/peer/id/00011')
+    data = json.loads(response.content)
+    print(data)
+    assert len(data) == 2
+    for meeting in data:
+        assert data[0]["meeting_id"] == "06" or "02"
+    assert data[0] ["meeting_id"] == "06"
+    # assert data [0]["peer_id"] == "00011"
+    # assert data[0] ["tutor_id"] == "10001"
+    
+
+
 
 # this is for debugging individual tests
 # if __name__ == "__main__":

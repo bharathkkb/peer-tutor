@@ -20,9 +20,14 @@ def seedUsersMeetings():
     studentCol.insert_one(student2)
     studentCol.insert_one(student3)
 
+
     meetingCol = mydb["meetings"]
     meeting1 = {"name": "meeting1", "meeting_id": "02"}
     meetingCol.insert_one(meeting1)
+    meeting2 = {"meeting_id": "06", "peer_id": "00011", "tutor_id": "10001"}
+    meeting3 = {"meeting_id": "02", "peer_id": "00011", "tutor_id": "10002", }
+    meetingCol.insert_one(meeting2)
+    meetingCol.insert_one(meeting3)
     print("Finished seeding students and meetings")
 
 
