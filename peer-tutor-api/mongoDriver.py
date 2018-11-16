@@ -11,19 +11,22 @@ class mongoDriver():
             # if you are running loccally comment the line below with mongodb:27017 and uncomment localhost:27017
             client = MongoClient('mongodb:27017')
             # client = MongoClient('localhost:27017')
-            print("Connected successfully")
+            # print("Connected successfully")
             return client
         except ConnectionFailure as e:
             sys.stderr.write("Could not connect to MongoDB:{}".format(str(e)))
             sys.exit(1)
 
-    def getFind(self, dbName, collectionName, query=False):
+    def getFind(self, dbName, collectionName, query=False, exclude=False):
         """ Run a query to get data from Mongo DB """
+        """ Exclude removes those keys from the data returned"""
         conn = self.connectToMongo()
         try:
             db = conn[dbName]
             collection = db[collectionName]
-            if query:
+            if query and exclude:
+                return collection.find(query, exclude)
+            elif query:
                 return collection.find(query)
             else:
                 return collection.find()
@@ -31,13 +34,16 @@ class mongoDriver():
             sys.stderr.write("Could not fetch from MongoDB: {}".format(str(e)))
             sys.exit(1)
 
-    def getFindOne(self, dbName, collectionName, query=False):
+    def getFindOne(self, dbName, collectionName, query=False, exclude=False):
         """ Run a query to get data from Mongo DB """
+        """ Exclude removes those keys from the data returned"""
         conn = self.connectToMongo()
         try:
             db = conn[dbName]
             collection = db[collectionName]
-            if query:
+            if query and exclude:
+                return collection.find_one(query, exclude)
+            elif query:
                 return collection.find_one(query)
             else:
                 return collection.find_one()
