@@ -10,8 +10,8 @@ pipeline {
 
                 docker -v && docker-compose -v
 
-                docker build -t peer-tutor-api -f Dockerfile-dev .
-                docker run -d --network="web_dev" -p 5000:5000 peer-tutor-api:latest
+                docker build -t peer-tutor-api-test -f Dockerfile-dev .
+                docker run -d --network="web_dev" -p 5000:5000 peer-tutor-api-test:latest
 
                 sleep 10
 
@@ -40,6 +40,7 @@ pipeline {
                 . env/bin/activate
                 pip install -r requirements.txt
                 pytest -q test_api.py --url=http://10.0.0.188:5000 --junitxml=./junitResult.xml
+
                 """
             }
         }
@@ -62,17 +63,50 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying'
+                echo 'Test Deployment'
+                script {
+                  if(GIT_BRANCH == 'stg'){
+                    echo 'Test building deployment package'
+                    sh """
+                    result=\$( docker ps -a -q )
+
+                    if [ -n "\$result" ]; then
+                      docker stop \$(docker ps -a -q)
+                       docker rm \$(docker ps -a -q)
+                    else
+                      echo "No containers left"
+                    fi
+                   """
+
+                    sh"""
+                    docker-compose -f compose-peer-tutor-prd-pkg.yml  up --d --build
+                    sleep 10
+                    curl http://10.0.0.188:8080/login
+                    docker-compose -f compose-peer-tutor-prd-pkg.yml  down
+                    """
+
+                  }
+                  else{
+                    echo 'Not Testing in dev'
+                  }
+                }
             }
         }
     }
     post {
         always {
+          //cleanup all containers
           sh """
-          #stop docker containers
-         docker stop \$(docker ps -a -q)
-         # remove
-         docker rm \$(docker ps -a -q)
+          result=\$( docker ps -a -q )
+
+          if [ -n "\$result" ]; then
+            docker stop \$(docker ps -a -q)
+             docker rm \$(docker ps -a -q)
+          else
+            echo "No containers left"
+          fi
+         """
+         sh """
          docker volume prune -f
          """
             archive "peer-tutor-api/*.xml"
