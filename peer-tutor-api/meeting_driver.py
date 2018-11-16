@@ -32,7 +32,7 @@ def getMeetingsByPeer(peerID):
 
 def getMeetingsByTutor(tutorID):
     query = dict()
-    query["tutor"] = tutorID
+    query["tutor_id"] = tutorID
     return json.loads(json_util.dumps(mongoDriver().getFind("peer-tutor-db", "meeting", query)))
 
 # inserts new meeting
