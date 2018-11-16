@@ -9,29 +9,18 @@ pipeline {
                 sh """
 
                 docker -v && docker-compose -v
+                cd peer-tutor-api
+                docker-compose -f MaaS-jenkins.yml up --d
+                sleep 10
+                docker ps -a
+                cd ..
+                sleep 10
 
                 docker build -t peer-tutor-api-test -f Dockerfile-dev .
                 docker run -d --network="web_dev" -p 5000:5000 peer-tutor-api-test:latest
 
                 sleep 10
-
-                cd peer-tutor-api
-                mkdir data
-                cd data
-                mkdir db
-                mkdir logs
-                cd logs
-                touch log.txt
-                cd ..
-                cd ..
-                chmod 777 -R data/
-                docker-compose -f MaaS-jenkins.yml up --d
-                sleep 10
                 docker ps -a
-                cd ..
-
-
-
                 # test the services
                 python3 --version
                 cd peer-tutor-api
