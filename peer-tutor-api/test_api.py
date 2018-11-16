@@ -354,93 +354,135 @@ def test_register_fail(url):
     # test if insert was success
     assert data["accountExists"] == True
 
-# # check get meeting by id
-# def test_get_meeting_by_peer_id_data(url):
-#     testAPIBasePath = "{}/test/api".format(url)
-#     response = requests.get(testAPIBasePath + '/meeting/peer/id/00011')
-#     data = json.loads(response.content)
-#     assert len(data) == 2
-#     for meeting in data:
-#         assert data[0]["meeting_id"] == "06" or "02"
-#     assert data[0] ["meeting_id"] == "06"
-#     #     print(data)
-#     #     assert len(data) == 2
-#     #     for meeting in data:
-#     #         assert data[0]["meeting_id"] == "06" or "02"
-#     #     assert data[0] ["meeting_id"] == "06"
-#     #     # assert data [0]["peer_id"] == "00011"
-#     # assert data[0] ["tutor_id"] == "10001"
-#
-#
-# # check get meeting by tutor id
-# def test_get_meeting_by_tutor_id_data(url):
-#     testAPIBasePath = "{}/test/api".format(url)
-#     response = requests.get(testAPIBasePath + '/meeting/tutor/id/10001')
-#     data = json.loads(response.content)
-#     print(data)
-#     assert len(data) == 2
-#     for meeting in data:
-#         assert data[0]["meeting_id"] == "06" or "05"
-#
-#
-# # check get meeting by meeting id
-# def test_get_meeting_by_meeting_id_data(url):
-#     testAPIBasePath = "{}/test/api".format(url)
-#     response = requests.get(testAPIBasePath + '/meeting/id/06')
-#     data = json.loads(response.content)
-#     print(data)
-#     assert data[0]["meeting_id"] == "06"
-#     assert data[0]["peer_id"] == "00011"
-#     assert data[0]["tutor_id"] == "10001"
-#
-#
-# # check get meeting by student id
-# def test_get_meeting_by_student_id_data(url):
-#     testAPIBasePath = "{}/test/api".format(url)
-#     response = requests.get(testAPIBasePath + '/meeting/student/id/00011')
-#     data = json.loads(response.content)
-#     print(data)
-#     assert len(data) == 2
-#     for meeting in data:
-#         assert data[0]["meeting_id"] == "06" or "02"
-#
-#
-# # check adding meeting with pre defined classes
-# def test_put_meeting_data(url):
-#     putMeeting = dict()
-#     putMeeting["meeting_id"] = "05"
-#     putMeeting["peer_id"] = "00011"
-#     putMeeting["peer_id"] = "10003"
-#     headers = {'content-type': 'application/json'}
-#     testAPIBasePath = "{}/test/api".format(url)
-#     putResponse = requests.put(
-#         testAPIBasePath + '/meeting', data=json.dumps(putMeeting), headers=headers)
-#     assert putResponse.status_code == 201
-#     data = json.loads(putResponse.content)
-#     # test if insert was success
-#
-#     assert data["meeting_id"] == putMeeting["meeting_id"]
-#     assert data["peer_id"] == putMeeting["peer_id"]
-#     assert data["peer_id"] == putMeeting["peer_id"]
-#
-#
-# # check modifying the meeting added above
-# def test_modify_meeting_data(url):
-#     putMeeting = dict()
-#     putMeeting["meeting_id"] = "05"
-#     putMeeting["peer_id"] = "00011"
-#     putMeeting["peer_id"] = "10004"
-#     headers = {'content-type': 'application/json'}
-#     testAPIBasePath = "{}/test/api".format(url)
-#     putResponse = requests.put(
-#         testAPIBasePath + '/meeting', data=json.dumps(putMeeting), headers=headers)
-#     assert putResponse.status_code == 200
-#     data = json.loads(putResponse.content)
-#     # test if insert was success
-#
-#     assert data["meeting_id"] == putMeeting["meeting_id"]
-#     assert data["peer_id"] == putMeeting["peer_id"]
-#     assert data["peer_id"] == putMeeting["peer_id"]
+
+"""
+**************************************
+Meeting Driver Tests
+**************************************
+"""
+
+# check get meeting by peer id
+
+
+def test_get_meeting_by_peer_id_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/meeting/peer/id/00011')
+    data = json.loads(response.content)
+    assert len(data) == 2
+    for meeting in data:
+        assert meeting["peer_id"] == "00011"
+        assert meeting["meeting_id"] == "06" or "02"
+        assert meeting["tutor_id"] == "10001" or "10002" or "00011"
+
+# check get meeting by wrong id
+
+
+def test_get_meeting_by_peer_id_data_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/meeting/peer/id/9999999999')
+    data = json.loads(response.content)
+    assert len(data) == 0
+
+
+# check get meeting by tutor id
+def test_get_meeting_by_tutor_id_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/meeting/tutor/id/10001')
+    data = json.loads(response.content)
+    assert len(data) == 1
+    for meeting in data:
+        assert meeting["tutor_id"] == "10001"
+        assert meeting["meeting_id"] == "06" or "05"
+        assert meeting["peer_id"] == "00011" or "00012"
+
+# check get meeting by wrong tutor id
+
+
+def test_get_meeting_by_tutor_id_data_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/meeting/tutor/id/9999999999')
+    data = json.loads(response.content)
+    assert len(data) == 0
+
+# check get meeting by meeting id
+
+
+def test_get_meeting_by_meeting_id_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/meeting/id/06')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert data["meeting_id"] == "06"
+    assert data["peer_id"] == "00011"
+    assert data["tutor_id"] == "10001"
+
+# check get meeting by wrong meeting id
+
+
+def test_get_meeting_by_meeting_id_data_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/meeting/id/99999')
+    data = json.loads(response.content)
+    assert response.status_code == 404
+
+
+# check get meeting by student id
+def test_get_meeting_by_student_id_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/meeting/student/id/00011')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert len(data) == 3
+    for meeting in data:
+        assert meeting["meeting_id"] == "06" or "02" or "05"
+        assert meeting["peer_id"] or meeting["tutor_id"] == "00011"
+
+# check get meeting by wrong student id
+
+
+def test_get_meeting_by_student_id_data_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/meeting/student/id/999999999')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert len(data) == 0
+
+
+# check adding meeting
+def test_put_meeting_data(url):
+    putMeeting = dict()
+    putMeeting["meeting_id"] = "11"
+    putMeeting["tutor_id"] = "00011"
+    putMeeting["peer_id"] = "10003"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/meeting', data=json.dumps(putMeeting), headers=headers)
+    assert putResponse.status_code == 201
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["meeting_id"] == putMeeting["meeting_id"]
+    assert data["peer_id"] == putMeeting["peer_id"]
+    assert data["tutor_id"] == putMeeting["tutor_id"]
+
+
+# check modifying the meeting added above
+def test_modify_meeting_data(url):
+    putMeeting = dict()
+    putMeeting["meeting_id"] = "11"
+    putMeeting["tutor_id"] = "00012"
+    putMeeting["peer_id"] = "10004"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/meeting', data=json.dumps(putMeeting), headers=headers)
+    assert putResponse.status_code == 200
+    data = json.loads(putResponse.content)
+    # test if insert was success
+
+    assert data["meeting_id"] == putMeeting["meeting_id"]
+    assert data["tutor_id"] == putMeeting["tutor_id"]
+    assert data["peer_id"] == putMeeting["peer_id"]
 
 
 # this is for debugging individual tests

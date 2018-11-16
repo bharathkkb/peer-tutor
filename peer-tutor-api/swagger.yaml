@@ -327,7 +327,7 @@ paths:
   /meeting/id/{meetingID}:
     get:
       summary: returns a meeting
-      operationId: meeting_driver.getMeetingById
+      operationId: meeting_driver.getMeetingByIdWrapperResponse
       tags:
       - "meeting"
       description: |
@@ -538,11 +538,10 @@ definitions:
     properties:
       meeting_id:
         type: string
-        example: 01
-      tutor:
+        example: "01"
+      tutor_id:
         type: string
-        example: 02
-      peer:
+        example: "02"
+      peer_id:
         type: string
-        example: 03
-
+        example: "03"

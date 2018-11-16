@@ -84,7 +84,8 @@ pipeline {
         success {
             script {
             echo 'This build was successful.'
-            if( (GIT_PREVIOUS_SUCCESSFUL_COMMIT == GIT_PREVIOUS_COMMIT) & GIT_BRANCH == 'dev'){
+            if(GIT_BRANCH == 'dev'){
+            if( GIT_PREVIOUS_SUCCESSFUL_COMMIT & GIT_PREVIOUS_COMMIT & (GIT_PREVIOUS_SUCCESSFUL_COMMIT == GIT_PREVIOUS_COMMIT)){
             echo 'Promoting to staging'
             withCredentials([usernamePassword(credentialsId: 'github-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh"""
@@ -107,6 +108,7 @@ pipeline {
             else{
                 echo 'Not eligible for promoting to staging'
             }
+          }
         }
     }
         failure {

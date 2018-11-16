@@ -3,10 +3,11 @@ class Meeting:
     Returns a ```Meeting``` object with the given id, peer, tutor, time, meetingTitle, Location
 
     """
-    def __init__(self, meeting_id, peer, tutor, time=None, meeting_title=None, location=None):
+
+    def __init__(self, meeting_id, peer_id, tutor_id, time=None, meeting_title=None, location=None):
         self.meeting_id = meeting_id
-        self.peer = peer
-        self.tutor = tutor
+        self.peer_id = peer_id
+        self.tutor_id = tutor_id
         self.time = time
         self.meeting_title = meeting_title
         self.location = location
@@ -22,10 +23,10 @@ class Meeting:
         """
         returns a json format of a Meeting
         """
-        meeting_dict=dict()
-        meeting_dict["meeting_id"]=self.meeting_id
-        meeting_dict["peer"] = self.peer
-        meeting_dict["tutor"] = self.tutor
+        meeting_dict = dict()
+        meeting_dict["meeting_id"] = self.meeting_id
+        meeting_dict["peer_id"] = self.peer_id
+        meeting_dict["tutor_id"] = self.tutor_id
         # meeting_dict["peer"] = self.peer.get_json() # one meeting one peer
         # meeting_dict["tutor"] = self.tutor.get_json() # one meeting one tutor
         # meeting_dict["time"] = self.time.get_json()  # one meeting one timeBlock
@@ -43,7 +44,7 @@ class Meeting:
         """
         return meeting's peer
         """
-        return self.peer
+        return self.peer_id
 
     def get_tutor(self):
         """
@@ -69,18 +70,18 @@ class Meeting:
         """
         return self.location
 
-    def set_peer(self, peer):
+    def set_peer(self, peer_id):
         """
         set peer
         """
-        self.peer = peer
+        self.peer_id = peer_id
         return True
 
-    def set_tutor(self, tutor):
+    def set_tutor(self, tutor_id):
         """
         set tutor
         """
-        self.tutor = tutor
+        self.tutor_id = tutor_id
         return True
 
     def set_time(self, time):
