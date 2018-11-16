@@ -40,6 +40,7 @@ pipeline {
                 . env/bin/activate
                 pip install -r requirements.txt
                 pytest -q test_api.py --url=http://10.0.0.188:5000 --junitxml=./junitResult.xml
+                docker-compose -f MaaS-jenkins.yml down
                 """
             }
         }
@@ -67,12 +68,16 @@ pipeline {
                   if(GIT_BRANCH == 'stg'){
                     echo 'Test building deployment package'
                     sh """
-                    #stop docker containers
-                   docker stop \$(docker ps -a -q)
-                   # remove
-                   docker rm \$(docker ps -a -q)
-                   docker volume prune -f
+                    result=\$( docker ps -a -q )
+
+                    if [ -n "\$result" ]; then
+                      docker stop \$(docker ps -a -q)
+                       docker rm \$(docker ps -a -q)
+                    else
+                      echo "No containers left"
+                    fi
                    """
+
                     sh"""
                     docker-compose -f compose-peer-tutor-prd-pkg.yml  up --d --build
                     curl http://10.0.0.188:8080/login
@@ -89,10 +94,11 @@ pipeline {
     }
     post {
         always {
+          //cleanup all containers
           sh """
           result=\$( docker ps -a -q )
 
-          if [[ -n "\$result" ]]; then
+          if [ -n "\$result" ]; then
             docker stop \$(docker ps -a -q)
              docker rm \$(docker ps -a -q)
           else
