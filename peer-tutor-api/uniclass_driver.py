@@ -22,6 +22,20 @@ def getClassById(classId):
     query["class-code"] = classId
     return json.loads(json_util.dumps(mongoDriver().getFindOne("peer-tutor-db", "uni_class", query, exclude)))
 
+# returns a list of all dept and their ids
+
+
+def getDepartments():
+    all = mongoDriver().getFind("peer-tutor-db", "uni_class")
+    deptList = list()
+    for dept in all:
+        deptData = dict()
+        deptData["dept-id"] = dept["dept-id"]
+        deptData["dept-name"] = dept["dept-name"]
+        deptList.append(deptData)
+    fullDeptList = list({v['dept-id']: v for v in deptList}.values())
+    return json.loads(json_util.dumps(fullDeptList))
+
 # returns a list of classes whose name matches with the given string
 # loosely matches for example "CS16" would return CS160, CS166 and CS161 etc all classes all sections
 
@@ -75,7 +89,15 @@ def getClassByDept(deptName):
     query["dept-name"]["$regex"] = deptName
     # to make it case insensitive
     query["dept-name"]["$options"] = 'i'
-    return json.loads(json_util.dumps(mongoDriver().getFind("peer-tutor-db", "uni_class", query)))
+    return json.loads(json_util.dumps(mongoDriver().getFind("peer-tutor-db", "uni_class", query, exclude)))
+
+# returns a list of classes whose deptId matches with the given Id
+
+
+def getClassByDeptId(deptId):
+    query = dict()
+    query["dept-id"] = deptId
+    return json.loads(json_util.dumps(mongoDriver().getFind("peer-tutor-db", "uni_class", query, exclude)))
 
 
 # just for testing purpose

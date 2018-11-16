@@ -233,7 +233,7 @@ def test_get_uniclass_by_name_data_fail(url):
 # test getting a class by title
 
 
-def test_get_uniclass_by_id_title(url):
+def test_get_uniclass_by_title(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/uniclass/title/Software E')
     data = json.loads(response.content)
@@ -241,10 +241,11 @@ def test_get_uniclass_by_id_title(url):
     for uniclass in data:
         assert "Software E".lower() in uniclass["title"].lower()
 
+
 # test getting a class by wrong title
 
 
-def test_get_uniclass_by_id_title_fail(url):
+def test_get_uniclass_by_title_fail(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/uniclass/title/Fortnite')
     data = json.loads(response.content)
@@ -284,6 +285,28 @@ def test_get_uniclass_by_dept_data_fail(url):
     assert response.status_code == 200
     for uniclass in data:
         assert "apple".lower() not in uniclass["dept-name"].lower()
+
+# test getting all classes by dept id
+
+
+def test_get_all_uniclasses_by_dept(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/department/id/d83848')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    # make sure all the classes are from Computer Science dept
+    for uniclass in data:
+        assert "Computer Science".lower() in uniclass["dept-name"].lower()
+
+# get list of all depts
+
+
+def test_get_all_depts(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/department/all')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert len(data) > 1
 
 
 """
