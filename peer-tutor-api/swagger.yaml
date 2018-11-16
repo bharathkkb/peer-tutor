@@ -324,6 +324,146 @@ paths:
               $ref: '#/definitions/hello'
         400:
           description: bad input parameter
+  /meeting/id/{meetingID}:
+    get:
+      summary: returns a meeting
+      operationId: meeting_driver.getMeetingById
+      tags:
+      - "meeting"
+      description: |
+        Get a meeting by passing the meeting ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: meetingID
+        description: meeting obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: meeting obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        400:
+          description: bad input parameter
+  /meeting/peer/id/{peerID}:
+    get:
+      summary: returns a meeting
+      operationId: meeting_driver.getMeetingsByPeer
+      tags:
+      - "meeting"
+      description: |
+        Get a meeting by passing the peer ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: peerID
+        description: meeting obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: meeting obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        400:
+          description: bad input parameter
+  /meeting/tutor/id/{tutorID}:
+    get:
+      summary: returns a meeting
+      operationId: meeting_driver.getMeetingsByTutor
+      tags:
+      - "meeting"
+      description: |
+        Get a meeting by passing the tutor ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: tutorID
+        description: meeting obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: meeting obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        400:
+          description: bad input parameter
+  /meeting:
+    put:
+      summary: add a new meeting
+      operationId: meeting_driver.putMeeting
+      tags:
+      - "meeting"
+      description: |
+        Get list of meeting by passing the meeting id
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: meetingData
+        description: input meeting obj
+        required: true
+        schema:
+          $ref: '#/definitions/meeting'
+      responses:
+        200:
+          description: meeting was updated
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        201:
+          description: meeting was created
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        400:
+          description: bad input parameter
+  /meeting/student/id/{studentID}:
+    get:
+      summary: returns returns an array of meeting which match the student name
+      operationId: meeting_driver.getAllMeeting
+      tags:
+      - "meeting"
+      description: |
+        Get a meeting by passing the student ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: studentID
+        description: meeting obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: meeting obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        400:
+          description: bad input parameter
+
+
 
 definitions:
 
@@ -393,3 +533,16 @@ definitions:
       units:
         type: string
         example: '3'
+  meeting:
+    type: object
+    properties:
+      meeting_id:
+        type: string
+        example: 01
+      tutor:
+        type: string
+        example: 02
+      peer:
+        type: string
+        example: 03
+
