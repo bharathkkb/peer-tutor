@@ -81,7 +81,7 @@ pipeline {
                     sh"""
                     docker-compose -f compose-peer-tutor-prd-pkg.yml  up --d --build
                     sleep 10
-                    curl http://10.0.0.188:8080/login
+                    curl http://10.0.0.188:8081/login
                     docker-compose -f compose-peer-tutor-prd-pkg.yml  down
                     """
 
