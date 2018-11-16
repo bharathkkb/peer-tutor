@@ -354,6 +354,13 @@ def test_register_fail(url):
     # test if insert was success
     assert data["accountExists"] == True
 
+
+"""
+**************************************
+Meeting Driver Tests
+**************************************
+"""
+
 # check get meeting by peer id
 
 
