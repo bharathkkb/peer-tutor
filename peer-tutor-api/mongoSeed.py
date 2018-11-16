@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 
+
 def seedUsersMeetings():
     client = MongoClient('0.0.0.0:27017')
     dblist = client.list_database_names()
@@ -25,7 +26,7 @@ def seedUsersMeetings():
     meetingCol.insert_one(meeting1)
     meeting2 = {"meeting_id": "06", "peer_id": "00011", "tutor_id": "10001"}
     meeting3 = {"meeting_id": "02", "peer_id": "00011", "tutor_id": "10002"}
-    meeting4 = {"meeting_id": "05", "peer_id": "00012", "tutor_id": "10001"}
+    meeting4 = {"meeting_id": "05", "peer_id": "00012", "tutor_id": "00011"}
     meetingCol.insert_one(meeting2)
     meetingCol.insert_one(meeting3)
     meetingCol.insert_one(meeting4)
