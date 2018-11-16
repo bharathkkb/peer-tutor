@@ -12,7 +12,7 @@ export class ClassDataService {
   /**TODO: use real api
    * Get an observable for a list of class data
    */
-  getAll(userId: string) {
+  getAll() {
     return this.http.get<UniClass[]>("localhost:5000/test/api/uniclass/all");
   }
 
@@ -25,19 +25,19 @@ export class ClassDataService {
   }
 
   getByDeptName(deptName:string) {
-    return this.http.get<UniClass>(environment.apipath.getUniClassByDeptName + deptName);
+    return this.http.get<UniClass[]>(environment.apipath.getUniClassByDeptName + deptName);
   }
 
   getByInstuctorName(instructorName:string){
-    return this.http.get<UniClass>(environment.apipath.getUniClassByInstructName + instructorName);
+    return this.http.get<UniClass[]>(environment.apipath.getUniClassByInstructName + instructorName);
   }
 
   getByClassTitle(classTitle:string) {
-    return this.http.get<UniClass>(environment.apipath.getUniClassByClassTitle + classTitle);
+    return this.http.get<UniClass[]>(environment.apipath.getUniClassByClassTitle + classTitle);
   }
 
   getByClassName(className:string){
-    return this.http.get<UniClass>(environment.apipath.getUniClassByClassName + className);
+    return this.http.get<UniClass[]>(environment.apipath.getUniClassByClassName + className);
   }
 
 }

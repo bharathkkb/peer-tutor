@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UniClass } from '../_models';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,18 @@ export class LocalStorageService {
       return JSON.parse(sessionStorage.getItem(key));
     } catch (e) {
       console.error('Error getting data from sessionStorage', e);
+      return null;
+    }
+  }
+
+
+  getClass(refresh:boolean):UniClass[]{
+    
+
+    try {
+      return JSON.parse(localStorage.getItem('currentUser'))['enrolled_classes'];
+    } catch (e) {
+      console.error('Error getting enrolled_classes from localStorage', e);
       return null;
     }
   }

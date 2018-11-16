@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ClassDataService } from '../_services';
+import { ClassDataService, LocalStorageService } from '../_services';
 import { UniClass } from '../_models/uniclass';
 import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs/internal/Observable';
 
 /**
  * Sumary of a UniClass
@@ -27,13 +29,25 @@ class ClassSum {
 })
 export class HomePageComponent implements OnInit {
 
+  modalDeptInputCtrl = new FormControl();
+  filteredDeptName : Observable<any[]>;
+  modalClassInputCtrl = new FormControl();
+  filteredClassName : Observable<any[]>;
+
+
   classes$: ClassSum[];
 
-  constructor( private classDataService:ClassDataService, private router:Router ) { }
+  addClasses$: Observable<ClassSum[]>;
+
+  constructor( 
+    private classDataService:ClassDataService, 
+    private router:Router,
+    private localStorageService:LocalStorageService,
+  ) { }
 
   ngOnInit() {
-    let currentUserId:string = localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser"))["id"] : ""
-    this.classDataService.getAll(currentUserId).subscribe(
+    //TODO: change to get class by student id
+    this.classDataService.getAll().subscribe(
       classes => { 
         this.classes$ = classes.map((c:UniClass)=>{
           let result:ClassSum = {
@@ -59,8 +73,15 @@ export class HomePageComponent implements OnInit {
     )
   }
 
-  addClassButton(){
-    console.log("Add button clicked!")
+  private initHomePage(){
+    
+  }
+  
+
+
+
+  addClass(id: string){
+    console.log("Add button clicked!" + id)
   }
 
 }
