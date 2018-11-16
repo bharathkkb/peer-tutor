@@ -199,9 +199,20 @@ def test_get_uniclass_by_id_data(url):
 # test getting a class by name
 
 
-def test_get_uniclass_by_id_data(url):
+def test_get_uniclass_by_name_data(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/uniclass/name/CS 16')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    for uniclass in data:
+        assert "CS 16".lower() in uniclass["class-name"].lower()
+
+# test getting a class by name without spaces
+
+
+def test_get_uniclass_by_name_without_space_data(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/name/CS16')
     data = json.loads(response.content)
     assert response.status_code == 200
     for uniclass in data:
@@ -210,7 +221,7 @@ def test_get_uniclass_by_id_data(url):
 # test getting a class by wrong name
 
 
-def test_get_uniclass_by_id_data_fail(url):
+def test_get_uniclass_by_name_data_fail(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/uniclass/name/Bharath')
     data = json.loads(response.content)

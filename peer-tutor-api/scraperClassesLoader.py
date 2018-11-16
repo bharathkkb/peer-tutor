@@ -35,6 +35,8 @@ def seedUniClasses():
             uniClass["dept-name"] = deptName
             uniClass["dept-id"] = deptId
             uniClass["class-name"] = uni_class["class-name"]
+            uniClass["class-name-nospace"] = uni_class["class-name"].replace(
+                ' ', '')
             uniClass["class-code"] = uni_class["code"]
             uniClass["dates"] = uni_class["dates"]
             uniClass["days"] = uni_class["days"]
