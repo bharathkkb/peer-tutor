@@ -46,6 +46,7 @@ export class HomePageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
     //TODO: change to get class by student id
     this.classDataService.getAll().subscribe(
       classes => { 

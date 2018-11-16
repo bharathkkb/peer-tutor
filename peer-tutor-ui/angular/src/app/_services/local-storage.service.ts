@@ -1,12 +1,24 @@
 import { Injectable } from '@angular/core';
 import { UniClass } from '../_models';
+import { ClassDataService, UserService } from '.';
+
+/**TODO: global const for key */
+const CURRENT_USER = {
+  key: "currentUser",
+  enrolled_classes: {
+    key: "enrolled_classes"
+  }
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
 
-  constructor() { }
+  constructor(
+    private classDataService:ClassDataService,
+    private userService:UserService,
+  ) { }
 
   /**A general method to be used to save data into local storage
    * 
@@ -32,6 +44,14 @@ export class LocalStorageService {
       console.error('Error getting data from localStorage', e);
       return null;
     }
+  }
+
+  /**A general method to remove an item from local storage by key
+   * 
+   * @param key item to be removed
+   */
+  removeLocalStorage(key:string){
+    localStorage.removeItem(key);
   }
 
   /**A general method to be used to save data into session storage
@@ -61,15 +81,35 @@ export class LocalStorageService {
   }
 
 
+  /**A general method to remove an item from session storage by key
+   * 
+   * @param key item to be removed
+   */
+  removeSessionStorage(key:string){
+    sessionStorage.removeItem(key);
+  }
+
+
   getClass(refresh:boolean):UniClass[]{
-    
+    let result:UniClass[];
+
+    let currentUser:any;
 
     try {
-      return JSON.parse(localStorage.getItem('currentUser'))['enrolled_classes'];
+      currentUser = JSON.parse(localStorage.getItem(CURRENT_USER.key))
+      result = currentUser[CURRENT_USER.enrolled_classes.key];
     } catch (e) {
       console.error('Error getting enrolled_classes from localStorage', e);
-      return null;
+      result = null;
     }
+
+    if (!refresh && result && result.length >= 0) {
+      return result;
+    }
+    else {
+      
+    }
+
   }
 
 }
