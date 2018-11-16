@@ -119,7 +119,7 @@ pipeline {
             script {
             echo 'This build was successful.'
             if(GIT_BRANCH == 'dev'){
-            if( GIT_PREVIOUS_SUCCESSFUL_COMMIT & GIT_PREVIOUS_COMMIT & (GIT_PREVIOUS_SUCCESSFUL_COMMIT == GIT_PREVIOUS_COMMIT)){
+            if(GIT_PREVIOUS_SUCCESSFUL_COMMIT == GIT_PREVIOUS_COMMIT){
             echo 'Promoting to staging'
             withCredentials([usernamePassword(credentialsId: 'github-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh"""
