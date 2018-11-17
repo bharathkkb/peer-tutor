@@ -7,6 +7,8 @@ body {
     font-family: 'Montserrat', sans-serif;
     height: 100vh;
 }
+// https://github.com/angular/material2/issues/5540
+.cdk-overlay-container { z-index: 9999; }
 
 // .container {
 //     display: grid;
