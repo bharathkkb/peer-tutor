@@ -3,8 +3,7 @@ import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTT
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 
-import { fakeUsers } from '../../assets/fakedata/fakelogin';
-import { fakeclasses } from '../../assets/fakedata/fakeclasses';
+import { fakeUsers, fakeclasses, fakeDeptList } from '../../assets/fakedata';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -181,6 +180,24 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     // return 401 not authorised if token is null or invalid
                     return throwError({ status: 401, error: { message: 'Unauthorised3' } });
                 }
+            }
+
+            // get all Department
+            if (request.url.endsWith('/uniclass/department/') && request.method === 'GET') {
+                /* 
+                    // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
+                    if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+                        if(request.params.get("userId") === "1") {
+                            let cherrypickArr = [uniClasses[0], uniClasses[2], uniClasses[4]];
+                            return of(new HttpResponse({ status: 200, body: cherrypickArr }));
+                        }
+                        return of(new HttpResponse({ status: 200, body: uniClasses }));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        return throwError({ status: 401, error: { message: 'Unauthorised1-uniclass' } });
+                    }
+                */
+                return of(new HttpResponse({ status: 200, body: fakeDeptList }));
             }
 
             // pass through any requests not handled above
