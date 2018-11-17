@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { UniClass } from '../_models/uniclass';
+import { UniClass, UniClassSum } from '../_models/uniclass';
 import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,23 @@ export class ClassDataService {
    */
   getAllDept(){
     return this.http.get<any[]>(environment.apipath.getUniClassByDeptName)
+  }
+
+  toClassSum(c:UniClass):UniClassSum{
+    let result:UniClassSum = {
+      "_id": c._id,
+      "class-name": c["class-name"],
+      "start-dates": c.dates.substring(0, 8),
+      "end-dates": c.dates.substring(9, 17),
+      "days": c.days,
+      "instructor": c.instructor,
+      "location": c.location,
+      "start-time": c.time.substring(0, 4),
+      "end-time": c.time.substring(5, 10),
+      "title": c.title,
+      "section": c.section,
+    }
+    return result
   }
 
 }

@@ -1,6 +1,6 @@
 <!-- Class Content -->
 <div class="row mt-4">
-    <div *ngFor="let c of classes$" class="col-sm-12 col-md-6 col-lg-4">
+    <div *ngFor="let c of enrolledClasses$" class="col-sm-12 col-md-6 col-lg-4">
         <div class="card mb-4">
             <div class="card-body text-center">
                 <h4 class="card-title">{{c["class-name"]}}</h4>
@@ -27,7 +27,7 @@
             <div class="modal-body">
                 <form [formGroup]="modalForm">
                     <!-- Select Department -->
-                    <div class="form-group">
+                    <div class="form-group" *ngIf="deptOpt$.length>0">
                         <mat-form-field>
                             <input type="text" placeholder="Select the Department"
                                 matInput formControlName="deptName" id="dept-input"
@@ -38,10 +38,11 @@
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>
+                        <button mat-button (click)="deptClickNext()">next</button>
                     </div>
                     <!-- Select Class -->
-                    <div class="form-group">
-                        <mat-form-field>
+                    <div class="form-group" *ngIf="modalFlag.className">
+                        <mat-form-field *ngIf="classNameOpt$.length>0; else no_class_found">
                             <input type="text" placeholder="Select the Class" 
                                 matInput formControlName="className" id="class-input"
                                 [matAutocomplete]="classAuto">
@@ -51,6 +52,9 @@
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>
+                        <ng-template #no_class_found *ngIf="modalFlag.classNameNotFound">
+                            <small class="text-danger">Cannot find any class!</small>
+                        </ng-template>
                     </div>
                 </form>
                 <!-- Select Section -->

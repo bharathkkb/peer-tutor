@@ -1,29 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ClassDataService, LocalStorageService } from '../_services';
-import { UniClass } from '../_models/uniclass';
+import { UniClass, UniClassSum } from '../_models/uniclass';
 import { Router } from '@angular/router';
 import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/internal/Observable';
 import {map, startWith, filter} from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 
-
-/**
- * Sumary of a UniClass
- */
-class ClassSum {
-  "_id": string;
-  "class-name": string;
-  "start-dates": string;
-  "end-dates": string;
-  "days": string;
-  "instructor": string;
-  "location": string;
-  "start-time": string;
-  "end-time": string;
-  "title": string;
-  "section": string;
-}
 
 @Component({
   selector: 'app-home-page',
@@ -32,24 +15,34 @@ class ClassSum {
 })
 export class HomePageComponent implements OnInit {
 
-  modalForm: FormGroup;
-
+  
   /**Flags that control which elements inside modal to be shown */
   modalFlag = {
     deptName: false,
     className: false,
+    classNameNotFound: false,
     classSections: false,
   }
-
-  //Modal forms
-  // modalDeptInputCtrl = new FormControl();
+  
+  /**Modal Form, for adding class */
+  modalForm: FormGroup;
+  /**Filtered Department Name option for material autocomplete */
   filteredDeptName : Observable<any[]>;
-  // modalClassInputCtrl = new FormControl();
+  /**Filtered Class Name option for material autocomplete */
   filteredClassName : Observable<any[]>;
 
-  addClasses$: Observable<ClassSum[]>;
+  /**List of department name. Waiting to be filtered */
+  deptOpt$: string[] = [];
+  /**List of class name. Waiting to be filtered */
+  classNameOpt$: string[] = [];
 
-  classes$: ClassSum[];
+  /**Class Section waiting to be picked by the user */
+  addClasses$: Observable<UniClassSum[]>;
+
+
+  enrolledClasses$: UniClassSum[];
+
+  testSubscriptClass: Subscription;
 
   constructor( 
     private classDataService:ClassDataService, 
@@ -66,65 +59,49 @@ export class HomePageComponent implements OnInit {
       className: '',
     })
 
-    this.classDataService.getAllDept().subscribe(d=>{this.options=d; this.options2=d;})
-
     // this.filteredDeptName = this.modalDeptInputCtrl.valueChanges.pipe(
     //   // startWith(''),
     //   map(value => this._filter(value)),
     // )
-    this.filteredDeptName = this.classDataService.getAllDept();
+    this.filteredDeptName = this.modalForm.get('deptName').valueChanges.pipe(
+      startWith(''),
+      map(v=>this._filterDeptName(v))
+    )
 
-    this.filteredClassName = of(['1','2','3']); 
+    this.filteredClassName = this.modalForm.get('deptName').valueChanges.pipe(
+      startWith(''),
+      map(v=>this._filterClassName(v))
+    ) 
     // this.modalClassInputCtrl.valueChanges.pipe(
     //   startWith(''),
     //   map(value => this._filter2(value)),
     // )
   }
 
+  /**Render currently enrolled UniClass
+   */
   private enrolledClassInitSubRoutine(){
     //TODO: change to get class by student id
     this.classDataService.getAll().subscribe(
       classes => { 
-        this.classes$ = classes.map((c:UniClass)=>{
-          let result:ClassSum = {
-            "_id": c._id,
-            "class-name": c["class-name"],
-            "start-dates": c.dates.substring(0, 8),
-            "end-dates": c.dates.substring(9, 17),
-            "days": c.days,
-            "instructor": c.instructor,
-            "location": c.location,
-            "start-time": c.time.substring(0, 4),
-            "end-time": c.time.substring(5, 10),
-            "title": c.title,
-            "section": c.section,
-          }
-          return result
-        }); 
+        this.enrolledClasses$ = classes.map(this.classDataService.toClassSum); 
       },
       error=>{
         console.log(error)
-        // this.router.navigate(["/login"])
       }
     )
   }
 
-  getDepartmentList(){
 
-  }
-
-  options: string[]=[];
-  options2: string[]=['1','2','3',];
-
-  private _filter(value: string): string[] {
+  private _filterDeptName(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+    return this.deptOpt$.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
-  private _filter2(value: string): string[] {
+  private _filterClassName(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.options2.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+    return this.classNameOpt$.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
   
 
@@ -132,8 +109,30 @@ export class HomePageComponent implements OnInit {
 
   addClassButtonOnClick(){
     console.log("Add button clicked!")
+    this.classDataService.getAllDept().subscribe(d=>this.deptOpt$ = d)
+  }
+
+  deptClickNext(){
+    console.log("dept next clicked!")
+
+    // if (this.testSubscriptClass) this.testSubscriptClass.unsubscribe();
+
+    this.modalFlag.className=true;
+
+    let deptName:string = this.modalForm.get('deptName').value;
     
-    this.classDataService
+    this.classNameOpt$=[];
+
+    this.testSubscriptClass = this.classDataService.getByDeptName(deptName).subscribe(
+      (d:UniClass[])=>{
+        this.classNameOpt$=d.map((c:UniClass) => c["class-name"]); //subcribe to get UniClass[], but we only need ["class-name"] for classNameOpt$
+        console.log(this.classNameOpt$)
+      },
+      err => {
+        console.log(err);
+        this.modalFlag.classNameNotFound = true
+      }
+    )
   }
 
 }
