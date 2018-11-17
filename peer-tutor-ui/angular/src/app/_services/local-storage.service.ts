@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UniClass } from '../_models';
-import { ClassDataService, UserService } from '.';
+import { ClassDataService } from './class-data.service';
+import { UserService } from './user.service';
 
 /**TODO: global const for key */
 const CURRENT_USER = {

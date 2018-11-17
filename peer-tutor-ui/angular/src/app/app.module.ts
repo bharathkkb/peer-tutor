@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { PostsComponent } from './posts/posts.component';
-import { UsersComponent } from './users/users.component';
 import { DetailsComponent } from './details/details.component';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -24,7 +23,6 @@ import { NavbarComponent } from './navbar/navbar.component';
     AppComponent,
     SidebarComponent,
     PostsComponent,
-    UsersComponent,
     DetailsComponent,
     LoginComponent,
     RegisterComponent,

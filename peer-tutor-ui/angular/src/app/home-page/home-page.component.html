@@ -30,7 +30,7 @@
                     <div class="form-group">
                         <mat-form-field>
                             <input type="text" placeholder="Select the Department"
-                                matInput [formControl]="modalDeptInputCtrl" id="dept-input"
+                                matInput formControlName="deptName" id="dept-input"
                                 [matAutocomplete]="deptAuto">
                             <mat-autocomplete autoActiveFirstOption #deptAuto="matAutocomplete">
                                 <mat-option *ngFor="let optDept of filteredDeptName | async" [value]="optDept">
@@ -43,7 +43,7 @@
                     <div class="form-group">
                         <mat-form-field>
                             <input type="text" placeholder="Select the Class" 
-                                matInput [formControl]="modalClassInputCtrl" id="class-input"
+                                matInput formControlName="className" id="class-input"
                                 [matAutocomplete]="classAuto">
                             <mat-autocomplete autoActiveFirstOption #classAuto="matAutocomplete">
                                 <mat-option *ngFor="let optClass of filteredClassName | async" [value]="optClass">
