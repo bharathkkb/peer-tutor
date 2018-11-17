@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ClassDataService, LocalStorageService } from '../_services';
 import { UniClass } from '../_models/uniclass';
 import { Router } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/internal/Observable';
-import {map, startWith} from 'rxjs/operators';
+import {map, startWith, filter} from 'rxjs/operators';
+import { of } from 'rxjs';
+
 
 /**
  * Sumary of a UniClass
@@ -30,6 +32,8 @@ class ClassSum {
 })
 export class HomePageComponent implements OnInit {
 
+  modalForm: FormGroup;
+
   /**Flags that control which elements inside modal to be shown */
   modalFlag = {
     deptName: false,
@@ -37,28 +41,44 @@ export class HomePageComponent implements OnInit {
     classSections: false,
   }
 
-  modalDeptInputCtrl = new FormControl();
+  //Modal forms
+  // modalDeptInputCtrl = new FormControl();
   filteredDeptName : Observable<any[]>;
-  modalClassInputCtrl = new FormControl();
+  // modalClassInputCtrl = new FormControl();
   filteredClassName : Observable<any[]>;
 
-  classes$: ClassSum[];
-
   addClasses$: Observable<ClassSum[]>;
+
+  classes$: ClassSum[];
 
   constructor( 
     private classDataService:ClassDataService, 
     private router:Router,
     private localStorageService:LocalStorageService,
+    private formBuilder: FormBuilder,
   ) { }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.enrolledClassInitSubRoutine();
 
-    this.filteredDeptName = this.modalDeptInputCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value)),
-    )
+    this.modalForm = this.formBuilder.group({
+      deptName: '',
+      className: '',
+    })
+
+    this.classDataService.getAllDept().subscribe(d=>{this.options=d; this.options2=d;})
+
+    // this.filteredDeptName = this.modalDeptInputCtrl.valueChanges.pipe(
+    //   // startWith(''),
+    //   map(value => this._filter(value)),
+    // )
+    this.filteredDeptName = this.classDataService.getAllDept();
+
+    this.filteredClassName = of(['1','2','3']); 
+    // this.modalClassInputCtrl.valueChanges.pipe(
+    //   startWith(''),
+    //   map(value => this._filter2(value)),
+    // )
   }
 
   private enrolledClassInitSubRoutine(){
@@ -93,12 +113,18 @@ export class HomePageComponent implements OnInit {
 
   }
 
-  options: string[] = ['One', 'Two', 'Three'];
+  options: string[]=[];
+  options2: string[]=['1','2','3',];
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
     return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+  }
+  private _filter2(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options2.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
   
 
@@ -106,7 +132,8 @@ export class HomePageComponent implements OnInit {
 
   addClassButtonOnClick(){
     console.log("Add button clicked!")
-    this.modalFlag.deptName=true;
+    
+    this.classDataService
   }
 
 }

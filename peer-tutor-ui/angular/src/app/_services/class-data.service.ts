@@ -40,4 +40,11 @@ export class ClassDataService {
     return this.http.get<UniClass[]>(environment.apipath.getUniClassByClassName + className);
   }
 
+  /**
+   * TODO: Wait for integration
+   */
+  getAllDept(){
+    return this.http.get<any[]>(environment.apipath.getUniClassByDeptName)
+  }
+
 }
