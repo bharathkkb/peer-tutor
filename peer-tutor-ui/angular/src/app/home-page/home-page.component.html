@@ -27,31 +27,35 @@
             <div class="modal-body">
                 <form>
                     <!-- Select Department -->
-                    <mat-form-field>
-                        <input type="text" placeholder="Select the Department" aria-label="Number"
-                            matInput [formControl]="modalDeptInputCtrl" id="dept-input"
-                            [matAutocomplete]="auto">
-                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <mat-option *ngFor="let optDept of filteredDeptName | async" [value]="optDept">
-                                {{optDept}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
+                    <div class="form-group">
+                        <mat-form-field *ngIf="modalFlag.deptName">
+                            <input type="text" placeholder="Select the Department" aria-label="Number"
+                                matInput [formControl]="modalDeptInputCtrl" id="dept-input"
+                                [matAutocomplete]="auto">
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                <mat-option *ngFor="let optDept of filteredDeptName | async" [value]="optDept">
+                                    {{optDept}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
 
                     <!-- Select Class -->
-                    <mat-form-field>
-                        <input type="text" placeholder="Select the Class" 
-                            matInput [formControl]="modalClassInputCtrl" id="class-input"
-                            [matAutocomplete]="auto">
-                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <mat-option *ngFor="let optClass of filteredClassName | async" [value]="optClass['class-name']">
-                                {{optClass['class-name']}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
+                    <div class="form-group">
+                        <mat-form-field *ngIf="modalFlag.className">
+                            <input type="text" placeholder="Select the Class" 
+                                matInput [formControl]="modalClassInputCtrl" id="class-input"
+                                [matAutocomplete]="auto">
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                <mat-option *ngFor="let optClass of filteredClassName | async" [value]="optClass['class-name']">
+                                    {{optClass['class-name']}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
 
                     <!-- Select Section -->
-                    <div class="mt-4 row">
+                    <div class="mt-4 row" *ngIf="modalFlag.classSections">
                         <h5>Select the Section</h5>
                         <div *ngFor="let ac of addClasses$ | async" class="col-sm-12 col-md-6">
                             <div class="card mb-4" data-dismiss="modal" (click)="addClass(ac._id)">
@@ -79,7 +83,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <div class="btn-group">
+            <div class="btn-group" (click)="addClassButtonOnClick()">
                 <a class="btn btn-success btn-fab" data-toggle="modal" data-target="#myModal">
                     <i class="material-icons">
                         <svg style="width:24px;height:24px" viewBox="0 0 42 42">

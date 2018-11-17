@@ -30,6 +30,13 @@ class ClassSum {
 })
 export class HomePageComponent implements OnInit {
 
+  /**Flags that control which elements inside modal to be shown */
+  modalFlag = {
+    deptName: false,
+    className: false,
+    classSections: false,
+  }
+
   modalDeptInputCtrl = new FormControl();
   filteredDeptName : Observable<any[]>;
   modalClassInputCtrl = new FormControl();
@@ -46,7 +53,15 @@ export class HomePageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.enrolledClassInitSubRoutine();
 
+    this.filteredDeptName = this.modalDeptInputCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value)),
+    )
+  }
+
+  private enrolledClassInitSubRoutine(){
     //TODO: change to get class by student id
     this.classDataService.getAll().subscribe(
       classes => { 
@@ -72,11 +87,10 @@ export class HomePageComponent implements OnInit {
         // this.router.navigate(["/login"])
       }
     )
+  }
 
-    this.filteredDeptName = this.modalDeptInputCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value)),
-    )
+  getDepartmentList(){
+
   }
 
   options: string[] = ['One', 'Two', 'Three'];
@@ -90,8 +104,9 @@ export class HomePageComponent implements OnInit {
 
 
 
-  addClass(id: string){
-    console.log("Add button clicked!" + id)
+  addClassButtonOnClick(){
+    console.log("Add button clicked!")
+    this.modalFlag.deptName=true;
   }
 
 }
