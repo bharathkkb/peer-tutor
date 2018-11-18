@@ -34,7 +34,9 @@ def appThread():
 apiThread = threading.Thread(name='Web App', target=appThread)
 apiThread.setDaemon(True)
 apiThread.start()
-time.sleep(20)
+while not apiThread.is_alive():
+    pass
+time.sleep(5)
 """
 **************************************
 Swagger Infra Tests
@@ -51,7 +53,7 @@ def validateSwagger(url):
 
 def test_case_connection(url):
     testAPIBasePath = "{}/test/api".format(url)
-    response = requests.get(testAPIBasePath + '/hello')
+    response = requests.get(testAPIBasePath + '/hello', timeout=300)
     assert response.status_code == 200
 
 # pytest for validating swagger schema
