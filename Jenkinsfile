@@ -119,6 +119,14 @@ pipeline {
             junit 'peer-tutor-api/*.xml'
             archive "peer-tutor-ui/angular/src/reports/*.xml"
             junit 'peer-tutor-ui/angular/src/reports/*.xml'
+            publishHTML target: [
+            allowMissing: false,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: 'peer-tutor-api/htmlcov/',
+            reportFiles: 'index.html',
+            reportName: 'Code Coverage Report'
+          ]
 
         }
         success {
