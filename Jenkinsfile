@@ -10,6 +10,9 @@ pipeline {
               # test the services
               python3 --version
               cd peer-tutor-api
+              docker-compose -f MaaS-jenkins.yml up --d
+              sleep 10
+              docker ps -a
               python3 -m virtualenv env
               ls
               . env/bin/activate
@@ -26,9 +29,6 @@ pipeline {
 
                 docker -v && docker-compose -v
                 cd peer-tutor-api
-                docker-compose -f MaaS-jenkins.yml up --d
-                sleep 10
-                docker ps -a
                 cd ..
                 sleep 10
 
