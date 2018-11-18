@@ -1,5 +1,6 @@
+<!-- Class Content -->
 <div class="row mt-4">
-    <div *ngFor="let c of classes$" class="col-sm-12 col-md-4">
+    <div *ngFor="let c of enrolledClasses$" class="col-sm-12 col-md-6 col-lg-4">
         <div class="card mb-4">
             <div class="card-body text-center">
                 <h4 class="card-title">{{c["class-name"]}}</h4>
@@ -9,6 +10,95 @@
                 <p class="card-text">{{c.location}}</p>
                 <a routerLink="/class/{{c._id}}" class="card-link">Class Detail</a>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for selecting class -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add a Class You Are Enrolling</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="modalForm">
+                    <!-- Select Department -->
+                    <div class="form-group" *ngIf="deptOpt$.length>0">
+                        <mat-form-field>
+                            <input type="text" placeholder="Select the Department"
+                                matInput formControlName="deptName" id="dept-input"
+                                [matAutocomplete]="deptAuto">
+                            <mat-autocomplete autoActiveFirstOption #deptAuto="matAutocomplete">
+                                <mat-option *ngFor="let optDept of filteredDeptName | async" [value]="optDept">
+                                    {{optDept}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <button mat-button (click)="deptClickNext()">next</button>
+                    </div>
+                    <!-- Select Class -->
+                    <div class="form-group" *ngIf="modalFlag.className">
+                        <div class="success">
+                            <mat-form-field *ngIf="classNameOpt$.length>0; else no_class_found">
+                                <input type="text" placeholder="Select the Class" 
+                                    matInput formControlName="className" id="class-input"
+                                    [matAutocomplete]="classAuto">
+                                <mat-autocomplete autoActiveFirstOption #classAuto="matAutocomplete">
+                                    <mat-option *ngFor="let optClass of filteredClassName | async" [value]="optClass">
+                                        {{optClass}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            <button mat-button (click)="classClickSearch()">search</button>
+                        </div>
+                        <ng-template #no_class_found *ngIf="modalFlag.classNameNotFound">
+                            <small class="text-danger">Cannot find any class!</small>
+                        </ng-template>
+                    </div>
+                </form>
+                <!-- Select Section -->
+                <div class="mt-4 row" *ngIf="modalFlag.classSections">
+                    <div class="col-md-12">
+                        <h5>Select the Section</h5>
+                    </div>
+                    <div *ngFor="let ac of addClasses$ | async" class="col-sm-12 col-md-6">
+                        <div class="card mb-4" data-dismiss="modal" (click)="classSectionAdded(ac['class-code'])">
+                            <div class="card-body text-center">
+                                <h4 class="card-title">{{ac["class-name"]}}</h4>
+                                <h5 class="card-title">{{ac.title}}</h5>
+                                <p class="card-text">Instructor: {{ac.instructor}}</p>
+                                <p class="card-text">{{ac["start-time"]}}~{{ac["end-time"]}}, {{ac.days}}</p>
+                                <p class="card-text">{{ac.location}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Add Class Button -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group" (click)="addClassButtonOnClick()">
+                <a class="btn btn-success btn-fab" data-toggle="modal" data-target="#myModal">
+                    <i class="material-icons">
+                        <svg style="width:24px;height:24px" viewBox="0 0 42 42">
+                            <path fill="#ffffff" d="M37.059,16H26V4.941C26,2.224,23.718,0,21,0s-5,2.224-5,4.941V16H4.941C2.224,16,0,18.282,0,21s2.224,5,4.941,5H16v11.059
+                            C16,39.776,18.282,42,21,42s5-2.224,5-4.941V26h11.059C39.776,26,42,23.718,42,21S39.776,16,37.059,16z" />
+                        </svg>
+                    </i>
+                </a>
             </div>
         </div>
     </div>

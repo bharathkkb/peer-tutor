@@ -33,3 +33,21 @@ export class UniClass{
     "units": string;
     "section": string;
 }
+
+/**
+ * Sumary of a UniClass
+ */
+export class UniClassSum {
+    "_id": string;
+    "class-name": string;
+    "class-code": string;
+    "start-dates": string;
+    "end-dates": string;
+    "days": string;
+    "instructor": string;
+    "location": string;
+    "start-time": string;
+    "end-time": string;
+    "title": string;
+    "section": string;
+  }
