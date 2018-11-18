@@ -17,7 +17,7 @@ pipeline {
               ls
               . env/bin/activate
               pip install -r requirements.txt
-              pytest -q test_api.py --url=http://10.0.0.188:5000 --cov-config .coveragerc --cov=. --cov-report=xml
+              pytest -q test_api.py --url=http://10.0.0.188:5000 --cov-config .coveragerc --cov=. --cov-report=html
               """
           }
       }
@@ -114,6 +114,7 @@ pipeline {
            sh """
            docker volume prune -f
          """
+            archive "peer-tutor-api/htmlcov/*"
             archive "peer-tutor-api/*.xml"
             junit 'peer-tutor-api/*.xml'
             archive "peer-tutor-ui/angular/src/reports/*.xml"
