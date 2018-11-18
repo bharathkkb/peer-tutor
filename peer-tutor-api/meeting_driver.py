@@ -53,6 +53,10 @@ def putMeeting(meetingData):
     if getMeetingById(meetingData["meeting_id"]):
         updateMeeting = getMeetingById(meetingData["meeting_id"])
         # make new meeting with the same meeting id
+        if(meetingData["peer_id"] == meetingData["tutor_id"]):
+            meetingData["selfReserved"] = True
+        else:
+            meetingData["selfReserved"] = False
         newMeetingData = Meeting(
             updateMeeting["meeting_id"], meetingData["peer_id"], meetingData["tutor_id"])
         # update the meeting info in db
@@ -62,6 +66,10 @@ def putMeeting(meetingData):
         return getMeetingById(meetingData["meeting_id"]), 200
     else:
         # make a new meeting
+        if(meetingData["peer_id"] == meetingData["tutor_id"]):
+            meetingData["selfReserved"] = True
+        else:
+            meetingData["selfReserved"] = False
         m = Meeting(meetingData["meeting_id"],
                     meetingData["peer_id"], meetingData["tutor_id"])
         # add the new meeting to db
@@ -71,7 +79,9 @@ def putMeeting(meetingData):
 
 
 def getAllMeeting(studentID):
-    return getMeetingsByPeer(studentID) + getMeetingsByTutor(studentID)
+    fullMeeting = getMeetingsByPeer(studentID) + getMeetingsByTutor(studentID)
+    fullMeetingList = list({v['meeting_id']: v for v in fullMeeting}.values())
+    return fullMeetingList
 
 
 # just for testing purpose

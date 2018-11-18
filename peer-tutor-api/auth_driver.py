@@ -3,7 +3,7 @@ from mongoDriver import mongoDriver
 
 from bson import json_util, ObjectId
 from student import Student
-from student_driver import putStudent
+from student_driver import putStudent, getStudentById
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -23,7 +23,8 @@ def login(loginData):
     found = json.loads(json_util.dumps(mongoDriver().getFindOne(
         "peer-tutor-db", "student", findStudent)))
     if found:
-        return found, 200
+        student = getStudentById(found["student_id"])
+        return student, 200
     else:
         return json.loads(json.dumps({"authorization": False})), 404
 

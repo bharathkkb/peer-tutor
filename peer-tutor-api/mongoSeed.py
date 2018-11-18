@@ -16,9 +16,9 @@ def seedUsersMeetings():
     mydb = client["peer-tutor-db"]
     studentCol = mydb["student"]
     student1 = {"name": "Lifeng", "student_id": "02",
-                "username": "lifeng@gmail.com", "password": "pass123", "enrolled_classes": [24778, 30053, 29567]}
+                "username": "lifeng@gmail.com", "password": "pass123", "enrolled_classes": [24778, 30053, 29567], "meetings": [11, 13]}
     student2 = {"name": "Albert", "student_id": "04",
-                "username": "albert@gmail.com", "password": "pass123", "enrolled_classes": [28583, 22052, 30143]}
+                "username": "albert@gmail.com", "password": "pass123", "enrolled_classes": [28583, 22052, 30143], "meetings": [12]}
     student3 = {"name": "Sheldon", "student_id": "06",
                 "username": "sheldon@gmail.com", "password": "sheldon123", "enrolled_classes": [28020, 27382, 22674]}
     studentCol.insert_one(student1)
@@ -35,6 +35,16 @@ def seedUsersMeetings():
     meetingCol.insert_one(meeting2)
     meetingCol.insert_one(meeting3)
     meetingCol.insert_one(meeting4)
+
+    meeting5 = {"meeting_id": "11", "peer_id": "02",
+                "tutor_id": "04", "selfReserved": False}
+    meeting6 = {"meeting_id": "12", "peer_id": "04",
+                "tutor_id": "06", "selfReserved": False}
+    meeting7 = {"meeting_id": "13", "peer_id": "02",
+                "tutor_id": "02", "selfReserved": True}
+    meetingCol.insert_one(meeting5)
+    meetingCol.insert_one(meeting6)
+    meetingCol.insert_one(meeting7)
     print("Finished seeding students and meetings")
 
 

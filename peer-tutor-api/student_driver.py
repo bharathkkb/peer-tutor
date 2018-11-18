@@ -2,6 +2,7 @@ import json
 from mongoDriver import mongoDriver
 from bson import json_util, ObjectId
 from student import Student
+from meeting_driver import getMeetingById
 from uniclass_driver import getClassById
 
 
@@ -26,6 +27,20 @@ def unfurl_enrolled_classes(dbStudent):
         dbStudent["enrolled_classes"] = unfurl_enrolled_classes
     return dbStudent
 
+
+def unfurl_meetings(dbStudent):
+    if(dbStudent and dbStudent.get("meetings", False)):
+        unfurl_meetings = list()
+        for meeting in dbStudent["meetings"]:
+            try:
+                meetingData = getMeetingById(str(meeting))
+                unfurl_meetings.append(meetingData)
+            except Exception as ex:
+                print("Error retriving a meeting {}".format(enrolled_class))
+                continue
+        dbStudent["meetings"] = unfurl_meetings
+    return dbStudent
+
 # returns one student with that id
 
 
@@ -35,6 +50,7 @@ def getStudentById(studentID):
     dbStudent = mongoDriver().getFindOne("peer-tutor-db", "student", query)
     # unfurl each class object and discard old ids
     dbStudent = unfurl_enrolled_classes(dbStudent)
+    dbStudent = unfurl_meetings(dbStudent)
     return json.loads(json_util.dumps(dbStudent))
 
 
@@ -61,6 +77,7 @@ def getStudentsByName(studentName):
         unfurled_students.append(unfurl_enrolled_classes(student))
     return json.loads(json_util.dumps(unfurled_students))
 
+
 # inserts new student
 # if a student with the given id is found then the data is updated
 
@@ -72,7 +89,7 @@ def putStudent(studentData):
         updateStudent = getStudentById(studentData["student_id"])
         # make new student with the same student id
         newStudentData = Student(
-            updateStudent["student_id"], studentData["name"], studentData["username"], studentData["password"], studentData["enrolled_classes"])
+            updateStudent["student_id"], studentData["name"], studentData["username"], studentData["password"], studentData.get("enrolled_classes", list()), studentData.get("meetings", list()))
         # update the student info in db
         mongoDriver().updateDict("peer-tutor-db", "student",
                                  updateStudent, newStudentData.get_json())

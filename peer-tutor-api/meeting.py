@@ -4,13 +4,14 @@ class Meeting:
 
     """
 
-    def __init__(self, meeting_id, peer_id, tutor_id, time=None, meeting_title=None, location=None):
+    def __init__(self, meeting_id, peer_id, tutor_id, time=None, meeting_title=None, location=None, selfReserved=False):
         self.meeting_id = meeting_id
         self.peer_id = peer_id
         self.tutor_id = tutor_id
         self.time = time
         self.meeting_title = meeting_title
         self.location = location
+        self.selfReserved = selfReserved
         print("A Meeting object is created.")
 
     def __str__(self):
@@ -27,6 +28,7 @@ class Meeting:
         meeting_dict["meeting_id"] = self.meeting_id
         meeting_dict["peer_id"] = self.peer_id
         meeting_dict["tutor_id"] = self.tutor_id
+        meeting_dict["selfReserved"] = self.selfReserved
         # meeting_dict["peer"] = self.peer.get_json() # one meeting one peer
         # meeting_dict["tutor"] = self.tutor.get_json() # one meeting one tutor
         # meeting_dict["time"] = self.time.get_json()  # one meeting one timeBlock
@@ -104,3 +106,16 @@ class Meeting:
         """
         self.location = location
         return True
+
+    def set_selfReserved(self, selfReserved):
+        """
+        set selfReserved
+        """
+        self.selfReserved = selfReserved
+        return True
+
+    def get_selfReserved(self):
+        """
+        set selfReserved
+        """
+        return self.selfReserved
