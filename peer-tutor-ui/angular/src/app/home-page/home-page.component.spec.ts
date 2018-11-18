@@ -7,6 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule, MatInputModule, MatAutocompleteModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CURRENT_USER } from '../_services';
 
 describe('HomePageComponent', () => {
   let component: HomePageComponent;
@@ -26,7 +27,7 @@ describe('HomePageComponent', () => {
         MatInputModule,
         MatAutocompleteModule,
         BrowserAnimationsModule,
-      ]
+      ],
     })
     .compileComponents();
   }));

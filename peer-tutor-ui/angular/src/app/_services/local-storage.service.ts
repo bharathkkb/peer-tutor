@@ -146,7 +146,9 @@ export class LocalStorageService {
 
   refreshCurrentUser(){
     let currentUser = this.getLocalStorage(CURRENT_USER.key);
-    this.userService.getByStudentId(currentUser[CURRENT_USER.student_id.key]).subscribe(d=>this.setLocalStorage(CURRENT_USER.key, currentUser))
+    if (currentUser) {
+      this.userService.getByStudentId(currentUser[CURRENT_USER.student_id.key]).subscribe(d=>this.setLocalStorage(CURRENT_USER.key, currentUser))
+    }
   }
 
 }

@@ -82,25 +82,35 @@ export class HomePageComponent implements OnInit {
   private enrolledClassInitSubRoutine(){
     //TODO: make an LocalStorage Behaviour Subject
 
-    this.userService.getByStudentId(this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key]).pipe(
-      map(u=>u[CURRENT_USER.enrolled_classes.key])
-    ).subscribe(
-      (classes:UniClass[]) => { this.enrolledClasses$ = classes ? classes.map(this.classDataService.toClassSum) : []  },
-      err => {console.log(err)}
-    )
-    
+    if (this.localStorageService.getCurrentUser()){
+      this.userService.getByStudentId(this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key]).pipe(
+        map(u=>u[CURRENT_USER.enrolled_classes.key])
+      ).subscribe(
+        (classes:UniClass[]) => { this.enrolledClasses$ = classes ? classes.map(this.classDataService.toClassSum) : []  },
+        err => {console.log(err)}
+      )
+    }
+
     this.localStorageService.refreshCurrentUser();
 
   }
 
 
+  /**helper for department name auto complete
+   * @param value form input value
+   */
   private _filterDeptName(value: string): string[] {
     const filterValue = value.toLowerCase();
 
     return this.deptOpt$.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
+  /**helper for uniclass name auto complete
+   * @param value form input value
+   */
   private _filterClassName(value: string): string[] {
+    /**just a lower case of input value */
     const filterValue = value.toLowerCase();
+    /**List of currently enrolled class name */
     const enrolledClassesName = this.enrolledClasses$.map(c=>c["class-name"].toLowerCase()) //Exclude current enrolling class
 
     const untrimmedResult = this.classNameOpt$.filter(option => {
@@ -152,20 +162,55 @@ export class HomePageComponent implements OnInit {
   }
 
   classSectionAdded(classCode:string){
-    console.log(classCode)
     //Send PUT
-    let tempUser = this.localStorageService.getCurrentUser();
-    console.log (JSON.stringify(tempUser))
-    tempUser[CURRENT_USER.enrolled_classes.key] = tempUser[CURRENT_USER.enrolled_classes.key].map(c=>c["class-code"])
-    tempUser[CURRENT_USER.enrolled_classes.key].push(classCode)
-    console.log (JSON.stringify(tempUser))
-    this.userService.update(tempUser).subscribe(
-      d=>this.localStorageService.setCurrentUser(d)
+
+    //get student first...
+    this.userService.getByStudentId(this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key]).subscribe(
+      user=>{
+        let tempUser = user;
+        tempUser[CURRENT_USER.enrolled_classes.key] = tempUser[CURRENT_USER.enrolled_classes.key].map(c=>c["class-code"])
+        tempUser[CURRENT_USER.enrolled_classes.key].push(classCode)
+        this.userService.update(tempUser).subscribe(
+          d=>{
+            //then update
+            this.localStorageService.setCurrentUser(d);
+            this.enrolledClassInitSubRoutine();
+            //then clean modal
+            this.modalFlag.deptName=false;
+            this.modalFlag.classSections=false;
+            this.modalFlag.classNameNotFound=false;
+            this.modalFlag.className=false;
+            this.deptOpt$=[];
+            this.classNameOpt$=[];
+    
+            this.modalForm.get("deptName").setValue("");
+            this.modalForm.get("className").setValue("");
+          }
+        )
+      }
     )
 
+    // let tempUser = this.localStorageService.getCurrentUser();
+    // tempUser[CURRENT_USER.enrolled_classes.key] = tempUser[CURRENT_USER.enrolled_classes.key].map(c=>c["class-code"])
+    // tempUser[CURRENT_USER.enrolled_classes.key].push(classCode)
+    // this.userService.update(tempUser).subscribe(
+    //   d=>{
+    //     //then update
+    //     this.localStorageService.setCurrentUser(d);
+    //     this.enrolledClassInitSubRoutine();
+    //     //then clean modal
+    //     this.modalFlag.deptName=false;
+    //     this.modalFlag.classSections=false;
+    //     this.modalFlag.classNameNotFound=false;
+    //     this.modalFlag.className=false;
+    //     this.deptOpt$=[];
+    //     this.classNameOpt$=[];
+
+    //     this.modalForm.get("deptName").setValue("");
+    //     this.modalForm.get("className").setValue("");
+    //   }
+    // )
     
-    //Refresh main page rendering
-    this.enrolledClassInitSubRoutine();
   }
 
 }
