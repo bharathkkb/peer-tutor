@@ -10,6 +10,11 @@ import sys
 import os
 from mongoSeed import seedUsersMeetings
 from scraperClassesLoader import seedUniClasses
+from server import createApp, createAppThread
+import time
+import threading
+from requests.exceptions import ConnectionError
+
 """
 **************************************
 Setup
@@ -17,6 +22,35 @@ Setup
 """
 seedUsersMeetings()
 seedUniClasses()
+
+# make an app thread
+
+
+def appThread():
+    app = createAppThread()
+    app.run(host='0.0.0.0', port=5000, debug=False)
+
+
+apiThread = threading.Thread(name='Web App', target=appThread)
+apiThread.setDaemon(True)
+apiThread.start()
+while not apiThread.is_alive():
+    pass
+
+
+def test_thread(url):
+    maxTry = 100
+    currentTry = 0
+    while currentTry < maxTry:
+        currentTry += 1
+        try:
+            testAPIBasePath = "{}/test/api".format(url)
+            response = requests.get(testAPIBasePath + '/hello', timeout=300)
+            if(response.status_code == 200):
+                break
+        except ConnectionError as ex:
+            pass
+
 
 """
 **************************************
@@ -34,7 +68,7 @@ def validateSwagger(url):
 
 def test_case_connection(url):
     testAPIBasePath = "{}/test/api".format(url)
-    response = requests.get(testAPIBasePath + '/hello')
+    response = requests.get(testAPIBasePath + '/hello', timeout=300)
     assert response.status_code == 200
 
 # pytest for validating swagger schema
