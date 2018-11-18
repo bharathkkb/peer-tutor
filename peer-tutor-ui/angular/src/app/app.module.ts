@@ -7,7 +7,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { PostsComponent } from './posts/posts.component';
 import { DetailsComponent } from './details/details.component';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -17,17 +16,21 @@ import { fakeBackendProvider, JwtInterceptorProvider } from './_helpers';
 import { AuthGuard } from './_guards';
 import { HomePageComponent } from './home-page/home-page.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { SchedulerComponent } from './scheduler/scheduler.component';
+
+import { CalendarModule, DateAdapter } from 'angular-calendar'
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns'
 
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
-    PostsComponent,
     DetailsComponent,
     LoginComponent,
     RegisterComponent,
     HomePageComponent,
     NavbarComponent,
+    SchedulerComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,6 +44,10 @@ import { NavbarComponent } from './navbar/navbar.component';
     MatAutocompleteModule,
     MatButtonModule,
     BrowserAnimationsModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,  //Angular Calendar or Angular Material???!!!
+      useFactory: adapterFactory
+    })
   ],
   providers: [
     JwtInterceptorProvider,

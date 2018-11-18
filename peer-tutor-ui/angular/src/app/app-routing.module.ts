@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DetailsComponent } from './details/details.component';
-import { PostsComponent } from './posts/posts.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_guards';
 import { HomePageComponent } from './home-page/home-page.component';
 import { RegisterComponent } from './register';
+import { SchedulerComponent } from './scheduler/scheduler.component';
 
 const routes: Routes = [
   {
@@ -19,10 +19,6 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'posts',
-    component: PostsComponent
-  },
-  {
     path: 'login',
     component: LoginComponent
   },
@@ -33,6 +29,10 @@ const routes: Routes = [
   {
     path: 'logout',
     redirectTo: 'login'
+  },
+  {
+    path: 'schedule/:id',
+    component: SchedulerComponent,
   },
 ];
 
