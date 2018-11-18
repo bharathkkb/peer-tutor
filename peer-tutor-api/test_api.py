@@ -39,7 +39,8 @@ maxTry = 100
 currentTry = 0
 while currentTry < maxTry:
     currentTry += 1
-    testAPIBasePath = "{}/test/api".format("http://10.0.0.188:5000")
+    testAPIBasePath = "{}/test/api".format(
+        "http://10.0.0.188:5000", timeout=30)
     response = requests.get(testAPIBasePath + '/hello')
     if(response.status_code == 200):
         break
