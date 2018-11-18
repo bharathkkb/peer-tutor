@@ -8,6 +8,7 @@ import os
 def seedUniClasses():
     pp = pprint.PrettyPrinter(indent=4)
     SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
+    print(SECRET_KEY)
     if SECRET_KEY:
         client = MongoClient('mongodb:27017')
     else:
