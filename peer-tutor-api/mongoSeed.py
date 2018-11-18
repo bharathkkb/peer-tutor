@@ -1,8 +1,13 @@
 from pymongo import MongoClient
+import os
 
 
 def seedUsersMeetings():
-    client = MongoClient('0.0.0.0:27017')
+    SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
+    if SECRET_KEY:
+        client = MongoClient('mongodb:27017')
+    else:
+        client = MongoClient('localhost:27017')
     dblist = client.list_database_names()
     if "peer-tutor-db" in dblist:
         print("Dropping database to start fresh")

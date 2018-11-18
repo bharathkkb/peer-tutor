@@ -8,6 +8,7 @@ WORKDIR /peer-tutor/peer-tutor-api
 # add requirements
 #ADD ./peer-tutor-api/requirements.txt /usr/src/app/requirements.txt
 
+ENV AM_I_IN_A_DOCKER_CONTAINER = yes
 # install requirements
 RUN pip install -r requirements.txt
 

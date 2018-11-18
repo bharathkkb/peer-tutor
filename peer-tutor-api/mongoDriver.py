@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import sys
 from pymongo.errors import ConnectionFailure
 from bson import json_util, ObjectId
+import os
 
 
 class mongoDriver():
@@ -9,8 +10,11 @@ class mongoDriver():
         """ Connect to MongoDB """
         try:
             # if you are running loccally comment the line below with mongodb:27017 and uncomment localhost:27017
-            client = MongoClient('mongodb:27017')
-            # client = MongoClient('localhost:27017')
+            SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
+            if SECRET_KEY:
+                client = MongoClient('mongodb:27017')
+            else:
+                client = MongoClient('localhost:27017')
             # print("Connected successfully")
             return client
         except ConnectionFailure as e:

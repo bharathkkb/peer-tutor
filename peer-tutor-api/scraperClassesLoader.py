@@ -2,11 +2,16 @@ from pymongo import MongoClient
 import pprint
 import json
 import sys
+import os
 
 
 def seedUniClasses():
     pp = pprint.PrettyPrinter(indent=4)
-    client = MongoClient('0.0.0.0:27017')
+    SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
+    if SECRET_KEY:
+        client = MongoClient('mongodb:27017')
+    else:
+        client = MongoClient('localhost:27017')
     dblist = client.list_database_names()
     # if "peer-tutor-db" in dblist:
     #     print("The database exists. dropping")
@@ -18,6 +23,7 @@ def seedUniClasses():
     collist = mydb.list_collection_names()
     if "uni_class" in collist:
         print("The collection exists.")
+        return None
     uniClassCol = mydb["uni_class"]
 
     with open("../sjsu-scraper/data-allsections.json", "r") as read_file:
