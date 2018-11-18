@@ -34,7 +34,7 @@ def appThread():
 apiThread = threading.Thread(name='Web App', target=appThread)
 apiThread.setDaemon(True)
 apiThread.start()
-time.sleep(2)
+time.sleep(5)
 """
 **************************************
 Swagger Infra Tests
