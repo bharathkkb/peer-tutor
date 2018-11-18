@@ -92,6 +92,8 @@ def test_get_student_by_id_data(url):
     assert len(data["enrolled_classes"]) == 3
     for enrolled_class in data["enrolled_classes"]:
         assert str(enrolled_class["class-code"]) in ["24778", "30053", "29567"]
+    for meeting in data["meetings"]:
+        assert str(meeting["meeting_id"]) in ["11", "13"]
 
 # check get student by wrong id
 
@@ -354,6 +356,32 @@ def test_login(url):
     assert data["username"] == putStudent["username"]
     assert data["password"] == putStudent["password"]
 
+# test logging in with a student from mongo seed to ensure that all fields are returned
+
+
+def test_login_with_mongo_seed_student(url):
+    putStudent = dict()
+    putStudent["username"] = "lifeng@gmail.com"
+    putStudent["password"] = "pass123"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.post(
+        testAPIBasePath + '/login', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 200
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["student_id"] == "02"
+    assert data["name"] == "Lifeng"
+    assert data["username"] == putStudent["username"]
+    assert data["password"] == putStudent["password"]
+    assert len(data["enrolled_classes"]) == 3
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]
+                   ) in ["24778", "30053", "29567"]
+    assert len(data["meetings"]) == 2
+    for meeting in data["meetings"]:
+        assert str(meeting["meeting_id"]) in ["11", "13"]
+
 # test logging in with the wrong password for the above student
 
 
@@ -485,7 +513,7 @@ def test_get_meeting_by_student_id_data_fail(url):
 # check adding meeting
 def test_put_meeting_data(url):
     putMeeting = dict()
-    putMeeting["meeting_id"] = "11"
+    putMeeting["meeting_id"] = "111"
     putMeeting["tutor_id"] = "00011"
     putMeeting["peer_id"] = "10003"
     headers = {'content-type': 'application/json'}
@@ -503,7 +531,7 @@ def test_put_meeting_data(url):
 # check modifying the meeting added above
 def test_modify_meeting_data(url):
     putMeeting = dict()
-    putMeeting["meeting_id"] = "11"
+    putMeeting["meeting_id"] = "111"
     putMeeting["tutor_id"] = "00012"
     putMeeting["peer_id"] = "10004"
     headers = {'content-type': 'application/json'}
@@ -518,6 +546,145 @@ def test_modify_meeting_data(url):
     assert data["tutor_id"] == putMeeting["tutor_id"]
     assert data["peer_id"] == putMeeting["peer_id"]
 
+
+"""
+**************************************
+**************************************
+**************************************
+Multi Driver Tests
+**************************************
+**************************************
+**************************************
+"""
+"""
+**************************************
+Multi Driver Test #1
+Add 2 new students
+Schedule a meeting between the both of them
+**************************************
+"""
+putStudentA = dict()
+putStudentA["name"] = "StudentA"
+putStudentA["student_id"] = "12321"
+putStudentA["username"] = "studentA@gmail.com"
+putStudentA["password"] = "pass123"
+putStudentA["enrolled_classes"] = ["27264", "28363"]
+
+
+def test_multi_driver_test1_add_studentA(url):
+
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/student', data=json.dumps(putStudentA), headers=headers)
+    assert putResponse.status_code == 201
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["student_id"] == putStudentA["student_id"]
+    assert data["name"] == putStudentA["name"]
+    assert data["password"] == putStudentA["password"]
+    assert data["username"] == putStudentA["username"]
+    assert len(data["enrolled_classes"]) == len(
+        putStudentA["enrolled_classes"])
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]
+                   ) in putStudentA["enrolled_classes"]
+
+
+putStudentB = dict()
+putStudentB["name"] = "StudentB"
+putStudentB["student_id"] = "14435"
+putStudentB["username"] = "studentB@gmail.com"
+putStudentB["password"] = "pass1233"
+putStudentB["enrolled_classes"] = ["23381", "21808", "28013"]
+
+
+def test_multi_driver_test1_add_studentB(url):
+
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/student', data=json.dumps(putStudentB), headers=headers)
+    assert putResponse.status_code == 201
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["student_id"] == putStudentB["student_id"]
+    assert data["name"] == putStudentB["name"]
+    assert data["password"] == putStudentB["password"]
+    assert data["username"] == putStudentB["username"]
+    assert len(data["enrolled_classes"]) == len(
+        putStudentB["enrolled_classes"])
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]
+                   ) in putStudentB["enrolled_classes"]
+
+
+putMeeting = dict()
+putMeeting["meeting_id"] = "142411"
+putMeeting["tutor_id"] = putStudentA["student_id"]
+putMeeting["peer_id"] = putStudentB["student_id"]
+
+
+def test_put_meeting_data_btw_A_B(url):
+
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/meeting', data=json.dumps(putMeeting), headers=headers)
+    assert putResponse.status_code == 201
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["meeting_id"] == putMeeting["meeting_id"]
+    assert data["peer_id"] == putStudentB["student_id"]
+    assert data["tutor_id"] == putStudentA["student_id"]
+
+
+def test_get_meeting_data_btw_A_B(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(
+        testAPIBasePath + '/meeting/id/{}'.format(putMeeting["meeting_id"]))
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert data["meeting_id"] == putMeeting["meeting_id"]
+    assert data["peer_id"] == putStudentB["student_id"]
+    assert data["tutor_id"] == putStudentA["student_id"]
+
+
+def test_get_meeting_from_get_student_A(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(
+        testAPIBasePath + '/student/id/{}'.format(putStudentA["student_id"]))
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert data["student_id"] == putStudentA["student_id"]
+    assert data["name"] == putStudentA["name"]
+    assert len(data["enrolled_classes"]) == len(
+        putStudentA["enrolled_classes"])
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]
+                   ) in putStudentA["enrolled_classes"]
+    print(data)
+    assert len(data["meetings"]) == 1
+    for meeting in data["meetings"]:
+        assert str(meeting["meeting_id"]) in putMeeting["meeting_id"]
+
+
+def test_get_meeting_from_get_student_B(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(
+        testAPIBasePath + '/student/id/{}'.format(putStudentB["student_id"]))
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert data["student_id"] == putStudentB["student_id"]
+    assert data["name"] == putStudentB["name"]
+    assert len(data["enrolled_classes"]) == len(
+        putStudentB["enrolled_classes"])
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]
+                   ) in putStudentB["enrolled_classes"]
+    assert len(data["meetings"]) == 1
+    for meeting in data["meetings"]:
+        assert str(meeting["meeting_id"]) in putMeeting["meeting_id"]
 
 # this is for debugging individual tests
 # if __name__ == "__main__":

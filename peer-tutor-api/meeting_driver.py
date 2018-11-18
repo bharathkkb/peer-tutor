@@ -1,6 +1,5 @@
 import json
 from mongoDriver import mongoDriver
-
 from bson import json_util, ObjectId
 from meeting import Meeting
 
@@ -53,6 +52,10 @@ def putMeeting(meetingData):
     if getMeetingById(meetingData["meeting_id"]):
         updateMeeting = getMeetingById(meetingData["meeting_id"])
         # make new meeting with the same meeting id
+        if(meetingData["peer_id"] == meetingData["tutor_id"]):
+            meetingData["selfReserved"] = True
+        else:
+            meetingData["selfReserved"] = False
         newMeetingData = Meeting(
             updateMeeting["meeting_id"], meetingData["peer_id"], meetingData["tutor_id"])
         # update the meeting info in db
@@ -62,8 +65,28 @@ def putMeeting(meetingData):
         return getMeetingById(meetingData["meeting_id"]), 200
     else:
         # make a new meeting
+        if(meetingData["peer_id"] == meetingData["tutor_id"]):
+            meetingData["selfReserved"] = True
+        else:
+            meetingData["selfReserved"] = False
         m = Meeting(meetingData["meeting_id"],
                     meetingData["peer_id"], meetingData["tutor_id"])
+
+        # add meeting to the peer student object
+        from student_driver import getStudentById, putStudent
+        print(meetingData["peer_id"])
+
+        peer = getStudentById(
+            meetingData["peer_id"], unfurlMeetings=False, unfurlUniClass=False)
+        print(meetingData["peer_id"])
+        peer["meetings"].append(meetingData["meeting_id"])
+        putStudent(peer)
+
+        # add meeting to the tutor student object
+        tutor = getStudentById(
+            meetingData["tutor_id"], unfurlMeetings=False, unfurlUniClass=False)
+        tutor["meetings"].append(meetingData["meeting_id"])
+        putStudent(tutor)
         # add the new meeting to db
         mongoDriver().putDict("peer-tutor-db", "meetings", m.get_json())
         # return new meeting obj with 201 status code
@@ -71,7 +94,9 @@ def putMeeting(meetingData):
 
 
 def getAllMeeting(studentID):
-    return getMeetingsByPeer(studentID) + getMeetingsByTutor(studentID)
+    fullMeeting = getMeetingsByPeer(studentID) + getMeetingsByTutor(studentID)
+    fullMeetingList = list({v['meeting_id']: v for v in fullMeeting}.values())
+    return fullMeetingList
 
 
 # just for testing purpose
