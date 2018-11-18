@@ -20,8 +20,8 @@ import threading
 Setup
 **************************************
 """
-# seedUsersMeetings()
-# seedUniClasses()
+seedUsersMeetings()
+seedUniClasses()
 
 # make an app thread
 
@@ -34,21 +34,7 @@ def appThread():
 apiThread = threading.Thread(name='Web App', target=appThread)
 apiThread.setDaemon(True)
 apiThread.start()
-time.sleep(2)
-maxTry = 100
-currentTry = 0
-while currentTry < maxTry:
-    try:
-        currentTry += 1
-        testAPIBasePath = "{}/test/api".format(
-            "http://10.0.0.188:5000", timeout=30)
-        response = requests.get(testAPIBasePath + '/hello')
-        time.sleep(2)
-        if(response.status_code == 200):
-            break
-    except Exception as ex:
-        pass
-
+time.sleep(20)
 """
 **************************************
 Swagger Infra Tests
