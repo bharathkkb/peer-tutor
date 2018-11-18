@@ -40,6 +40,7 @@ export class UniClass{
 export class UniClassSum {
     "_id": string;
     "class-name": string;
+    "class-code": string;
     "start-dates": string;
     "end-dates": string;
     "days": string;

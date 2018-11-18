@@ -10,7 +10,7 @@ import { User } from '../_models';
 export class UserService {
     constructor(private http: HttpClient) { }
 
-    getById(id: string) {
+    getByStudentId(id: string) {
         return this.http.get(environment.apipath.getStudentById + id);
     }
 

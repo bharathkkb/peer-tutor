@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ClassDataService, LocalStorageService } from '../_services';
+import { ClassDataService, LocalStorageService, UserService, CURRENT_USER } from '../_services';
 import { UniClass, UniClassSum } from '../_models/uniclass';
 import { Router } from '@angular/router';
 import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
@@ -39,13 +39,12 @@ export class HomePageComponent implements OnInit {
   /**Class Section waiting to be picked by the user */
   addClasses$: Observable<UniClassSum[]>;
 
-
+  /**Currently enrolled class */
   enrolledClasses$: UniClassSum[];
 
-  testSubscriptClass: Subscription;
-
   constructor( 
-    private classDataService:ClassDataService, 
+    private classDataService:ClassDataService,
+    private userService:UserService,
     private router:Router,
     private localStorageService:LocalStorageService,
     private formBuilder: FormBuilder,
@@ -81,15 +80,17 @@ export class HomePageComponent implements OnInit {
   /**Render currently enrolled UniClass
    */
   private enrolledClassInitSubRoutine(){
-    //TODO: change to get class by student id
-    this.classDataService.getAll().subscribe(
-      classes => { 
-        this.enrolledClasses$ = classes.map(this.classDataService.toClassSum); 
-      },
-      error=>{
-        console.log(error)
-      }
+    //TODO: make an LocalStorage Behaviour Subject
+
+    this.userService.getByStudentId(this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key]).pipe(
+      map(u=>u[CURRENT_USER.enrolled_classes.key])
+    ).subscribe(
+      (classes:UniClass[]) => { this.enrolledClasses$ = classes ? classes.map(this.classDataService.toClassSum) : []  },
+      err => {console.log(err)}
     )
+    
+    this.localStorageService.refreshCurrentUser();
+
   }
 
 
@@ -100,20 +101,27 @@ export class HomePageComponent implements OnInit {
   }
   private _filterClassName(value: string): string[] {
     const filterValue = value.toLowerCase();
+    const enrolledClassesName = this.enrolledClasses$.map(c=>c["class-name"].toLowerCase()) //Exclude current enrolling class
 
-    return this.classNameOpt$.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+    const untrimmedResult = this.classNameOpt$.filter(option => {
+      return option.toLowerCase().indexOf(filterValue) === 0 //filterValue is beginning of substring of option
+        && !enrolledClassesName.includes(option.toLowerCase()) //exclude currently enrolled classes
+    });
+
+    return this._trimDuplicateInArray(untrimmedResult);
   }
-  
-
-
+  private _trimDuplicateInArray(arr: any[]):any[]{
+    let seen: {[x:string]:any} = {};
+    return arr.filter(function(item) {
+        return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    });
+  }
 
   addClassButtonOnClick(){
-    console.log("Add button clicked!")
     this.classDataService.getAllDept().subscribe(d=>this.deptOpt$ = d)
   }
 
   deptClickNext(){
-    console.log("dept next clicked!")
 
     // if (this.testSubscriptClass) this.testSubscriptClass.unsubscribe();
 
@@ -123,16 +131,41 @@ export class HomePageComponent implements OnInit {
     
     this.classNameOpt$=[];
 
-    this.testSubscriptClass = this.classDataService.getByDeptName(deptName).subscribe(
+    this.classDataService.getByDeptName(deptName).subscribe(
       (d:UniClass[])=>{
         this.classNameOpt$=d.map((c:UniClass) => c["class-name"]); //subcribe to get UniClass[], but we only need ["class-name"] for classNameOpt$
-        console.log(this.classNameOpt$)
       },
       err => {
         console.log(err);
         this.modalFlag.classNameNotFound = true
       }
     )
+  }
+
+  classClickSearch(){
+    this.modalFlag.classSections = true;
+    let pickedClassName:string = this.modalForm.get("className").value;
+
+    this.addClasses$ = this.classDataService.getByClassName(pickedClassName).pipe(
+      map(data=>data.map(c=>this.classDataService.toClassSum(c))) //map to a Observable<UniClassSum[]>
+    )
+  }
+
+  classSectionAdded(classCode:string){
+    console.log(classCode)
+    //Send PUT
+    let tempUser = this.localStorageService.getCurrentUser();
+    console.log (JSON.stringify(tempUser))
+    tempUser[CURRENT_USER.enrolled_classes.key] = tempUser[CURRENT_USER.enrolled_classes.key].map(c=>c["class-code"])
+    tempUser[CURRENT_USER.enrolled_classes.key].push(classCode)
+    console.log (JSON.stringify(tempUser))
+    this.userService.update(tempUser).subscribe(
+      d=>this.localStorageService.setCurrentUser(d)
+    )
+
+    
+    //Refresh main page rendering
+    this.enrolledClassInitSubRoutine();
   }
 
 }

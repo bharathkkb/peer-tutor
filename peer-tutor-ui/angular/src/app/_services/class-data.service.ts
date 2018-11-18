@@ -52,6 +52,7 @@ export class ClassDataService {
     let result:UniClassSum = {
       "_id": c._id,
       "class-name": c["class-name"],
+      "class-code": c["class-code"],
       "start-dates": c.dates.substring(0, 8),
       "end-dates": c.dates.substring(9, 17),
       "days": c.days,
