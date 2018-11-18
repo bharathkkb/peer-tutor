@@ -44,13 +44,15 @@ def unfurl_meetings(dbStudent):
 # returns one student with that id
 
 
-def getStudentById(studentID):
+def getStudentById(studentID, unfurlMeetings=True, unfurlUniClass=True):
     query = dict()
     query["student_id"] = studentID
     dbStudent = mongoDriver().getFindOne("peer-tutor-db", "student", query)
     # unfurl each class object and discard old ids
-    dbStudent = unfurl_enrolled_classes(dbStudent)
-    dbStudent = unfurl_meetings(dbStudent)
+    if unfurlUniClass:
+        dbStudent = unfurl_enrolled_classes(dbStudent)
+    if unfurlMeetings:
+        dbStudent = unfurl_meetings(dbStudent)
     return json.loads(json_util.dumps(dbStudent))
 
 
@@ -98,7 +100,7 @@ def putStudent(studentData):
     else:
         # make a new student
         s = Student(studentData["student_id"], studentData["name"],
-                    studentData["username"], studentData["password"], studentData.get("enrolled_classes", list()))
+                    studentData["username"], studentData["password"], studentData.get("enrolled_classes", list()), studentData.get("meetings", list()))
         print(s.get_json())
         # add the new student to db
         mongoDriver().putDict("peer-tutor-db", "student", s.get_json())

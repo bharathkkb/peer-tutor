@@ -1,6 +1,5 @@
 import json
 from mongoDriver import mongoDriver
-
 from bson import json_util, ObjectId
 from meeting import Meeting
 
@@ -72,6 +71,22 @@ def putMeeting(meetingData):
             meetingData["selfReserved"] = False
         m = Meeting(meetingData["meeting_id"],
                     meetingData["peer_id"], meetingData["tutor_id"])
+
+        # add meeting to the peer student object
+        from student_driver import getStudentById, putStudent
+        print(meetingData["peer_id"])
+
+        peer = getStudentById(
+            meetingData["peer_id"], unfurlMeetings=False, unfurlUniClass=False)
+        print(meetingData["peer_id"])
+        peer["meetings"].append(meetingData["meeting_id"])
+        putStudent(peer)
+
+        # add meeting to the tutor student object
+        tutor = getStudentById(
+            meetingData["tutor_id"], unfurlMeetings=False, unfurlUniClass=False)
+        tutor["meetings"].append(meetingData["meeting_id"])
+        putStudent(tutor)
         # add the new meeting to db
         mongoDriver().putDict("peer-tutor-db", "meetings", m.get_json())
         # return new meeting obj with 201 status code

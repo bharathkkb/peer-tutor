@@ -20,10 +20,25 @@ def seedUsersMeetings():
     student2 = {"name": "Albert", "student_id": "04",
                 "username": "albert@gmail.com", "password": "pass123", "enrolled_classes": [28583, 22052, 30143], "meetings": [12]}
     student3 = {"name": "Sheldon", "student_id": "06",
-                "username": "sheldon@gmail.com", "password": "sheldon123", "enrolled_classes": [28020, 27382, 22674]}
+                "username": "sheldon@gmail.com", "password": "sheldon123", "enrolled_classes": [28020, 27382, 22674], "meetings": []}
+    student4 = {"name": "TestStudent1", "student_id": "00011",
+                "username": "TestStudent1@gmail.com", "password": "test12", "enrolled_classes": [], "meetings": []}
+    student5 = {"name": "TestStudent2", "student_id": "00012",
+                "username": "TestStudent2@gmail.com", "password": "34test", "enrolled_classes": [], "meetings": []}
+    student6 = {"name": "TestStudent3", "student_id": "10002",
+                "username": "TestStudent3@gmail.com", "password": "blah1", "enrolled_classes": [], "meetings": []}
+    student7 = {"name": "TestStudent4", "student_id": "00011",
+                "username": "TestStudent4@gmail.com", "password": "blah2", "enrolled_classes": [], "meetings": []}
+    student8 = {"name": "TestStudent5", "student_id": "10003",
+                "username": "TestStudent5@gmail.com", "password": "blah3", "enrolled_classes": [], "meetings": []}
     studentCol.insert_one(student1)
     studentCol.insert_one(student2)
     studentCol.insert_one(student3)
+    studentCol.insert_one(student4)
+    studentCol.insert_one(student5)
+    studentCol.insert_one(student6)
+    studentCol.insert_one(student7)
+    studentCol.insert_one(student8)
 
     meetingCol = mydb["meetings"]
     # meeting1 = {"name": "meeting1", "meeting_id": "02"}
