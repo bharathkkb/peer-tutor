@@ -2,7 +2,23 @@ pipeline {
     agent any
 
     stages {
-        stage('Build and test backend') {
+      stage('Build and test backend locally') {
+          steps {
+              echo 'Building'
+              sh "ls"
+              sh """
+              # test the services
+              python3 --version
+              cd peer-tutor-api
+              python3 -m virtualenv env
+              ls
+              . env/bin/activate
+              pip install -r requirements.txt
+              pytest -q test_api.py --url=http://10.0.0.188:5000 --cov-config .coveragerc --cov=. --cov-report=xml
+              """
+          }
+      }
+        stage('Build and test backend in container') {
             steps {
                 echo 'Building'
                 sh "ls"

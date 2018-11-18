@@ -17,8 +17,20 @@ def parseArgs():
     return parser.parse_args()
 
 
-if __name__ == '__main__':
-    args = parseArgs()
+def createAppThread():
+
+    print("API V1")
+    seedUniClasses()
+    app = connexion.App(__name__, specification_dir='./',
+                        arguments={'is_testing': '/test'})
+    dbType = "testing_db"
+    CORS(app.app)
+    app.add_api('swagger.yaml')
+    return app
+
+
+def createApp(args):
+
     print("API V1")
     seedUniClasses()
     if(args.t is True):
@@ -31,6 +43,12 @@ if __name__ == '__main__':
         dbType = "prd_db"
     CORS(app.app)
     app.add_api('swagger.yaml')
+    return app
+
+
+if __name__ == '__main__':
+    args = parseArgs()
+    app = createApp(args)
     app.run(host='0.0.0.0', port=args.p, debug=True)
 
 

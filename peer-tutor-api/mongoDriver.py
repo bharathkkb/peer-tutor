@@ -63,7 +63,7 @@ class mongoDriver():
             db = conn[dbName]
             collection = db[collectionName]
 
-            return collection.insert(obj)
+            return collection.insert_one(obj)
 
         except ConnectionFailure as e:
             sys.stderr.write(

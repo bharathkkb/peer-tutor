@@ -10,6 +10,11 @@ import sys
 import os
 from mongoSeed import seedUsersMeetings
 from scraperClassesLoader import seedUniClasses
+from server import createApp, createAppThread
+import time
+import threading
+
+
 """
 **************************************
 Setup
@@ -18,6 +23,18 @@ Setup
 seedUsersMeetings()
 seedUniClasses()
 
+# make an app thread
+
+
+def appThread():
+    app = createAppThread()
+    app.run(host='0.0.0.0', port=5000, debug=False)
+
+
+apiThread = threading.Thread(name='Web App', target=appThread)
+apiThread.setDaemon(True)
+apiThread.start()
+time.sleep(2)
 """
 **************************************
 Swagger Infra Tests
