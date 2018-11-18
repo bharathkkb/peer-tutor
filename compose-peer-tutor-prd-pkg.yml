@@ -7,11 +7,15 @@ services:
       - 27017:27017
     command: mongod --smallfiles # --quiet
   peer-tutor-api:
+    environment:
+      - AM_I_IN_A_DOCKER_CONTAINER=1
     build:
       context: .
       dockerfile: ./Dockerfile-dev
+    container_name: peer-tutor-api
+    image: peer-tutor-api
     ports:
-      - "5000:5000"
+      - 5000:5000
   peer-tutor-ui:
     build:
       context: ./peer-tutor-ui/angular/

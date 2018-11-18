@@ -3,7 +3,7 @@ from flask import render_template
 import connexion
 from flask_cors import CORS
 import argparse
-
+from scraperClassesLoader import seedUniClasses
 global dbType
 app = Flask(__name__)
 
@@ -20,7 +20,7 @@ def parseArgs():
 if __name__ == '__main__':
     args = parseArgs()
     print("API V1")
-
+    seedUniClasses()
     if(args.t is True):
         app = connexion.App(__name__, specification_dir='./',
                             arguments={'is_testing': '/test'})

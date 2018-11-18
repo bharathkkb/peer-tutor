@@ -292,7 +292,7 @@ paths:
       parameters:
       - in: body
         name: registerData
-        description: info for making a new student
+        description: info for making a new student, enrolled_classes are optional
         required: true
         schema:
             $ref: '#/definitions/student'
@@ -318,12 +318,13 @@ paths:
           description: bad input parameter
   /student:
     put:
-      summary: add a new student
+      summary: add a new student, modify an existing student
       operationId: student_driver.putStudent
       tags:
         - "student"
       description: |
-        Get list of students by passing the student name
+        Add a new student or modify an existing student
+        If you are adding a new student please call via /register endpoint
       produces:
       - application/json
       parameters:
@@ -533,13 +534,18 @@ definitions:
     properties:
       student_id:
         type: string
-        example: 01
+        example: "01"
       name:
         type: string
         example: 'Bharath Baiju'
       username:
         type: string
         example: 'bharath@gmail.com'
+      enrolled_classes:
+        type: array
+        items:
+          type: string
+          example: "22271"
   uniclass:
     type: object
     properties:
