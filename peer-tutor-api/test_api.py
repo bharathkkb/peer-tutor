@@ -13,7 +13,7 @@ from scraperClassesLoader import seedUniClasses
 from server import createApp, createAppThread
 import time
 import threading
-
+from requests.exceptions import ConnectionError
 
 """
 **************************************
@@ -36,7 +36,22 @@ apiThread.setDaemon(True)
 apiThread.start()
 while not apiThread.is_alive():
     pass
-time.sleep(5)
+
+
+def test_thread(url):
+    maxTry = 100
+    currentTry = 0
+    while currentTry < maxTry:
+        currentTry += 1
+        try:
+            testAPIBasePath = "{}/test/api".format(url)
+            response = requests.get(testAPIBasePath + '/hello', timeout=300)
+            if(response.status_code == 200):
+                break
+        except ConnectionError as ex:
+            pass
+
+
 """
 **************************************
 Swagger Infra Tests
