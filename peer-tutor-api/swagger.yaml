@@ -585,6 +585,11 @@ definitions:
       units:
         type: string
         example: '3'
+      students:
+        type: array
+        items:
+          type: string
+          example: "22271"
   meeting:
     type: object
     properties:
@@ -597,6 +602,12 @@ definitions:
       peer_id:
         type: string
         example: "03"
+      start:
+        type: string
+        example: "11-1-2018 1:00 PM"
+      end:
+        type: string
+        example: "11-1-2018 2:00 PM"
   deptObj:
     type: object
     properties:

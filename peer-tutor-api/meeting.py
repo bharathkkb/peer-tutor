@@ -1,3 +1,6 @@
+from timeBlock import TimeBlock
+
+
 class Meeting:
     """
     Returns a ```Meeting``` object with the given id, peer, tutor, time, meetingTitle, Location
@@ -31,7 +34,10 @@ class Meeting:
         meeting_dict["selfReserved"] = self.selfReserved
         # meeting_dict["peer"] = self.peer.get_json() # one meeting one peer
         # meeting_dict["tutor"] = self.tutor.get_json() # one meeting one tutor
-        # meeting_dict["time"] = self.time.get_json()  # one meeting one timeBlock
+        # one meeting one timeBlock
+        timeB = self.time.get_json()
+        meeting_dict["start"] = timeB["start"]
+        meeting_dict["end"] = timeB["end"]
         # meeting_dict["meeting_title"] = self.meeting_title
         # meeting_dict["location"] = self.location
         return meeting_dict
