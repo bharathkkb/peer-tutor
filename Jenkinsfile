@@ -44,7 +44,7 @@ pipeline {
                 ls
                 . env/bin/activate
                 pip install -r requirements.txt
-                pytest -q test_api.py --url=http://10.0.0.188:5000 --junitxml=./junitResult.xml
+                pytest -q test_api.py --url=http://10.0.0.188:5000 --local=1 -vv -s --junitxml=./junitResult.xml
 
                 """
             }
