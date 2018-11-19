@@ -15,7 +15,7 @@ paths:
   /uniclass/id/{classId}:
     get:
       summary: returns an single university class with matching class code
-      operationId: uniclass_driver.getClassById
+      operationId: uniclass_driver.getClassByIdWrapperResponse
       tags:
         - "uniclass"
       description: |

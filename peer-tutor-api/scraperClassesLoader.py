@@ -53,6 +53,7 @@ def seedUniClasses():
             uniClass["title"] = uni_class["title"]
             uniClass["units"] = uni_class["units"]
             uniClass["section"] = uni_class["section"]
+            uniClass["students"] = list()
             insertUniClass = uniClassCol.insert_one(uniClass)
             # pp.pprint("{} was inserted".format(uniClass["class-name"]))
     print("Finished seeding university classes")

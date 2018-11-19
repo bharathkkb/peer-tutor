@@ -14,7 +14,6 @@ from server import createApp, createAppThread
 import time
 import threading
 from requests.exceptions import ConnectionError
-
 """
 **************************************
 Setup
@@ -31,11 +30,18 @@ def appThread():
     app.run(host='0.0.0.0', port=5000, debug=False)
 
 
-apiThread = threading.Thread(name='Web App', target=appThread)
-apiThread.setDaemon(True)
-apiThread.start()
-while not apiThread.is_alive():
-    pass
+def test_start_daemon_api_thread(local):
+    print(local)
+    if(local == "0"):
+        print("Starting daemon serve thread")
+        apiThread = threading.Thread(name='Web App', target=appThread)
+        apiThread.setDaemon(True)
+        apiThread.start()
+        while not apiThread.is_alive():
+            pass
+    else:
+        print(
+            "Not starting daemon serve thread, assuming server running in a seperate process")
 
 
 def test_thread(url):
@@ -62,6 +68,7 @@ Swagger Infra Tests
 def validateSwagger(url):
     testAPIBasePath = "{}/test/api".format(url)
     validate_spec_url(testAPIBasePath + '/swagger.json')
+
 
 # check connection to server
 
@@ -101,7 +108,6 @@ def test_hello_data(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/hello')
     data = json.loads(response.content)
-    print(data)
     assert data["hello"] == "hello"
 
 
@@ -159,7 +165,8 @@ def test_put_student_data(url):
     putStudent["student_id"] = "07"
     putStudent["username"] = "bharathupdate@gmail.com"
     putStudent["password"] = "pass123"
-    putStudent["enrolled_classes"] = ["22271", "28363", "22363", "21299"]
+    putStudent["enrolled_classes"] = [
+        "22271", "28363", "22363", "21299"]
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.put(
@@ -210,6 +217,32 @@ def test_modify_student_data(url):
 University Class Driver Tests
 **************************************
 """
+putStudent = dict()
+putStudent["name"] = "StudentUniClass"
+putStudent["student_id"] = "123437"
+putStudent["username"] = "StudentUniClass@gmail.com"
+putStudent["password"] = "pass123"
+putStudent["enrolled_classes"] = ["22271", "28363", "22363", "21299", "28013"]
+
+
+def test_put_student_data_for_testing_class(url):
+
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/student', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 201
+    data = json.loads(putResponse.content)
+    # test if insert was success
+
+    assert data["student_id"] == putStudent["student_id"]
+    assert data["name"] == putStudent["name"]
+    assert data["password"] == putStudent["password"]
+    assert data["username"] == putStudent["username"]
+    assert len(data["enrolled_classes"]) == 5
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]
+                   ) in putStudent["enrolled_classes"]
 
 # test getting a class by id
 
@@ -231,6 +264,8 @@ def test_get_uniclass_by_id_data(url):
     assert data["time"] == "1930 2045"
     assert data["title"] == "Software Engr"
     assert data["units"] == "3"
+    for student in data["students"]:
+        assert student["student_id"] == putStudent["student_id"]
 
 # test getting a class by name
 
@@ -697,7 +732,6 @@ def test_get_meeting_from_get_student_A(url):
     for enrolled_class in data["enrolled_classes"]:
         assert str(enrolled_class["class-code"]
                    ) in putStudentA["enrolled_classes"]
-    print(data)
     assert len(data["meetings"]) == 1
     for meeting in data["meetings"]:
         assert str(meeting["meeting_id"]) in putMeeting["meeting_id"]

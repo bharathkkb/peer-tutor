@@ -3,7 +3,7 @@ from mongoDriver import mongoDriver
 from bson import json_util, ObjectId
 from student import Student
 from meeting_driver import getMeetingById
-from uniclass_driver import getClassById
+from uniclass_driver import getClassById, putStudentInClass
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -80,15 +80,23 @@ def getStudentsByName(studentName):
     return json.loads(json_util.dumps(unfurled_students))
 
 
+def updateUniClassStudentData(studentData):
+    for uniclass in studentData["enrolled_classes"]:
+        putStudentInClass(studentData["student_id"], uniclass)
+
+
 # inserts new student
 # if a student with the given id is found then the data is updated
 
 
 def putStudent(studentData):
-
     # check if old student exists in db
     if getStudentById(studentData["student_id"]):
         updateStudent = getStudentById(studentData["student_id"])
+        if(updateStudent["student_id"] != studentData["student_id"]):
+            return json.loads(json.dumps({"error": "student id for the student to update doesnt match"})), 400
+        if(studentData.get("enrolled_classes", False) and len(studentData["enrolled_classes"]) > 0):
+            updateUniClassStudentData(studentData)
         # make new student with the same student id
         newStudentData = Student(
             updateStudent["student_id"], studentData["name"], studentData["username"], studentData["password"], studentData.get("enrolled_classes", list()), studentData.get("meetings", list()))
