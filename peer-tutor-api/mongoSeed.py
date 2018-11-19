@@ -10,7 +10,7 @@ def seedUsersMeetings():
         client = MongoClient('localhost:27017')
     dblist = client.list_database_names()
     if "peer-tutor-db" in dblist:
-        print("Dropping database to start fresh")
+        print(" Dropping database to start fresh")
         client.drop_database("peer-tutor-db")
     print("Starting to seed students and meetings")
     mydb = client["peer-tutor-db"]
