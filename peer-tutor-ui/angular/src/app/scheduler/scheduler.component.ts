@@ -17,20 +17,21 @@ const colors = {
   },
   yellow: {
     primary: '#e3bc08',
-    secondary: '#FDF1BA'
-  }
+    secondary: '#000000'
+  },
+  
 };
 
 //Place holder data
 let users = [
   {
     id: 0,
-    name: 'John smith',
+    name: 'Peer',
     color: colors.yellow
   },
   {
     id: 1,
-    name: 'Jane Doe',
+    name: 'Tutor',
     color: colors.blue
   }
 ];

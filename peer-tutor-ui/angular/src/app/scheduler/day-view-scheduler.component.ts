@@ -23,8 +23,8 @@ export class DayViewSchedulerCalendarUtils extends CalendarUtils {
         view.users.push(event.meta.user);
       }
     });
-    // sort the users by their names
-    view.users.sort((user1, user2) => user1.name.localeCompare(user2.name));
+    // sort the users by their id
+    view.users.sort((user1, user2) => user1.id-user2.id);
     view.events = view.events.map(dayViewEvent => {
       const index = view.users.indexOf(dayViewEvent.event.meta.user);
       dayViewEvent.left = index * EVENT_WIDTH; // change the column of the event
