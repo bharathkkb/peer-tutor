@@ -16,10 +16,13 @@ import { fakeBackendProvider, JwtInterceptorProvider } from './_helpers';
 import { AuthGuard } from './_guards';
 import { HomePageComponent } from './home-page/home-page.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { SchedulerComponent } from './scheduler/scheduler.component';
 
+//Scheduler thingy
+import { SchedulerComponent } from './scheduler/scheduler.component';
+import { DayViewSchedulerComponent } from './scheduler/day-view-scheduler.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar'
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns'
+
 
 @NgModule({
   declarations: [
@@ -30,7 +33,9 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns'
     RegisterComponent,
     HomePageComponent,
     NavbarComponent,
+    
     SchedulerComponent,
+    DayViewSchedulerComponent,
   ],
   imports: [
     BrowserModule,
