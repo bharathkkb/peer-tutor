@@ -1,8 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, NgZone } from '@angular/core';
 import { CalendarEvent, CalendarEventTimesChangedEvent } from 'angular-calendar';
+import { interval, Subject } from 'rxjs'
 
 import { addHours, startOfDay } from 'date-fns';
+import { ActivatedRoute } from '@angular/router';
 
+//Place holder colors
 const colors = {
   red: {
     primary: '#ad2121',
@@ -18,7 +21,8 @@ const colors = {
   }
 };
 
-const users = [
+//Place holder data
+let users = [
   {
     id: 0,
     name: 'John smith',
@@ -35,11 +39,11 @@ const users = [
   selector: 'app-scheduler',
   templateUrl: './scheduler.component.html',
   styleUrls: ['./scheduler.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchedulerComponent implements OnInit {
 
-  
+  scheduleId:string;
 
   viewDate = new Date();
 
@@ -101,9 +105,40 @@ export class SchedulerComponent implements OnInit {
     this.events = [...this.events];
   }
 
-  constructor() { }
+  constructor(
+    private activatedRoute:ActivatedRoute,
+    private zone:NgZone,
+  ) 
+  {
+    this.activatedRoute.params.subscribe(params => this.scheduleId = params['id'] );
+  }
+
+  refresh: Subject<any> = new Subject();
+
+  // clickToRefresh(){
+  //   this.refresh.next();
+  // }
 
   ngOnInit() {
+    // interval(3000).subscribe(v=>{
+    //   this.events.push({
+    //     title: 'Dynamic',
+    //     color: users[0].color,
+    //     start: addHours(startOfDay(new Date()), v),
+    //     meta: {
+    //       user: users[0]
+    //     },
+    //     resizable: {
+    //       beforeStart: false,
+    //       afterEnd: false
+    //     },
+    //     draggable: false
+    //   })
+    //   this.refresh.next();
+    //   console.log(JSON.stringify(this.events))
+    // })
   }
+
+
 
 }

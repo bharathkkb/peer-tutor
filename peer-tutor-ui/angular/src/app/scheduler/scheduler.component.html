@@ -25,6 +25,8 @@
   </div>
   <div class="col-md-6 text-right">
     <h3>{{ viewDate | calendarDate:('dayViewTitle') }}</h3>
+    {{scheduleId}}
+    <button (click)="clickToRefresh()">Refresh?</button>
   </div>
 </div>
 <br>
@@ -34,5 +36,6 @@
   [events]="events"
   (eventTimesChanged)="eventTimesChanged($event)"
   (userChanged)="userChanged($event)"
+  [refresh]="refresh"
 >
 </mwl-day-view-scheduler>
