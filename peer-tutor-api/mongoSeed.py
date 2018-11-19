@@ -42,21 +42,25 @@ def seedUsersMeetings():
 
     meetingCol = mydb["meetings"]
     # meeting1 = {"name": "meeting1", "meeting_id": "02"}
-    meeting1 = {"meeting_id": "01", "peer_id": "00012", "tutor_id": "10002"}
+    meeting1 = {"meeting_id": "01", "peer_id": "00012", "tutor_id": "10002",
+                "start": "11-18-2018 6:00 PM", "end": "11-18-2018 7:00 PM"}
     meetingCol.insert_one(meeting1)
-    meeting2 = {"meeting_id": "06", "peer_id": "00011", "tutor_id": "10001"}
-    meeting3 = {"meeting_id": "02", "peer_id": "00011", "tutor_id": "10002"}
-    meeting4 = {"meeting_id": "05", "peer_id": "00012", "tutor_id": "00011"}
+    meeting2 = {"meeting_id": "06", "peer_id": "00011", "tutor_id": "10001",
+                "start": "11-19-2018 6:00 PM", "end": "11-19-2018 7:00 PM"}
+    meeting3 = {"meeting_id": "02", "peer_id": "00011", "tutor_id": "10002",
+                "start": "11-20-2018 6:00 PM", "end": "11-20-2018 7:00 PM"}
+    meeting4 = {"meeting_id": "05", "peer_id": "00012", "tutor_id": "00011",
+                "start": "11-21-2018 6:00 PM", "end": "11-21-2018 7:00 PM"}
     meetingCol.insert_one(meeting2)
     meetingCol.insert_one(meeting3)
     meetingCol.insert_one(meeting4)
 
     meeting5 = {"meeting_id": "11", "peer_id": "02",
-                "tutor_id": "04", "selfReserved": False}
+                "tutor_id": "04", "selfReserved": False, "start": "11-18-2018 5:00 AM", "end": "11-18-2018 7:00 PM"}
     meeting6 = {"meeting_id": "12", "peer_id": "04",
-                "tutor_id": "06", "selfReserved": False}
+                "tutor_id": "06", "selfReserved": False, "start": "11-1-2018 6:00 PM", "end": "11-1-2018 7:00 PM"}
     meeting7 = {"meeting_id": "13", "peer_id": "02",
-                "tutor_id": "02", "selfReserved": True}
+                "tutor_id": "02", "selfReserved": True, "start": "11-13-2018 6:00 PM", "end": "11-13-2018 7:00 PM"}
     meetingCol.insert_one(meeting5)
     meetingCol.insert_one(meeting6)
     meetingCol.insert_one(meeting7)

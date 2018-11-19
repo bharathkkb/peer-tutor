@@ -2,6 +2,7 @@ import json
 from mongoDriver import mongoDriver
 from bson import json_util, ObjectId
 from meeting import Meeting
+from timeBlock import TimeBlock
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -56,8 +57,13 @@ def putMeeting(meetingData):
             meetingData["selfReserved"] = True
         else:
             meetingData["selfReserved"] = False
+
+        if(not (meetingData.get("start", False) and meetingData.get("end", False))):
+            return json.loads(json.dumps({"error": "Either start or end is not defined"})), 400
+
+        timeB = TimeBlock(meetingData["start"], meetingData["end"])
         newMeetingData = Meeting(
-            updateMeeting["meeting_id"], meetingData["peer_id"], meetingData["tutor_id"])
+            updateMeeting["meeting_id"], meetingData["peer_id"], meetingData["tutor_id"], time=timeB)
         # update the meeting info in db
         mongoDriver().updateDict("peer-tutor-db", "meetings",
                                  updateMeeting, newMeetingData.get_json())
@@ -69,13 +75,17 @@ def putMeeting(meetingData):
             meetingData["selfReserved"] = True
         else:
             meetingData["selfReserved"] = False
+
+        if(not (meetingData.get("start", False) and meetingData.get("end", False))):
+            return json.loads(json.dumps({"error": "Either start or end is not defined"})), 400
+        timeB = TimeBlock(meetingData["start"], meetingData["end"])
+
         m = Meeting(meetingData["meeting_id"],
-                    meetingData["peer_id"], meetingData["tutor_id"])
+                    meetingData["peer_id"], meetingData["tutor_id"], time=timeB)
 
         # add meeting to the peer student object
-        from student_driver import getStudentById, putStudent
-        print(meetingData["peer_id"])
 
+        from student_driver import getStudentById, putStudent
         peer = getStudentById(
             meetingData["peer_id"], unfurlMeetings=False, unfurlUniClass=False)
         print(meetingData["peer_id"])
@@ -87,6 +97,7 @@ def putMeeting(meetingData):
             meetingData["tutor_id"], unfurlMeetings=False, unfurlUniClass=False)
         tutor["meetings"].append(meetingData["meeting_id"])
         putStudent(tutor)
+
         # add the new meeting to db
         mongoDriver().putDict("peer-tutor-db", "meetings", m.get_json())
         # return new meeting obj with 201 status code

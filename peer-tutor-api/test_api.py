@@ -585,6 +585,8 @@ def test_put_meeting_data(url):
     putMeeting["meeting_id"] = "111"
     putMeeting["tutor_id"] = "00011"
     putMeeting["peer_id"] = "10003"
+    putMeeting["start"] = "11-18-2018 11:00 AM"
+    putMeeting["end"] = "11-18-2018 10:00 AM"
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.put(
@@ -595,6 +597,37 @@ def test_put_meeting_data(url):
     assert data["meeting_id"] == putMeeting["meeting_id"]
     assert data["peer_id"] == putMeeting["peer_id"]
     assert data["tutor_id"] == putMeeting["tutor_id"]
+    assert data["start"] == putMeeting["start"]
+    assert data["end"] == putMeeting["end"]
+
+# check adding meeting without meeting start
+
+
+def test_put_meeting_data_no_start_fail(url):
+    putMeeting = dict()
+    putMeeting["meeting_id"] = "11135345646"
+    putMeeting["tutor_id"] = "00011"
+    putMeeting["peer_id"] = "10003"
+    putMeeting["end"] = "11-18-2018 10:00 AM"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/meeting', data=json.dumps(putMeeting), headers=headers)
+    assert putResponse.status_code == 400
+
+# check adding meeting without meeting start or end
+
+
+def test_put_meeting_data_no_start_end_fail(url):
+    putMeeting = dict()
+    putMeeting["meeting_id"] = "1113242424"
+    putMeeting["tutor_id"] = "00011"
+    putMeeting["peer_id"] = "10003"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/meeting', data=json.dumps(putMeeting), headers=headers)
+    assert putResponse.status_code == 400
 
 
 # check modifying the meeting added above
@@ -603,6 +636,8 @@ def test_modify_meeting_data(url):
     putMeeting["meeting_id"] = "111"
     putMeeting["tutor_id"] = "00012"
     putMeeting["peer_id"] = "10004"
+    putMeeting["start"] = "11-11-2018 1:00 PM"
+    putMeeting["end"] = "11-11-2018 2:00 PM"
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.put(
@@ -614,6 +649,8 @@ def test_modify_meeting_data(url):
     assert data["meeting_id"] == putMeeting["meeting_id"]
     assert data["tutor_id"] == putMeeting["tutor_id"]
     assert data["peer_id"] == putMeeting["peer_id"]
+    assert data["start"] == putMeeting["start"]
+    assert data["end"] == putMeeting["end"]
 
 
 """
@@ -692,6 +729,8 @@ putMeeting = dict()
 putMeeting["meeting_id"] = "142411"
 putMeeting["tutor_id"] = putStudentA["student_id"]
 putMeeting["peer_id"] = putStudentB["student_id"]
+putMeeting["start"] = "11-1-2018 1:00 PM"
+putMeeting["end"] = "11-1-2018 2:00 PM"
 
 
 def test_put_meeting_data_btw_A_B(url):
@@ -706,6 +745,8 @@ def test_put_meeting_data_btw_A_B(url):
     assert data["meeting_id"] == putMeeting["meeting_id"]
     assert data["peer_id"] == putStudentB["student_id"]
     assert data["tutor_id"] == putStudentA["student_id"]
+    assert data["start"] == putMeeting["start"]
+    assert data["end"] == putMeeting["end"]
 
 
 def test_get_meeting_data_btw_A_B(url):
@@ -717,6 +758,8 @@ def test_get_meeting_data_btw_A_B(url):
     assert data["meeting_id"] == putMeeting["meeting_id"]
     assert data["peer_id"] == putStudentB["student_id"]
     assert data["tutor_id"] == putStudentA["student_id"]
+    assert data["start"] == putMeeting["start"]
+    assert data["end"] == putMeeting["end"]
 
 
 def test_get_meeting_from_get_student_A(url):
