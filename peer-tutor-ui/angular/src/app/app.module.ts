@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatButtonModule } from '@angular/material';
+import { MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -16,10 +16,14 @@ import { fakeBackendProvider, JwtInterceptorProvider } from './_helpers';
 import { AuthGuard } from './_guards';
 import { HomePageComponent } from './home-page/home-page.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { SchedulerComponent } from './scheduler/scheduler.component';
 
+//Scheduler thingy
+import { SchedulerComponent } from './scheduler/scheduler.component';
+import { DayViewSchedulerComponent } from './scheduler/day-view-scheduler.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar'
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns'
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { AddScheduleModalComponent } from './scheduler/add-schedule-modal/add-schedule-modal.component';
+
 
 @NgModule({
   declarations: [
@@ -30,7 +34,13 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns'
     RegisterComponent,
     HomePageComponent,
     NavbarComponent,
+    
     SchedulerComponent,
+    DayViewSchedulerComponent,
+    AddScheduleModalComponent,
+  ],
+  entryComponents: [
+    AddScheduleModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +57,8 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns'
     CalendarModule.forRoot({
       provide: DateAdapter,  //Angular Calendar or Angular Material???!!!
       useFactory: adapterFactory
-    })
+    }),
+    MatDialogModule,
   ],
   providers: [
     JwtInterceptorProvider,

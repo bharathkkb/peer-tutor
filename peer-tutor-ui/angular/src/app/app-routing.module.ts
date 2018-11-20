@@ -31,7 +31,7 @@ const routes: Routes = [
     redirectTo: 'login'
   },
   {
-    path: 'schedule/:id',
+    path: 'schedule/:studentid',
     component: SchedulerComponent,
   },
 ];
