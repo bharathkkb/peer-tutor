@@ -1,9 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, NgZone } from '@angular/core';
-import { CalendarEvent, CalendarEventTimesChangedEvent } from 'angular-calendar';
+import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarEventAction } from 'angular-calendar';
 import { interval, Subject } from 'rxjs'
 
-import { addHours, startOfDay } from 'date-fns';
+import { addHours, startOfDay, addDays } from 'date-fns';
 import { ActivatedRoute } from '@angular/router';
+import { DayViewHourSegment } from 'calendar-utils';
 
 //Place holder colors
 const colors = {
@@ -19,6 +20,10 @@ const colors = {
     primary: '#e3bc08',
     secondary: '#000000'
   },
+  green: {
+    primary: '#009933',
+    secondary: '#99ff99'
+  },
   
 };
 
@@ -26,12 +31,12 @@ const colors = {
 let users = [
   {
     id: 0,
-    name: 'Peer',
-    color: colors.yellow
+    name: 'Tutor',
+    color: colors.red
   },
   {
     id: 1,
-    name: 'Tutor',
+    name: 'Peer',
     color: colors.blue
   }
 ];
@@ -48,6 +53,19 @@ export class SchedulerComponent implements OnInit {
 
   viewDate = new Date();
 
+  actions: CalendarEventAction[] = [
+    {
+      label: '<i class="fa fa-fw fa-times"></i>',
+      onClick: ({ event }: { event: CalendarEvent }): void => {
+        this.handleEvent('Deleted', event);
+      }
+    }
+  ];
+  handleEvent(action: string, event: CalendarEvent): void {
+    console.log (action+": "+JSON.stringify(event));
+  }
+
+  //Place holder event
   events: CalendarEvent[] = [
     {
       title: 'An event',
@@ -76,9 +94,9 @@ export class SchedulerComponent implements OnInit {
       draggable: true
     },
     {
-      title: 'An 3rd event',
+      title: 'An event',
       color: users[0].color,
-      start: addHours(startOfDay(new Date()), 7),
+      start: addDays(addHours(startOfDay(new Date()), 5),1),
       meta: {
         user: users[0]
       },
@@ -87,8 +105,39 @@ export class SchedulerComponent implements OnInit {
         afterEnd: true
       },
       draggable: true
+    },
+    {
+      title: 'Another event',
+      color: users[1].color,
+      start: addDays(addHours(startOfDay(new Date()), 2),-1),
+      meta: {
+        user: users[1]
+      },
+      resizable: {
+        beforeStart: true,
+        afterEnd: true
+      },
+      draggable: true
+    },
+    {
+      title: 'An 3rd event',
+      color: colors.green,
+      start: addHours(startOfDay(new Date()), 7),
+      meta: {
+        user: users[0]
+      },
+      resizable: {
+        beforeStart: true,
+        afterEnd: true
+      },
+      draggable: true,
+      actions: this.actions,
     }
   ];
+
+
+  
+
 
   eventTimesChanged({
     event,
@@ -140,6 +189,12 @@ export class SchedulerComponent implements OnInit {
     // })
   }
 
-
+  startDragToCreate(segment: DayViewHourSegment,
+    mouseDownEvent: MouseEvent,
+    segmentElement: HTMLElement){
+    //https://mattlewis92.github.io/angular-calendar/#/drag-to-create-events
+    console.log ("CLICK!!")
+    console.log(JSON.stringify(segment))
+  }
 
 }
