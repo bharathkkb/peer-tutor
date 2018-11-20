@@ -130,6 +130,14 @@ pipeline {
             reportFiles: 'index.html',
             reportName: 'Code Coverage Report'
           ]
+          publishHTML target: [
+          allowMissing: false,
+          alwaysLinkToLastBuild: false,
+          keepAll: true,
+          reportDir: 'peer-tutor-ui/angular/e2e-test-results/e2e-html-result',
+          reportFiles: 'index.html',
+          reportName: 'UI BB E2E Report'
+        ]
 
         }
         success {
