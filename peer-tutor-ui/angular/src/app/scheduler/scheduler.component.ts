@@ -5,6 +5,8 @@ import { interval, Subject } from 'rxjs'
 import { addHours, startOfDay, addDays } from 'date-fns';
 import { ActivatedRoute } from '@angular/router';
 import { DayViewHourSegment } from 'calendar-utils';
+import { MatDialog } from '@angular/material';
+import { AddScheduleModalComponent } from './add-schedule-modal/add-schedule-modal.component';
 
 //Place holder colors
 const colors = {
@@ -135,10 +137,6 @@ export class SchedulerComponent implements OnInit {
     }
   ];
 
-
-  
-
-
   eventTimesChanged({
     event,
     newStart,
@@ -158,9 +156,18 @@ export class SchedulerComponent implements OnInit {
   constructor(
     private activatedRoute:ActivatedRoute,
     private zone:NgZone,
+    public matDialog: MatDialog,
   ) 
   {
     this.activatedRoute.params.subscribe(params => this.scheduleId = params['id'] );
+  }
+
+  openDialog(): void {
+    const dialogRef = this.matDialog.open(AddScheduleModalComponent, {
+      width: '250px',
+      data: {name: "ASDF_NAME", animal: "QWERT_NAME"}
+    });
+
   }
 
   refresh: Subject<any> = new Subject();

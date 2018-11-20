@@ -25,8 +25,7 @@
   </div>
   <div class="col-md-6 text-right">
     <h3>{{ viewDate | calendarDate:('dayViewTitle') }}</h3>
-    {{scheduleId}}
-    <button (click)="clickToRefresh()">Refresh?</button>
+    <button (click)="openDialog()">{{scheduleId}}</button>
   </div>
 </div>
 <br>
