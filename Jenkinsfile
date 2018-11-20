@@ -120,6 +120,8 @@ pipeline {
             junit 'peer-tutor-api/*.xml'
             archive "peer-tutor-ui/angular/src/reports/*.xml"
             junit 'peer-tutor-ui/angular/src/reports/*.xml'
+            archive "peer-tutor-ui/angular/src/e2e-test-results/*.xml"
+            junit 'peer-tutor-ui/angular/src/e2e-test-results/*.xml'
             publishHTML target: [
             allowMissing: false,
             alwaysLinkToLastBuild: false,

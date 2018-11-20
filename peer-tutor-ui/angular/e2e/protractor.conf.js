@@ -5,7 +5,10 @@ const
 {
   SpecReporter
 } = require('jasmine-spec-reporter');
-
+const
+{
+  JUnitXmlReporter
+} = require('jasmine-reporters');
 exports.config = {
   allScriptsTimeout: 11000,
   specs: [
@@ -21,7 +24,7 @@ exports.config = {
   },
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
-  framework: 'jasmine',
+  framework: 'jasmine2',
   jasmineNodeOpts:
   {
     showColors: true,
@@ -41,5 +44,13 @@ exports.config = {
         displayStacktrace: true
       }
     }));
+
+    const junitReporter = new JUnitXmlReporter(
+    {
+      savePath: './e2e-test-results',
+      consolidateAll: false
+    });
+    jasmine.getEnv().addReporter(junitReporter);
+
   }
 };
