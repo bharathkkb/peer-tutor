@@ -16,6 +16,8 @@ import { fakeBackendProvider, JwtInterceptorProvider } from './_helpers';
 import { AuthGuard } from './_guards';
 import { HomePageComponent } from './home-page/home-page.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { ContactComponent } from './contact/contact.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     RegisterComponent,
     HomePageComponent,
     NavbarComponent,
+    ContactComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,

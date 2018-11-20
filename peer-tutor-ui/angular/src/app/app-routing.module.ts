@@ -7,6 +7,8 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_guards';
 import { HomePageComponent } from './home-page/home-page.component';
 import { RegisterComponent } from './register';
+import { ContactComponent } from './contact/contact.component';
+import { AboutComponent } from './about/about.component';
 
 const routes: Routes = [
   {
@@ -30,6 +32,14 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+  {
+    path: 'contact',
+    component: ContactComponent
+  },
+  {
+    path: 'about',
+    component: AboutComponent
   }
 ];
 
