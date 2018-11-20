@@ -120,7 +120,7 @@ pipeline {
             junit 'peer-tutor-api/*.xml'
             archive "peer-tutor-ui/angular/src/reports/*.xml"
             junit 'peer-tutor-ui/angular/src/reports/*.xml'
-            archive "peer-tutor-ui/angular/e2e-test-results/**/*.*"
+            archive "peer-tutor-ui/angular/e2e-test-results/*.xml"
             junit 'peer-tutor-ui/angular/e2e-test-results/*.xml'
             publishHTML target: [
             allowMissing: false,
@@ -130,11 +130,12 @@ pipeline {
             reportFiles: 'index.html',
             reportName: 'Code Coverage Report'
           ]
+          archive "peer-tutor-ui/angular/e2e-test-results/e2e-html-result/**"
           publishHTML target: [
           allowMissing: false,
           alwaysLinkToLastBuild: false,
           keepAll: true,
-          reportDir: 'peer-tutor-ui/angular/e2e-test-results/e2e-html-result',
+          reportDir: 'peer-tutor-ui/angular/e2e-test-results/e2e-html-result/',
           reportFiles: 'index.html',
           reportName: 'UI BB E2E Report'
         ]
