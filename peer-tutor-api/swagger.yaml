@@ -12,6 +12,345 @@ basePath: "{{is_testing}}/api"
 
 
 paths:
+  /uniclass/id/{classId}:
+    get:
+      summary: returns an single university class with matching class code
+      operationId: uniclass_driver.getClassByIdWrapperResponse
+      tags:
+        - "uniclass"
+      description: |
+        Get university class by id
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: classId
+        description: uniclass  is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass  is returned
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/name/{className}:
+    get:
+      summary: returns an array of university classes which match the name
+      operationId: uniclass_driver.getClassByName
+      tags:
+        - "uniclass"
+      description: |
+        Get list of university classes by passing the class name
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: className
+        description: uniclass array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass array is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/title/{classTitle}:
+    get:
+      summary: returns an array of university classes which match the title
+      operationId: uniclass_driver.getClassByTitle
+      tags:
+        - "uniclass"
+      description: |
+        Get list of university classes by passing the class title
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: classTitle
+        description: uniclass array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass array is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/instructor/{instructorName}:
+    get:
+      summary: returns an array of university classes which match the instructorName
+      operationId: uniclass_driver.getClassByInstructor
+      tags:
+        - "uniclass"
+      description: |
+        Get list of university classes by passing the class instructorName
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: instructorName
+        description: uniclass array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass array is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/department/{deptName}:
+    get:
+      summary: returns an array of university classes which match the departmentName
+      operationId: uniclass_driver.getClassByDept
+      tags:
+        - "uniclass"
+      description: |
+        Get list of university classes by passing the  departmentName
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: deptName
+        description: uniclass array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass array is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/department/id/{deptId}:
+    get:
+      summary: returns an array of university classes which match the deptId
+      operationId: uniclass_driver.getClassByDeptId
+      tags:
+        - "uniclass"
+      description: |
+        Get list of university classes by passing the deptId
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: deptId
+        description: uniclass array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: uniclass array is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/uniclass'
+        400:
+          description: bad input parameter
+  /uniclass/department/all:
+    get:
+      summary: returns an array of all departments and their ids
+      operationId: uniclass_driver.getDepartments
+      tags:
+        - "uniclass"
+      description: |
+        Get list of all departments and their ids by passing the deptId
+      produces:
+      - application/json
+      responses:
+        200:
+          description:  array of deptnames and their ids is returned
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/deptObj'
+        400:
+          description: bad input parameter
+  /student/id/{studentID}:
+    get:
+      summary: returns a student
+      operationId: student_driver.getStudentByIdWrapperResponse
+      tags:
+        - "student"
+      description: |
+        Get a student by passing the student ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: studentID
+        description: student obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: student obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        400:
+          description: bad input parameter
+  /student/name/{studentName}:
+    get:
+      summary: returns an array of students
+      operationId: student_driver.getStudentsByName
+      tags:
+        - "student"
+      description: |
+        Get list of students by passing the student name
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: studentName
+        description: student array is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: student array
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        400:
+          description: bad input parameter
+  /login:
+    post:
+      summary: returns a student obj if login success else returns False
+      operationId: auth_driver.login
+      tags:
+        - "login"
+      description: |
+        Authenticate a student login
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: loginData
+        description: login info username(email) and pass
+        required: true
+        schema:
+            $ref: '#/definitions/login'
+      responses:
+        200:
+          description: student obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        404:
+          description: student not found
+          schema:
+            type: object
+            items:
+              type: object
+              properties:
+                authorization:
+                  type: boolean
+                  example: false
+        400:
+          description: bad input parameter
+
+
+  /register:
+    post:
+      summary: returns a student obj if successful
+      operationId: auth_driver.register
+      tags:
+        - "register"
+      description: |
+        Register a new student
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: registerData
+        description: info for making a new student, enrolled_classes are optional
+        required: true
+        schema:
+            $ref: '#/definitions/student'
+      responses:
+        201:
+          description: student obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        403:
+          description: student already exists
+          schema:
+            type: object
+            items:
+              type: object
+              properties:
+                accountExists:
+                  type: boolean
+                  example: true
+        400:
+          description: bad input parameter
+  /student:
+    put:
+      summary: add a new student, modify an existing student
+      operationId: student_driver.putStudent
+      tags:
+        - "student"
+      description: |
+        Add a new student or modify an existing student
+        If you are adding a new student please call via /register endpoint
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: studentData
+        description: input student obj
+        required: true
+        schema:
+            $ref: '#/definitions/student'
+      responses:
+        200:
+          description: student was updated
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        201:
+          description: student was created
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/student'
+        400:
+          description: bad input parameter
   /hello:
     get:
       summary: returns hello
@@ -32,10 +371,146 @@ paths:
               $ref: '#/definitions/hello'
         400:
           description: bad input parameter
-#    /student/{}:
-#     put:
-#      get:
-#    /student/
+  /meeting/id/{meetingID}:
+    get:
+      summary: returns a meeting
+      operationId: meeting_driver.getMeetingByIdWrapperResponse
+      tags:
+      - "meeting"
+      description: |
+        Get a meeting by passing the meeting ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: meetingID
+        description: meeting obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: meeting obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        400:
+          description: bad input parameter
+  /meeting/peer/id/{peerID}:
+    get:
+      summary: returns a meeting
+      operationId: meeting_driver.getMeetingsByPeer
+      tags:
+      - "meeting"
+      description: |
+        Get a meeting by passing the peer ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: peerID
+        description: meeting obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: meeting obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        400:
+          description: bad input parameter
+  /meeting/tutor/id/{tutorID}:
+    get:
+      summary: returns a meeting
+      operationId: meeting_driver.getMeetingsByTutor
+      tags:
+      - "meeting"
+      description: |
+        Get a meeting by passing the tutor ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: tutorID
+        description: meeting obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: meeting obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        400:
+          description: bad input parameter
+  /meeting:
+    put:
+      summary: add a new meeting
+      operationId: meeting_driver.putMeeting
+      tags:
+      - "meeting"
+      description: |
+        Get list of meeting by passing the meeting id
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: meetingData
+        description: input meeting obj
+        required: true
+        schema:
+          $ref: '#/definitions/meeting'
+      responses:
+        200:
+          description: meeting was updated
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        201:
+          description: meeting was created
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        400:
+          description: bad input parameter
+  /meeting/student/id/{studentID}:
+    get:
+      summary: returns returns an array of meeting which match the student name
+      operationId: meeting_driver.getAllMeeting
+      tags:
+      - "meeting"
+      description: |
+        Get a meeting by passing the student ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: studentID
+        description: meeting obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: meeting obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/meeting'
+        400:
+          description: bad input parameter
+
+
 
 definitions:
 
@@ -45,3 +520,100 @@ definitions:
       hello:
         type: string
         example: hello-string
+  login:
+    type: object
+    properties:
+      username:
+        type: string
+        example: bharath@gmail.com
+      password:
+        type: string
+        example: password123
+  student:
+    type: object
+    properties:
+      student_id:
+        type: string
+        example: "01"
+      name:
+        type: string
+        example: 'Bharath Baiju'
+      username:
+        type: string
+        example: 'bharath@gmail.com'
+      enrolled_classes:
+        type: array
+        items:
+          type: string
+          example: "22271"
+  uniclass:
+    type: object
+    properties:
+      class-code:
+        type: string
+        example: 28013
+      class-name:
+        type: string
+        example: 'CS 160'
+      dates:
+        type: string
+        example: '01/24/19 05/13/19'
+      days:
+        type: string
+        example: 'TR'
+      dept-id:
+        type: string
+        example: 'd83848'
+      dept-name:
+        type: string
+        example: 'COMPUTER SCIENCE'
+      instructor:
+        type: string
+        example: 'W Cao'
+      location:
+        type: string
+        example: 'MH 222'
+      section:
+        type: string
+        example: '05'
+      time:
+        type: string
+        example: '1930 2045'
+      title:
+        type: string
+        example: 'Software Engr'
+      units:
+        type: string
+        example: '3'
+      students:
+        type: array
+        items:
+          type: string
+          example: "22271"
+  meeting:
+    type: object
+    properties:
+      meeting_id:
+        type: string
+        example: "01"
+      tutor_id:
+        type: string
+        example: "02"
+      peer_id:
+        type: string
+        example: "03"
+      start:
+        type: string
+        example: "11-1-2018 1:00 PM"
+      end:
+        type: string
+        example: "11-1-2018 2:00 PM"
+  deptObj:
+    type: object
+    properties:
+      dept-id:
+        type: string
+        example: "d83848"
+      dept-name:
+        type: string
+        example: "COMPUTER SCIENCE"

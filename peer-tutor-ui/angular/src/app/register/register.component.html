@@ -7,15 +7,6 @@
         <form #loginForm="ngForm">
             <!-- Username input -->
             <div class="form-group">
-                <label for="register-username">Username</label>
-                <input type="text" class="form-control" name="username" id="register-username" placeholder="Username"
-                    [(ngModel)]="registerUsername" required #formusername="ngModel"
-                    [class.is-invalid]="formusername.invalid && formusername.touched">
-                <small [class.d-none]="formusername.valid || formusername.untouched" class="text-danger">
-                    Name is required.
-                </small>
-            </div>
-            <div class="form-group">
                 <label for="firstname">First Name</label>
                 <input type="text" class="form-control" name="firstname" id="firstname" placeholder="First Name"
                     [(ngModel)]="firstname" required #formfirstname="ngModel"
@@ -33,14 +24,23 @@
                     Last Name is required.
                 </small>
             </div>
-
+            <div class="form-group">
+                <label for="studentid">Student ID</label>
+                <input type="number" class="form-control" name="studentid" id="studentid" placeholder="Student ID"
+                    [(ngModel)]="studentId" required #formstudentId="ngModel"
+                    [class.is-invalid]="formstudentId.invalid && formstudentId.touched">
+                <small [class.d-none]="formstudentId.valid || formstudentId.untouched" class="text-danger">
+                    Student ID is required.
+                </small>
+            </div>
             <div class="form-group">
                 <label for="email">Email</label>
+                <!-- pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" -->
                 <input type="text" class="form-control" name="email" id="email" placeholder="Email" 
-                    [(ngModel)]="email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required #formemail="ngModel"
+                    [(ngModel)]="email" required #formemail="ngModel"
                     [class.is-invalid]="formemail.invalid && formemail.touched">
                 <small [class.d-none]="formemail.valid || formemail.untouched" class="text-danger">
-                    Please enter a valid email.
+                    Email is required.
                 </small>
             </div>
             <!-- Password input -->
@@ -56,7 +56,7 @@
             <!-- Login submit / Registration -->
             <div class="form-group">
                 <button [disabled]="loginForm.form.invalid" class="btn btn-primary" (click)="tryregister()">Register</button>
-                <a href="#" class="btn btn-link">Login</a>
+                <a href="#" class="btn btn-link" routerLink="/login">Login</a>
             </div>
         </form>
     </div>

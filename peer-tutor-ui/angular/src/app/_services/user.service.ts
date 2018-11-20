@@ -10,23 +10,20 @@ import { User } from '../_models';
 export class UserService {
     constructor(private http: HttpClient) { }
 
-    getAll() {
-        return this.http.get<User[]>(`${environment.apiUrl}/users`);
+    getByStudentId(id: string) {
+        return this.http.get(environment.apipath.getStudentById + id);
     }
 
-    getById(id: number) {
-        return this.http.get(`${environment.apiUrl}/users/` + id);
+    getByName(name:string){
+        return this.http.get(environment.apipath.getStudentsByName + name);
     }
 
-    register(user: User) {
-        return this.http.post(`${environment.apiUrl}/users/register`, user);
+    register(user: any) {
+        return this.http.post(environment.apipath.register, user);
     }
 
-    update(user: User) {
-        return this.http.put(`${environment.apiUrl}/users/` + user.id, user);
-    }
-
-    delete(id: number) {
-        return this.http.delete(`${environment.apiUrl}/users/` + id);
+    //Not in used
+    update(user: any) {
+        return this.http.put(environment.apipath.putStudent, user);
     }
 }

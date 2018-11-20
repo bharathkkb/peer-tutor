@@ -2,11 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { PostsComponent } from './posts/posts.component';
-import { UsersComponent } from './users/users.component';
 import { DetailsComponent } from './details/details.component';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -19,12 +19,18 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
 
+//Scheduler thingy
+import { SchedulerComponent } from './scheduler/scheduler.component';
+import { DayViewSchedulerComponent } from './scheduler/day-view-scheduler.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar'
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { AddScheduleModalComponent } from './scheduler/add-schedule-modal/add-schedule-modal.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
-    PostsComponent,
-    UsersComponent,
     DetailsComponent,
     LoginComponent,
     RegisterComponent,
@@ -32,6 +38,12 @@ import { AboutComponent } from './about/about.component';
     NavbarComponent,
     ContactComponent,
     AboutComponent,
+    SchedulerComponent,
+    DayViewSchedulerComponent,
+    AddScheduleModalComponent,
+  ],
+  entryComponents: [
+    AddScheduleModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,6 +51,17 @@ import { AboutComponent } from './about/about.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    //Material Auto Complete mess
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    BrowserAnimationsModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,  //Angular Calendar or Angular Material???!!!
+      useFactory: adapterFactory
+    }),
+    MatDialogModule,
   ],
   providers: [
     JwtInterceptorProvider,

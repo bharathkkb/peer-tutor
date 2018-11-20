@@ -1,20 +1,20 @@
 from timeBlock import TimeBlock
-from student import Student
-from peer import Peer
-from tutor import Tutor
+
 
 class Meeting:
     """
     Returns a ```Meeting``` object with the given id, peer, tutor, time, meetingTitle, Location
 
     """
-    def __init__(self, meeting_id, peer, tutor, time, meeting_title, location):
+
+    def __init__(self, meeting_id, peer_id, tutor_id, time=None, meeting_title=None, location=None, selfReserved=False):
         self.meeting_id = meeting_id
-        self.peer = peer
-        self.tutor = tutor
+        self.peer_id = peer_id
+        self.tutor_id = tutor_id
         self.time = time
         self.meeting_title = meeting_title
         self.location = location
+        self.selfReserved = selfReserved
         print("A Meeting object is created.")
 
     def __str__(self):
@@ -27,13 +27,19 @@ class Meeting:
         """
         returns a json format of a Meeting
         """
-        meeting_dict=dict()
-        meeting_dict["meeting_id"]=self.meeting_id
-        meeting_dict["peer"] = self.peer.get_json() # one meeting one peer
-        meeting_dict["tutor"] = self.tutor.get_json() # one meeting one tutor
-        meeting_dict["time"] = self.time.get_json()  # one meeting one timeBlock
-        meeting_dict["meeting_title"] = self.meeting_title
-        meeting_dict["location"] = self.location
+        meeting_dict = dict()
+        meeting_dict["meeting_id"] = self.meeting_id
+        meeting_dict["peer_id"] = self.peer_id
+        meeting_dict["tutor_id"] = self.tutor_id
+        meeting_dict["selfReserved"] = self.selfReserved
+        # meeting_dict["peer"] = self.peer.get_json() # one meeting one peer
+        # meeting_dict["tutor"] = self.tutor.get_json() # one meeting one tutor
+        # one meeting one timeBlock
+        timeB = self.time.get_json()
+        meeting_dict["start"] = timeB["start"]
+        meeting_dict["end"] = timeB["end"]
+        # meeting_dict["meeting_title"] = self.meeting_title
+        # meeting_dict["location"] = self.location
         return meeting_dict
 
     def get_meeting_id(self):
@@ -46,7 +52,7 @@ class Meeting:
         """
         return meeting's peer
         """
-        return self.peer
+        return self.peer_id
 
     def get_tutor(self):
         """
@@ -72,18 +78,18 @@ class Meeting:
         """
         return self.location
 
-    def set_peer(self, peer):
+    def set_peer(self, peer_id):
         """
         set peer
         """
-        self.peer = peer
+        self.peer_id = peer_id
         return True
 
-    def set_tutor(self, tutor):
+    def set_tutor(self, tutor_id):
         """
         set tutor
         """
-        self.tutor = tutor
+        self.tutor_id = tutor_id
         return True
 
     def set_time(self, time):
@@ -106,3 +112,16 @@ class Meeting:
         """
         self.location = location
         return True
+
+    def set_selfReserved(self, selfReserved):
+        """
+        set selfReserved
+        """
+        self.selfReserved = selfReserved
+        return True
+
+    def get_selfReserved(self):
+        """
+        set selfReserved
+        """
+        return self.selfReserved

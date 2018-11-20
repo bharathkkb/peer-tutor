@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary" *ngIf='isVisible'>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" *ngIf='isVisible'>
     <a href="#" class="navbar-brand">Peer-Tutor</a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
@@ -17,8 +17,8 @@
                     <a href="#" (click)="logout()" class="dropdown-item">Logout</a>
                 </div>
             </li>
-            <li class="nav-item"><a href="about" class="nav-link">About </a></li>
-            <li class="nav-item"><a href="contact" class="nav-link">Contact Us</a></li>
+            <li class="nav-item"><a routerLink="/about" class="nav-link">About </a></li>
+            <li class="nav-item"><a routerLink="/contact" class="nav-link">Contact Us</a></li>
         </ul>
     </div>
 </nav>

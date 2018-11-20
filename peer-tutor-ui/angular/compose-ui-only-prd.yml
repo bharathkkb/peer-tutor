@@ -1,0 +1,10 @@
+version: '3'
+services:
+  peer-tutor-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile-prd-dist
+    image: peer-tutor-ui
+    container_name: peer-tutor-ui
+    ports:
+      - 8080:80

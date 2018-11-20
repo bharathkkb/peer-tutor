@@ -1,6 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomePageComponent } from './home-page.component';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule, MatInputModule, MatAutocompleteModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CURRENT_USER } from '../_services';
 
 describe('HomePageComponent', () => {
   let component: HomePageComponent;
@@ -8,7 +15,19 @@ describe('HomePageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HomePageComponent ]
+      declarations: [ HomePageComponent ],
+      imports: [
+        RouterModule,
+        HttpClientModule,
+        RouterTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        //Material Auto Complete mess
+        MatFormFieldModule,
+        MatInputModule,
+        MatAutocompleteModule,
+        BrowserAnimationsModule,
+      ],
     })
     .compileComponents();
   }));

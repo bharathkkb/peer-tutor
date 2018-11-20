@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
-import { fakeUsers } from '../../assets/fakedata/fakelogin'
+
+import { fakeUsers, fakeclasses, fakeDeptList } from '../../assets/fakedata';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -20,34 +21,39 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         /**fake data in asset + previously registered fake users*/
         let users:any[] = fakeUsers.concat(storedUsers);
+        /**fake uniClasses in asset. currently no plan to add more so it stay */
+        let uniClasses:any[] = fakeclasses;
         
         return of(null).pipe(mergeMap(() => {
 
             // authenticate
-            if (request.url.endsWith('/users/authenticate') && request.method === 'POST') {
-                // find if any user matches login credentials
-                let filteredUsers = users.filter(user => {
-                    return user.username === request.body.username && user.password === request.body.password;
-                });
+            /*
+                if (request.url.endsWith('/users/authenticate') && request.method === 'POST') {
+                    // find if any user matches login credentials
+                    let filteredUsers = users.filter(user => {
+                        return user.username === request.body.username && user.password === request.body.password;
+                    });
 
-                if (filteredUsers.length) {
-                    // if login details are valid return 200 OK with user details and fake jwt token
-                    let user = filteredUsers[0];
-                    let body = {
-                        id: user.id,
-                        username: user.username,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        token: 'fake-jwt-token'
-                    };
+                    if (filteredUsers.length) {
+                        // if login details are valid return 200 OK with user details and fake jwt token
+                        let user = filteredUsers[0];
+                        let body = {
+                            id: user.id,
+                            username: user.username,
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            email: user.email,
+                            token: 'fake-jwt-token',
+                        };
 
-                    return of(new HttpResponse({ status: 200, body: body }));
-                } else {
-                    // else return 400 bad request
-                    return throwError({ error: { message: 'Username or password is incorrect' } });
+                        return of(new HttpResponse({ status: 200, body: body }));
+                    } else {
+                        // else return 400 bad request
+                        return throwError({ error: { message: 'Username or password is incorrect' } });
+                    }
                 }
-            }
-
+            */
+            
             // get users
             if (request.url.endsWith('/users') && request.method === 'GET') {
                 // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
@@ -60,47 +66,96 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             }
 
             // get user by id
-            if (request.url.match(/\/users\/\d+$/) && request.method === 'GET') {
-                // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
-                if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-                    // find user by id in users array
-                    let urlParts = request.url.split('/');
-                    let id = parseInt(urlParts[urlParts.length - 1]);
-                    let matchedUsers = users.filter(user => { return user.id === id; });
-                    let user = matchedUsers.length ? matchedUsers[0] : null;
+            /* 
+                if (request.url.match(/\/users\/\d+$/) && request.method === 'GET') {
+                    // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+                    if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+                        // find user by id in users array
+                        let urlParts = request.url.split('/');
+                        let id = parseInt(urlParts[urlParts.length - 1]);
+                        let matchedUsers = users.filter(user => { return user.id === id; });
+                        let user = matchedUsers.length ? matchedUsers[0] : null;
 
-                    return of(new HttpResponse({ status: 200, body: user }));
-                } else {
-                    // return 401 not authorised if token is null or invalid
-                    return throwError({ status: 401, error: { message: 'Unauthorised2' } });
+                        return of(new HttpResponse({ status: 200, body: user }));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        return throwError({ status: 401, error: { message: 'Unauthorised2' } });
+                    }
                 }
+            */
+
+            // get Uni classes
+            if (request.url.endsWith('/uniclass/all') && request.method === 'GET') {
+                /* 
+                    // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
+                    if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+                        if(request.params.get("userId") === "1") {
+                            let cherrypickArr = [uniClasses[0], uniClasses[2], uniClasses[4]];
+                            return of(new HttpResponse({ status: 200, body: cherrypickArr }));
+                        }
+                        return of(new HttpResponse({ status: 200, body: uniClasses }));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        return throwError({ status: 401, error: { message: 'Unauthorised1-uniclass' } });
+                    }
+                */
+                return of(new HttpResponse({ status: 200, body: uniClasses }));
             }
+
+            // get one Uni class by id
+            if (request.url.match(/\/uniclass\/[a-z0-9]+$/) && request.method === 'GET') {
+                // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+                /* 
+                    if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+                        // find user by id in users array
+                        let urlParts = request.url.split('/');
+                        let classId = urlParts[urlParts.length - 1];
+                        let matchedClasses = uniClasses.filter(c => { return c["_id"] === classId; });
+                        let resultClass = matchedClasses.length ? matchedClasses[0] : null;
+
+                        return of(new HttpResponse({ status: 200, body: resultClass }));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        return throwError({ status: 401, error: { message: 'Unauthorised2-uniclass' } });
+                    }
+                */
+
+                let urlParts = request.url.split('/');
+                let classId = urlParts[urlParts.length - 1];
+                let matchedClasses = uniClasses.filter(c => { return c["_id"] === classId; });
+                let resultClass = matchedClasses.length ? matchedClasses[0] : null;
+
+                return of(new HttpResponse({ status: 200, body: resultClass }));
+            }
+
 
             // register user
-            if (request.url.endsWith('/users/register') && request.method === 'POST') {
-                // get new user object from post body
-                let newUser = request.body;
+            /* 
+                if (request.url.endsWith('/users/register') && request.method === 'POST') {
+                    // get new user object from post body
+                    let newUser = request.body;
 
-                // validation
-                let duplicateUser = users.filter(user => { return user.username === newUser.username; }).length;
-                if (duplicateUser) {
-                    return throwError({ error: { message: 'Username "' + newUser.username + '" is already taken' } });
+                    // validation
+                    let duplicateUser = users.filter(user => { return user.username === newUser.username; }).length;
+                    if (duplicateUser) {
+                        return throwError({ error: { message: 'Username "' + newUser.username + '" is already taken' } });
+                    }
+
+                    // save new user
+                    newUser.id = (users.length + 1).toString();
+                    // users.push(newUser);
+                    //TODO: DEBUG
+                    console.log("DEBUG1-1")
+                    storedUsers.push(newUser);
+                    console.log("DEBUG1-2")
+
+                    // localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('users', JSON.stringify(storedUsers));
+
+                    // respond 200 OK
+                    return of(new HttpResponse({ status: 200 }));
                 }
-
-                // save new user
-                newUser.id = users.length + 1;
-                // users.push(newUser);
-                //TODO: DEBUG
-                console.log("DEBUG1-1")
-                storedUsers.push(newUser);
-                console.log("DEBUG1-2")
-
-                // localStorage.setItem('users', JSON.stringify(users));
-                localStorage.setItem('users', JSON.stringify(storedUsers));
-
-                // respond 200 OK
-                return of(new HttpResponse({ status: 200 }));
-            }
+            */
 
             // delete user
             if (request.url.match(/\/users\/\d+$/) && request.method === 'DELETE') {
@@ -125,6 +180,24 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     // return 401 not authorised if token is null or invalid
                     return throwError({ status: 401, error: { message: 'Unauthorised3' } });
                 }
+            }
+
+            // get all Department
+            if (request.url.endsWith('/uniclass/department/') && request.method === 'GET') {
+                /* 
+                    // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
+                    if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+                        if(request.params.get("userId") === "1") {
+                            let cherrypickArr = [uniClasses[0], uniClasses[2], uniClasses[4]];
+                            return of(new HttpResponse({ status: 200, body: cherrypickArr }));
+                        }
+                        return of(new HttpResponse({ status: 200, body: uniClasses }));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        return throwError({ status: 401, error: { message: 'Unauthorised1-uniclass' } });
+                    }
+                */
+                return of(new HttpResponse({ status: 200, body: fakeDeptList }));
             }
 
             // pass through any requests not handled above

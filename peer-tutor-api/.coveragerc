@@ -1,0 +1,10 @@
+[run]
+omit = env/*
+      __pycache__
+      .pytest_cache
+      comment.py
+      conftest.py
+      peer.py
+      tutor.py
+      scraperClassesLoader.py
+      timeblock.py

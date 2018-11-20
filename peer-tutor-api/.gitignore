@@ -2,8 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-.data/db
-.data/logs
+
 # C extensions
 *.so
 
@@ -40,6 +39,7 @@ pip-delete-this-directory.txt
 htmlcov/
 .tox/
 .nox/
+junitResult.xml
 .coverage
 .coverage.*
 .cache

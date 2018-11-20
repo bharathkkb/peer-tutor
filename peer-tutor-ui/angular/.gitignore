@@ -4,7 +4,7 @@
 /dist
 /tmp
 /out-tsc
-
+/e2e-test-results/*
 # dependencies
 /node_modules
 
@@ -37,3 +37,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# custom Lab
+/tsjslab

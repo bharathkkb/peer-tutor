@@ -1,8 +1,10 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-module.exports = function (config) {
-  config.set({
+module.exports = function (config)
+{
+  config.set(
+  {
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
@@ -10,12 +12,15 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
-      require('@angular-devkit/build-angular/plugins/karma')
+      require('@angular-devkit/build-angular/plugins/karma'),
+      require('karma-junit-reporter')
     ],
-    client: {
+    client:
+    {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
-    coverageIstanbulReporter: {
+    coverageIstanbulReporter:
+    {
       dir: require('path').join(__dirname, '../coverage'),
       reports: ['html', 'lcovonly'],
       fixWebpackSourcePaths: true
@@ -25,7 +30,26 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'headlessChrome', 'google-chrome-stable'],
+    customLaunchers:
+    {
+      headlessChrome:
+      {
+        base: 'ChromiumHeadless',
+        flags: [
+		'--no-sandbox',
+	]
+      }
+    },
+    reporters: ['junit'],
+    junitReporter:
+    {
+      outputDir: 'reports', // results will be saved as $outputDir/$browserName.xml
+      outputFile: 'junit-ui.xml', // if included, results will be saved as $outputDir/$browserName/$outputFile
+      useBrowserName: false // add browser name to report and classes names
+    },
+
+
     singleRun: false
   });
 };

@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { UsersComponent } from './users/users.component';
 import { DetailsComponent } from './details/details.component';
-import { PostsComponent } from './posts/posts.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_guards';
 import { HomePageComponent } from './home-page/home-page.component';
 import { RegisterComponent } from './register';
 import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
+import { SchedulerComponent } from './scheduler/scheduler.component';
+
 
 const routes: Routes = [
   {
@@ -17,13 +17,9 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'details/:id',
+    path: 'class/:id',
     component: DetailsComponent,
     canActivate: [AuthGuard]
-  },
-  {
-    path: 'posts',
-    component: PostsComponent
   },
   {
     path: 'login',
@@ -41,6 +37,13 @@ const routes: Routes = [
     path: 'about',
     component: AboutComponent
   }
+    path: 'logout',
+    redirectTo: 'login'
+  },
+  {
+    path: 'schedule/:studentid',
+    component: SchedulerComponent,
+  },
 ];
 
 @NgModule({

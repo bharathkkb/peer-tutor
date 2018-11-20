@@ -7,12 +7,12 @@
         <form #loginForm="ngForm">
             <!-- Username input -->
             <div class="form-group">
-                <label for="login-username">Username</label>
-                <input type="text" class="form-control" name="username" id="login-username" placeholder="Username"
+                <label for="login-username">Email</label>
+                <input type="text" class="form-control" name="username" id="login-username" placeholder="Email"
                     [(ngModel)]="loginUsername" required #loginusername="ngModel"
                     [class.is-invalid]="loginusername.invalid && loginusername.touched">
                 <small [class.d-none]="loginusername.valid || loginusername.untouched" class="text-danger">
-                    Name is required.
+                    Email is required.
                 </small>
             </div>
             <!-- Password input -->
@@ -28,7 +28,7 @@
             <!-- Login submit / Registration -->
             <div class="form-group">
                 <button [disabled]="loginForm.form.invalid" class="btn btn-primary" (click)="tryLogin()">Login</button>
-                <a href="register" class="btn btn-link">Register</a>
+                <a href="#" class="btn btn-link" routerLink="/register">Register</a>
             </div>
         </form>
     </div>

@@ -9,49 +9,44 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-    private registerUsername:string;
-    private firstname:string;
-    private lastname:string;
-    private email:string;
-    private registerPassword:string;
+    // private registerUsername:string;
+    firstname:string;
+    lastname:string;
+    email:string;
+    registerPassword:string;
+    studentId:string;
 
-    private returnUrl:string;
+    returnUrl:string;
     // private activatedRoute: ActivatedRoute;
-    private submitted = false;
+    submitted = false;
     
-    private registerError = false;
-    private registerErrorMsg:Object;
+    registerError = false;
+    registerErrorMsg:Object;
 
     /**
      * try to log in
      */
     tryregister() {
         this.submitted = true;
-        // this.userService.register(this.registerUsername, this.registerPassword)
-        //     .pipe(first())
-        //     .subscribe(
-        //         data=>{this.router.navigate([this.returnUrl])},
-        //         error=>{
-        //             this.registerError=true; 
-        //             this.registerErrorMsg=error.error.message; 
-        //             // console.log(error.error.message)
-        //         }
-        //     );
+        
         let registrationObj:any = {
-            username: this.registerUsername, 
+            name: this.firstname+" "+this.lastname,
+            student_id: this.studentId.toString(),
+            username: this.email,
             password: this.registerPassword, 
-            firstName: this.firstname, 
-            lastName: this.lastname,
-            email: this.email,
         }
 
         this.userService.register(registrationObj)
             .pipe(first())
             .subscribe(
                 data=>{this.router.navigate(['/login'])},
-                error=>{this.registerError=true, 
-                    console.log("err!!: "+error);
-                    this.registerErrorMsg=error.error.message
+                error=>{this.registerError=true;
+                    switch (error.status){
+                        case 400: this.registerErrorMsg = "BAD REQUEST! CHECK THE CODE!!"; break;
+                        case 404: this.registerErrorMsg = "BACKEND API NOT FOUND!"; break;
+                        case 403: this.registerErrorMsg = "This user has already registered!"; break;
+                        default: this.registerErrorMsg = "CHECK CONSOLE FOR LOG!"; console.log(error);
+                    }
                 }
             )
         // console.log(this.registerUsername + " " + this.registerPassword);
