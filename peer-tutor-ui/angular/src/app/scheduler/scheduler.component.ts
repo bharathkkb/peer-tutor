@@ -18,10 +18,6 @@ const colors = {
     primary: '#1e90ff',
     secondary: '#D1E8FF'
   },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#000000'
-  },
   green: {
     primary: '#009933',
     secondary: '#99ff99'
@@ -159,7 +155,7 @@ export class SchedulerComponent implements OnInit {
     public matDialog: MatDialog,
   ) 
   {
-    this.activatedRoute.params.subscribe(params => this.scheduleId = params['id'] );
+    this.activatedRoute.params.subscribe(params => this.scheduleId = params['studentid'] );
   }
 
   openDialog(): void {

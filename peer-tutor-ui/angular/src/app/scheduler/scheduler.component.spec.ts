@@ -2,9 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SchedulerComponent } from './scheduler.component';
 
-import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { CalendarModule, DateAdapter, CalendarUtils } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DayViewSchedulerCalendarUtils, DayViewSchedulerComponent } from './day-view-scheduler.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatButtonModule, MatAutocompleteModule, MatInputModule, MatFormFieldModule, MatDialogModule } from '@angular/material';
 
 
 describe('SchedulerComponent', () => {
@@ -13,13 +16,29 @@ describe('SchedulerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SchedulerComponent ],
+      declarations: [ 
+        SchedulerComponent,
+        DayViewSchedulerComponent,
+      ],
       imports: [
         BrowserAnimationsModule,
         CalendarModule.forRoot({
           provide: DateAdapter,
           useFactory: adapterFactory
         }),
+        RouterTestingModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatAutocompleteModule,
+        MatButtonModule,
+        MatDialogModule,
+      ],
+      providers: [
+        
+      //   {
+      //     provide: CalendarUtils,
+      //     useClass: DayViewSchedulerCalendarUtils
+      //   },
       ]
     })
     .compileComponents();
