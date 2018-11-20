@@ -48,6 +48,7 @@
     "karma-junit-reporter": "^1.2.0",
     "node-sass": "^4.10.0",
     "protractor": "~5.4.0",
+    "protractor-beautiful-reporter": "^1.2.7",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~2.9.2"

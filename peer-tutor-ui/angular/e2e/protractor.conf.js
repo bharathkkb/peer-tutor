@@ -9,6 +9,7 @@ const
 {
   JUnitXmlReporter
 } = require('jasmine-reporters');
+var HtmlReporter = require('protractor-beautiful-reporter');
 exports.config = {
   allScriptsTimeout: 11000,
   specs: [
@@ -51,6 +52,13 @@ exports.config = {
       consolidateAll: false
     });
     jasmine.getEnv().addReporter(junitReporter);
-
+    jasmine.getEnv().addReporter(new HtmlReporter(
+    {
+      baseDirectory: './e2e-test-results/e2e-html-result',
+      screenshotsSubfolder: 'images',
+      jsonsSubfolder: 'jsons',
+      docTitle: 'Peer-Tutor UI BB E2E Tests',
+      docName: 'index.html'
+    }).getJasmine2Reporter());
   }
 };
