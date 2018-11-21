@@ -5,6 +5,8 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_guards';
 import { HomePageComponent } from './home-page/home-page.component';
 import { RegisterComponent } from './register';
+import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
 import { SchedulerComponent } from './scheduler/scheduler.component';
 
 const routes: Routes = [
@@ -33,6 +35,14 @@ const routes: Routes = [
   {
     path: 'schedule/:studentid',
     component: SchedulerComponent,
+  },
+  {
+    path: 'about',
+    component: AboutComponent,
+  },
+  {
+    path: 'contact',
+    component: ContactComponent,
   },
 ];
 
