@@ -2,6 +2,8 @@ from timeBlock import TimeBlock
 from student import Student
 from comment import Comment
 
+
+
 class UniClass:
     """
     Returns a ```UniClass``` object with the given id, peer, tutor, time, meetingTitle, Location
@@ -70,6 +72,8 @@ class UniClass:
         """
         return self.student_comments
 
+    ###
+
     def set_class_id(self, class_id):
         """
         set class_id
@@ -84,21 +88,21 @@ class UniClass:
         self.class_name = class_name
         return True
 
-    def set_time(self, class_time):
+    def set_time(self, time):
         """
         set class_time
         """
-        self.class_time = class_time
-        return True
+        self.time = time
 
-    def add_student(self, student):
+
+    def set_students(self, students):
         """
         add a student into a class
         """
-        return True
+        self.students = students
 
-    def add_student_comment(self, student_comment):
+    def set_student_comments(self, student_comments):
         """
         add student_comments
         """
-        return True
+        self.student_comments = student_comments
