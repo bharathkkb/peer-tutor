@@ -7,7 +7,7 @@
 /e2e-test-results/*
 # dependencies
 /node_modules
-
+src/reports/*
 # IDEs and editors
 /.idea
 .project
