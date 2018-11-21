@@ -21,6 +21,7 @@ pipeline {
               cd wb-unittests
               coverage run -m unittest discover -s . -p '*_testing.py' -v
               coverage report
+              coverage xml
               coverage html
               """
           }
@@ -132,7 +133,7 @@ pipeline {
             keepAll: true,
             reportDir: 'peer-tutor-api/htmlcov/',
             reportFiles: 'index.html',
-            reportName: 'API BB UnitTests Coverage Report'
+            reportName: 'API BB FeatureTest Coverage Report'
           ]
           archive "peer-tutor-ui/angular/e2e-test-results/e2e-html-result/**"
           publishHTML target: [
