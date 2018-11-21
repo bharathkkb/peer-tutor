@@ -11,10 +11,5 @@ describe('workspace-project App', () => {
     page.navigateTo();
     expect(page.getRegisterTitleText()).toEqual('Register');
   });
-
-  it('should fail the register', ()=>{
-    page.navigateTo();
-    page.fillInfos();
-    expect(page.getRegisterFailMsgElem().isPresent()).toBeTruthy();
-  })
+  
 });
