@@ -15,8 +15,10 @@ describe('workspace-project App', () => {
   
   it('should show the modal once click add class button', ()=>{
     page.login();
+    expect(page.getAddClassModalElem().getAttribute("style")).toBeFalsy()
+
     page.getAddClassBtnElem().click();
-    expect(page.getAddClassModalElem().isPresent()).toBeTruthy();
+    expect(page.getAddClassModalElem().getAttribute("style")).toContain("display: block;")
   })
   
 });

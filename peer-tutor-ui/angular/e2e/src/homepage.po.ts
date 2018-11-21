@@ -15,7 +15,7 @@ export class HomePage {
   /**Return add class modal as element
    */
   getAddClassModalElem(){
-    return element(by.css('.modal .modal-dialog'));
+    return element(by.css('#myModal'));
   }
 
   /**Return the biggest chunk of background as homepage element */
