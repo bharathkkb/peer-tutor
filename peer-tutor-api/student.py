@@ -2,7 +2,7 @@
 # from meeting import Meeting
 from timeBlock import TimeBlock
 
-# Student("123","bharath","list(class1,class2,..)", "list(timeblock1,timebl2)","list(m1,m2,m3)")
+# Student("123","bharath",list("class1","class2",..), list(timeblock1,timebl2),list(m1,m2,m3))
 
 
 class Student:
@@ -11,7 +11,7 @@ class Student:
 
     """
 
-    def __init__(self, student_id, name, username, password, enrolled_classes=list(), meetings=list(), schedules=list(),):
+    def __init__(self, student_id, name, username, password, enrolled_classes=list(), schedules=list(), meetings=list()):
         self.student_id = student_id
         self.name = name
         self.username = username
@@ -40,13 +40,13 @@ class Student:
         for enrolled_class in self.enrolled_classes:
             student_dict["enrolled_classes"].append(str(enrolled_class))
 
-        # student_dict["schedules"] = list()      # list(timeblock1,timeblock2)
-        # for schedule in self.schedules:
-        #     student_dict["schedules"].append(schedule.get_json())
+        student_dict["schedules"] = list()      # list(timeblock1,timeblock2)
+        for schedule in self.schedules:
+            student_dict["schedules"].append(schedule.get_json())
 
         student_dict["meetings"] = list()       # list(m1,m2,m3)
         for meeting in self.meetings:
-            student_dict["meetings"].append(meeting)
+            student_dict["meetings"].append(meeting.get_json())
 
         return student_dict
 
@@ -61,6 +61,18 @@ class Student:
         return student's name
         """
         return self.name
+
+    def get_user_name(self):
+        """
+        return student's name
+        """
+        return self.username
+
+    def get_password(self):
+        """
+        return student's name
+        """
+        return self.password
 
     def get_enrolled_classes(self):
         """
@@ -80,6 +92,8 @@ class Student:
         """
         return self.meetings
 
+
+##
     def set_student_id(self, student_id):
         """
         set student's id
@@ -92,20 +106,32 @@ class Student:
         """
         self.name = name
 
-    def add_class(self, a_class):
+    def set_user_name(self, user_name):
+        """
+        set student's name
+        """
+        self.username = user_name
+
+    def set_password(self, password):
+        """
+        set student's password
+        """
+        self.password = password
+
+    def set_classes(self, classes):
         """
         add a class
         """
-        return True
+        self.enrolled_classes = classes
 
-    def add_meeting(self, meeting):
+    def set_meetings(self, meetings):
         """
         add a meeting
         """
-        return True
+        self.meetings = meetings
 
-    def add_schedule(self, schedule):
+    def set_schedules(self, schedules):
         """
         add a schedules
         """
-        return True
+        self.schedules = schedules
