@@ -23,6 +23,8 @@ import { DayViewSchedulerComponent } from './scheduler/day-view-scheduler.compon
 import { CalendarModule, DateAdapter } from 'angular-calendar'
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { AddScheduleModalComponent } from './scheduler/add-schedule-modal/add-schedule-modal.component';
+import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
 
 
 @NgModule({
@@ -38,6 +40,8 @@ import { AddScheduleModalComponent } from './scheduler/add-schedule-modal/add-sc
     SchedulerComponent,
     DayViewSchedulerComponent,
     AddScheduleModalComponent,
+    AboutComponent,
+    ContactComponent,
   ],
   entryComponents: [
     AddScheduleModalComponent,

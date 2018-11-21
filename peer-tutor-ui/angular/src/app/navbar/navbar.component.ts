@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router/';
 import { filter } from 'rxjs/internal/operators/';
 import { NavigationStart } from '@angular/router/';
 import { NavigationEnd } from '@angular/router/';
+import { AuthenticationService } from '../_services';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +17,8 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute, 
+    private authenticationService: AuthenticationService
   ) { }
   
 
@@ -33,6 +35,11 @@ export class NavbarComponent implements OnInit {
       if (x.url.match(/\/login|\/register|\/logout/)) {this.isVisible = false;}
       else {this.isVisible = true;}
     });
+  }
+  logout() {
+     // logout
+     this.authenticationService.logout();
+     this.router.navigate(['/', 'login']);
   }
 
 }

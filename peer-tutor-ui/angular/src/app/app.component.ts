@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'projv1-angular';
+  title = 'Peer-Tutor - Connecting Peers and Tutors Together';
 }
