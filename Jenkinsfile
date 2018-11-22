@@ -18,6 +18,7 @@ pipeline {
               . env/bin/activate
               pip install -r requirements.txt
               pip install unittest-xml-reporting
+              pip install xmlrunner
               pytest -q test_api.py --url=http://10.0.0.188:5000  --local=0 -vv -s --cov-config .coveragerc --cov=. --cov-report=html
               cd wb-unittests
               coverage run -m unittest discover -s . -p '*_testing.py' -v
