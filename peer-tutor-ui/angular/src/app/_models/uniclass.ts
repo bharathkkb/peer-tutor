@@ -22,7 +22,7 @@
  * ```
  */
 export class UniClass{
-    "_id": {"$oid":string};
+    "_id": any;
     "dept-name": string;
     "dept-id": string;
     "class-name": string;
