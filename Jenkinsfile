@@ -22,7 +22,8 @@ pipeline {
               coverage run -m unittest discover -s . -p '*_testing.py' -v
               coverage report
               coverage html
-              python unittest_runner.py
+              python unittest_runner_xml.py
+              python unittest_runner_html.py
               """
           }
       }
@@ -165,6 +166,17 @@ pipeline {
       reportFiles: 'index.html',
       reportName: 'API BB FeatureTest Report'
     ]
+
+
+    archive "peer-tutor-api/wb-unittests/reports/*"
+    publishHTML target: [
+    allowMissing: false,
+    alwaysLinkToLastBuild: false,
+    keepAll: true,
+    reportDir: 'peer-tutor-api/wb-unittests/reports/',
+    reportFiles: 'index.html',
+    reportName: 'API WB UnitTests Report'
+  ]
 
         }
         success {
