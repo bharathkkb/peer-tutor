@@ -17,26 +17,44 @@ export class ClassDataService {
     return this.http.get<UniClass[]>("localhost:5000/test/api/uniclass/all");
   }
 
-  /**TODO: use real api
-   * Get an observable for a class with specific id
+  /**@deprecated
    * @param id the id of the class you are requesting
    */
   getById(id:string) {
-    return this.http.get<UniClass>("localhost:5000/test/api/uniclass/"+id);
+    return this.http.get<UniClass>(environment.apipath.getUniClassByClassCode+id);
   }
 
+  /**Return a UniClass Object by Class Code
+   * @param code the class code of the class you are requesting. exp: 22371
+   */
+  getByClassCode(code:string) {
+    return this.http.get<UniClass>(environment.apipath.getUniClassByClassCode + code);
+  }
+
+  /**Return a list of UniClass Objects by Department Name
+   * @param deptName department name. exp: "COMPUTER SCIENCE"
+   */
   getByDeptName(deptName:string) {
     return this.http.get<UniClass[]>(environment.apipath.getUniClassByDeptName + deptName);
   }
 
+  /**Return a list of UniClass Objects by Instructor Name
+   * @param instructorName "N Ferguson"
+   */
   getByInstuctorName(instructorName:string){
     return this.http.get<UniClass[]>(environment.apipath.getUniClassByInstructName + instructorName);
   }
 
+  /**Return a list of UniClass Objects by Class Title
+   * @param classTitle 
+   */
   getByClassTitle(classTitle:string) {
     return this.http.get<UniClass[]>(environment.apipath.getUniClassByClassTitle + classTitle);
   }
 
+  /**Return a list of UniClass Objects by Class Name
+   * @param className 
+   */
   getByClassName(className:string){
     return this.http.get<UniClass[]>(environment.apipath.getUniClassByClassName + className);
   }
@@ -50,7 +68,7 @@ export class ClassDataService {
 
   toClassSum(c:UniClass):UniClassSum{
     let result:UniClassSum = {
-      "_id": c._id,
+      "_id": c._id.$oid,
       "class-name": c["class-name"],
       "class-code": c["class-code"],
       "start-dates": c.dates.substring(0, 8),
