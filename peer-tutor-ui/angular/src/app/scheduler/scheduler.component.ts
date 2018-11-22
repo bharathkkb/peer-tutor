@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DayViewHourSegment } from 'calendar-utils';
 import { MatDialog } from '@angular/material';
 import { AddScheduleModalComponent } from './add-schedule-modal/add-schedule-modal.component';
+import { MeetingScheduleService } from '../_services';
 
 //Place holder colors
 const colors = {
@@ -39,6 +40,9 @@ let users = [
   }
 ];
 
+//place holder title
+const EVENT_TITLE = "SOME EVENT"
+
 @Component({
   selector: 'app-scheduler',
   templateUrl: './scheduler.component.html',
@@ -47,10 +51,26 @@ let users = [
 })
 export class SchedulerComponent implements OnInit {
 
-  scheduleId:string;
+  /**Tutor ID is determined by routing param and is used to GET tutor meetings*/
+  tutorId:string;
+  /**Peer ID is determined by localStorage of current user and is used to GET peer meetings */
+  peerId:string;
 
+  /**A list of events for tutor */
+  tutorEvents: CalendarEvent[] = []
+  /**A list of events for peer, AKA current User */
+  peerEvents: CalendarEvent[] = []
+
+  /**Used to keep track of the Date in the calendar view */
   viewDate = new Date();
 
+  /**TODO: when user click it's own event, a modal pop up.
+   * 
+   * User then can either edit or cancel the meeting
+   * 
+   * @param action 
+   * @param event 
+   */
   handleEvent(action: string, event: CalendarEvent): void {
     console.log (action+": "+JSON.stringify(event));
   }
@@ -64,15 +84,16 @@ export class SchedulerComponent implements OnInit {
       meta: {
         user: users[0]
       },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
+      // resizable: {
+      //   beforeStart: true,
+      //   afterEnd: true
+      // },
     },
     {
       title: 'Another event',
       color: users[1].color,
       start: addHours(startOfDay(new Date()), 2),
+      end: addHours(startOfDay(new Date()), 3),
       meta: {
         user: users[1]
       },
@@ -119,10 +140,20 @@ export class SchedulerComponent implements OnInit {
     }
   ];
 
+  /**TODO: when clicked on an empty hour segment, user can make meeting with tutor
+   * 
+   * TO BE REVISE, RESTRICTION? ETC.
+   * 
+   * @param date 
+   */
   hourSegmentClicked(date: Date){
     console.log(date);
   }
 
+  /**TODO: dont think i need this
+   * 
+   * @param param0 
+   */
   eventTimesChanged({
     event,
     newStart,
@@ -133,19 +164,27 @@ export class SchedulerComponent implements OnInit {
     this.events = [...this.events];
   }
 
+  /**TODO: dont think i need this
+   * 
+   * spread operator MAY due to pointer/reference shenanigan
+   * 
+   * @param param0 
+   */
   userChanged({ event, newUser }) {
     event.color = newUser.color;
     event.meta.user = newUser;
     this.events = [...this.events];
   }
 
+
   constructor(
     private activatedRoute:ActivatedRoute,
     private zone:NgZone,
+    private meetingScheduleService: MeetingScheduleService,
     public matDialog: MatDialog,
   ) 
   {
-    this.activatedRoute.params.subscribe(params => this.scheduleId = params['studentid'] );
+    this.activatedRoute.params.subscribe(params => this.tutorId = params['studentid'] );
   }
 
   openDialog(): void {
@@ -165,8 +204,8 @@ export class SchedulerComponent implements OnInit {
 
   /**Plan:
    * 
-   * 1. get tutor student obj by tutor's student id
-   * 2. get user student obj by current user's student id
+   * 1. get tutor meeting list by tutor's student id
+   * 2. get user student meeting list by current user's student id
    * 3. populate tutor time schedule (include uniclass schedule?). Everything is red first
    * 4. populate current user's time schedule (include uniclass schedule?). Everything is blue first
    * 5. find corresponding meeting, mark them green
@@ -194,6 +233,16 @@ export class SchedulerComponent implements OnInit {
     //   this.refresh.next();
     //   console.log(JSON.stringify(this.events))
     // })
+
+    this.meetingScheduleService.getMeetingsByTutorId(this.tutorId).subscribe(
+      meetings => {
+
+      },
+      err => console.log(err)
+    )
+
+
+
     console.log (new Date());
     
   }
