@@ -12,7 +12,6 @@ flex==6.13.2
 html-testRunner==1.1.2
 idna==2.7
 inflection==0.3.1
-Jinja2==2.9.5
 jsonpointer==1.14
 jsonschema==2.6.0
 MarkupSafe==1.0
