@@ -87,19 +87,6 @@
 </div>
 
 <!-- Add Class Button -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="btn-group" (click)="addClassButtonOnClick()">
-                <a class="btn btn-success btn-fab" data-toggle="modal" data-target="#myModal">
-                    <i class="material-icons">
-                        <svg style="width:24px;height:24px" viewBox="0 0 42 42">
-                            <path fill="#ffffff" d="M37.059,16H26V4.941C26,2.224,23.718,0,21,0s-5,2.224-5,4.941V16H4.941C2.224,16,0,18.282,0,21s2.224,5,4.941,5H16v11.059
-                            C16,39.776,18.282,42,21,42s5-2.224,5-4.941V26h11.059C39.776,26,42,23.718,42,21S39.776,16,37.059,16z" />
-                        </svg>
-                    </i>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
+<button (click)="addClassButtonOnClick()" mat-fab class="mat-button-bottom-right-fixed" data-toggle="modal" data-target="#myModal">
+    <mat-icon>add</mat-icon>
+</button>

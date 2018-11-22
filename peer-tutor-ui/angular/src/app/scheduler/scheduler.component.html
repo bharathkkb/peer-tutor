@@ -25,7 +25,7 @@
   </div>
   <div class="col-md-6 text-right">
     <h3>{{ viewDate | calendarDate:('dayViewTitle') }}</h3>
-    <button (click)="openDialog()">{{scheduleId}}</button>
+    {{scheduleId}}
   </div>
 </div>
 <br>
@@ -68,3 +68,6 @@
 <!-- [hourSegmentTemplate]="weekViewHourSegmentTemplate" -->
 </mwl-day-view-scheduler>
 
+<button mat-fab class="mat-button-bottom-right-fixed">
+  <mat-icon>add</mat-icon>
+</button>
