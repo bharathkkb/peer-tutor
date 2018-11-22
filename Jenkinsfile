@@ -21,8 +21,8 @@ pipeline {
               cd wb-unittests
               coverage run -m unittest discover -s . -p '*_testing.py' -v
               coverage report
-              coverage xml
               coverage html
+               python3 unittest_runner.py
               """
           }
       }
@@ -146,7 +146,8 @@ pipeline {
         ]
         archive "peer-tutor-api/wb-unittests/htmlcov/*"
         archive "peer-tutor-api/wb-unittests/*.xml"
-        junit 'peer-tutor-api/wb-unittests/*.xml'
+        archive "peer-tutor-api/wb-unittests/test-reports/*.xml"
+        junit 'peer-tutor-api/wb-unittests/test-reports/*.xml'
         publishHTML target: [
         allowMissing: false,
         alwaysLinkToLastBuild: false,
