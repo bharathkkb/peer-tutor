@@ -7,7 +7,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DayViewSchedulerCalendarUtils, DayViewSchedulerComponent } from './day-view-scheduler.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatButtonModule, MatAutocompleteModule, MatInputModule, MatFormFieldModule, MatDialogModule } from '@angular/material';
+import { MatButtonModule, MatAutocompleteModule, MatInputModule, MatFormFieldModule, MatDialogModule, MatIconModule } from '@angular/material';
 
 
 describe('SchedulerComponent', () => {
@@ -32,6 +32,7 @@ describe('SchedulerComponent', () => {
         MatAutocompleteModule,
         MatButtonModule,
         MatDialogModule,
+        MatIconModule,
       ],
       providers: [
         

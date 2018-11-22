@@ -63,6 +63,8 @@
   [refresh]="refresh"
 
   (eventClicked)="handleEvent('Clicked', $event.event)"
+
+  (hourSegmentClicked)="hourSegmentClicked($event.date)"
   
 >
 <!-- [hourSegmentTemplate]="weekViewHourSegmentTemplate" -->

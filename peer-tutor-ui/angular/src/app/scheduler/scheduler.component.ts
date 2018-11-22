@@ -51,14 +51,6 @@ export class SchedulerComponent implements OnInit {
 
   viewDate = new Date();
 
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fa fa-fw fa-times"></i>',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Deleted', event);
-      }
-    }
-  ];
   handleEvent(action: string, event: CalendarEvent): void {
     console.log (action+": "+JSON.stringify(event));
   }
@@ -76,7 +68,6 @@ export class SchedulerComponent implements OnInit {
         beforeStart: true,
         afterEnd: true
       },
-      draggable: true
     },
     {
       title: 'Another event',
@@ -89,7 +80,6 @@ export class SchedulerComponent implements OnInit {
         beforeStart: true,
         afterEnd: true
       },
-      draggable: true
     },
     {
       title: 'An event',
@@ -102,7 +92,6 @@ export class SchedulerComponent implements OnInit {
         beforeStart: true,
         afterEnd: true
       },
-      draggable: true
     },
     {
       title: 'Another event',
@@ -115,7 +104,6 @@ export class SchedulerComponent implements OnInit {
         beforeStart: true,
         afterEnd: true
       },
-      draggable: true
     },
     {
       title: 'An 3rd event',
@@ -128,10 +116,12 @@ export class SchedulerComponent implements OnInit {
         beforeStart: true,
         afterEnd: true
       },
-      draggable: true,
-      actions: this.actions,
     }
   ];
+
+  hourSegmentClicked(date: Date){
+    console.log(date);
+  }
 
   eventTimesChanged({
     event,
@@ -172,6 +162,20 @@ export class SchedulerComponent implements OnInit {
   //   this.refresh.next();
   // }
 
+
+  /**Plan:
+   * 
+   * 1. get tutor student obj by tutor's student id
+   * 2. get user student obj by current user's student id
+   * 3. populate tutor time schedule (include uniclass schedule?). Everything is red first
+   * 4. populate current user's time schedule (include uniclass schedule?). Everything is blue first
+   * 5. find corresponding meeting, mark them green
+   * 
+   * 3,4?> if play with uniclass schedule, need service that decipher schedule... rip
+   * 
+   * 
+   * 
+   */
   ngOnInit() {
     // interval(3000).subscribe(v=>{
     //   this.events.push({
@@ -190,6 +194,8 @@ export class SchedulerComponent implements OnInit {
     //   this.refresh.next();
     //   console.log(JSON.stringify(this.events))
     // })
+    console.log (new Date());
+    
   }
 
   startDragToCreate(segment: DayViewHourSegment,
