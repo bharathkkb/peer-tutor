@@ -17,14 +17,12 @@ pipeline {
               ls
               . env/bin/activate
               pip install -r requirements.txt
-              pip install unittest-xml-reporting
-              pip install xmlrunner
-              pytest -q test_api.py --url=http://10.0.0.188:5000  --local=0 -vv -s --cov-config .coveragerc --cov=. --cov-report=html
+              pytest -q test_api.py --url=http://10.0.0.188:5000  --local=0 -vv -s --cov-config .coveragerc --cov=. --cov-report=html --html=feature-html-report/index.html
               cd wb-unittests
               coverage run -m unittest discover -s . -p '*_testing.py' -v
               coverage report
               coverage html
-               python3 unittest_runner.py
+              python unittest_runner.py
               """
           }
       }
@@ -158,6 +156,15 @@ pipeline {
         reportFiles: 'index.html',
         reportName: 'API WB UnitTests Coverage Report'
       ]
+      archive "peer-tutor-api/feature-html-report/*"
+      publishHTML target: [
+      allowMissing: false,
+      alwaysLinkToLastBuild: false,
+      keepAll: true,
+      reportDir: 'peer-tutor-api/feature-html-report/',
+      reportFiles: 'index.html',
+      reportName: 'API BB FeatureTest Report'
+    ]
 
         }
         success {
