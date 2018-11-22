@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append("../")
 # import TestCase
 
 # This is class we want to test. So, we need to import it
