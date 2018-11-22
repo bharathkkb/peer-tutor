@@ -28,6 +28,19 @@ export const environment = {
     getUniClassByClassName: host+"/test/api/uniclass/name/",
     /**GET request, Need to append ***Class Title*** as path parameter */
     getUniClassByClassTitle: host+"/test/api/uniclass/title/",
+    /**GET request, Need to append ***Class Code*** as path parameter */
+    getUniClassByClassCode: host+"/test/api/uniclass/id/",
+
+    /**PUT request */
+    putMeeting: host+"/test/api/meeting",
+    /**GET request, Need to append ***Meeting ID*** as path parameter */
+    getMeetingByMeetingId: host+"/test/api/meeting/id/",
+    /**GET request, Need to append ***Peer ID*** as path parameter */
+    getMeetingByPeerId: host+"/test/api/meeting/peer/id/",
+    /**GET request, Need to append ***Tutor ID*** as path parameter */
+    getMeetingByTutorId: host+"/test/api/meeting/tutor/id/",
+    /**GET request, Need to append ***Student ID*** as path parameter */
+    getMeetingByStudentId: host+"/test/api/meeting/student/id/",
   }
 };
 

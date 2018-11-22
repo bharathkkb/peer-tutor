@@ -2,24 +2,27 @@
  * 
  * ```
  * {
- *      "_id": "5be76e1817a06cb2fcb0fb2b", 
- *      "dept-name": "ADVERTISING", 
- *      "dept-id": "d83887", 
- *      "class-name": "ADV 125", 
- *      "class-code": "21726",
- *      "dates": "01/24/19 05/13/19", 
- *      "days": "MW", 
- *      "instructor": "J Delacruz", 
- *      "location": "DBH 117D", 
- *      "time": "1200 1315", 
- *      "title": "Ad Layout & Prod", 
- *      "units": "3", 
- *      "section": "01"
- * }
+  "_id": {
+    "$oid": "5bf5e3d16d552f00062a0377"
+  },
+  "class-code": "22371",
+  "class-name": "STAT 115",
+  "dates": "01/24/19 05/13/19",
+  "days": "TR",
+  "dept-id": "d83918",
+  "dept-name": "STATISTICS",
+  "instructor": "D Schuster",
+  "location": "DMH 359",
+  "section": "03",
+  "students": ["012345678",...]
+  "time": "1030 1145",
+  "title": "Interm Stat",
+  "units": "3"
+}
  * ```
  */
 export class UniClass{
-    "_id": string;
+    "_id": any;
     "dept-name": string;
     "dept-id": string;
     "class-name": string;
@@ -32,6 +35,7 @@ export class UniClass{
     "title": string;
     "units": string;
     "section": string;
+    "students": string[]
 }
 
 /**
