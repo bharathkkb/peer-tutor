@@ -7,7 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { DayViewHourSegment } from 'calendar-utils';
 import { MatDialog } from '@angular/material';
 import { AddScheduleModalComponent } from './add-schedule-modal/add-schedule-modal.component';
-import { MeetingScheduleService } from '../_services';
+import { MeetingScheduleService, LocalStorageService, CURRENT_USER } from '../_services';
+
+import { v4 } from 'uuid'
 
 //Place holder colors
 const colors = {
@@ -181,12 +183,15 @@ export class SchedulerComponent implements OnInit {
     private activatedRoute:ActivatedRoute,
     private zone:NgZone,
     private meetingScheduleService: MeetingScheduleService,
+    private localStorageService: LocalStorageService,
     public matDialog: MatDialog,
   ) 
   {
     this.activatedRoute.params.subscribe(params => this.tutorId = params['studentid'] );
   }
 
+  /**TODO: open add class modal
+   */
   openDialog(): void {
     const dialogRef = this.matDialog.open(AddScheduleModalComponent, {
       width: '250px',
@@ -195,6 +200,7 @@ export class SchedulerComponent implements OnInit {
 
   }
 
+  /**A refresher for Angular Calendar. Need to put in directive. DO NOT TOUCH */
   refresh: Subject<any> = new Subject();
 
   // clickToRefresh(){
@@ -234,9 +240,40 @@ export class SchedulerComponent implements OnInit {
     //   console.log(JSON.stringify(this.events))
     // })
 
+    this.peerId = this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key];
+
     this.meetingScheduleService.getMeetingsByTutorId(this.tutorId).subscribe(
       meetings => {
+        this.tutorEvents = meetings.map(
+          (m):CalendarEvent => {
+            let resultEvent:CalendarEvent = {
+              start: new Date(m.start),
+              end: new Date(m.end),
+              title: EVENT_TITLE + m.meeting_id, //TODO: need to make some description
+              id: m.meeting_id,
+              color: m.peer_id === this.peerId? colors.green : colors.red,
+            }
+            return resultEvent;
+          }
+        )
+      },
+      err => console.log(err)
+    )
 
+    this.meetingScheduleService.getMeetingsByPeerId(this.peerId).subscribe(
+      meetings => {
+        this.peerEvents = meetings.map(
+          (m):CalendarEvent => {
+            let resultEvent:CalendarEvent = {
+              start: new Date(m.start),
+              end: new Date(m.end),
+              title: EVENT_TITLE + m.meeting_id, //TODO: need to make some description
+              id: m.meeting_id,
+              color: m.tutor_id === this.tutorId? colors.green : colors.blue,
+            }
+            return resultEvent;
+          }
+        )
       },
       err => console.log(err)
     )
