@@ -1,9 +1,18 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
-export interface DialogData {
-  animal: string;
-  name: string;
+/**
+ * 
+ */
+export interface AddScheduleEventData {
+  start: Date
+  end?: Date
+}
+
+export interface AddScheduleResult {
+  start: Date;
+  end: Date;
+
 }
 
 @Component({
@@ -18,10 +27,14 @@ export class AddScheduleModalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AddScheduleModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+    @Inject(MAT_DIALOG_DATA) public data: AddScheduleEventData) {}
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  onSaveClick() {
+
   }
 
 }

@@ -6,40 +6,44 @@ import { addHours, startOfDay, addDays } from 'date-fns';
 import { ActivatedRoute } from '@angular/router';
 import { DayViewHourSegment } from 'calendar-utils';
 import { MatDialog } from '@angular/material';
-import { AddScheduleModalComponent } from './add-schedule-modal/add-schedule-modal.component';
-import { MeetingScheduleService, LocalStorageService, CURRENT_USER } from '../_services';
+import { AddScheduleModalComponent, AddScheduleEventData } from './add-schedule-modal/add-schedule-modal.component';
+import { MeetingScheduleService, LocalStorageService, CURRENT_USER, UserService } from '../_services';
 
 import { v4 } from 'uuid'
 
-const colors = {
-  /**Red is for Tutor */
+/**Color for Red, Green, Blue */
+const COLORS = {
+  /**Red is for Opponent event, unrelated to user*/
   red: {
     primary: '#ad2121',
     secondary: '#FAE3E3'
   },
-  /**Blue is for user */
+  /**Yellow is for Self event, unrelated to opponent */
+  yellow: {
+    primary: '#e3bc08',
+    secondary: '#FDF1BA'
+  },
+  /**Blue is for event with User as tutor and Opponent as peer */
   blue: {
     primary: '#1e90ff',
     secondary: '#D1E8FF'
   },
-  /**Green is for meeting of the two */
+  /**Green is for event with Opponent as tutor and User as peer */
   green: {
     primary: '#009933',
     secondary: '#99ff99'
   },
 };
 
-//Place holder data
-const users = [
+/**Default column */
+let USERS = [
   {
     id: 0,
-    name: 'Tutor',
-    color: colors.red
+    name: 'Other',
   },
   {
     id: 1,
-    name: 'Peer',
-    color: colors.blue
+    name: 'Self',
   }
 ];
 
@@ -48,7 +52,7 @@ const EVENT_TITLE = "SOME EVENT"
 
 /**Meta Data for a event. Contain info about meetings*/
 class EventMeta {
-  user: {id: number; name: string; color: {primary: string; secondary: string;}};
+  user: {id: number; name: string;};
   meeting: {
     /**_id may not be useful */
     "_id"?: {
@@ -72,16 +76,16 @@ class EventMeta {
 export class SchedulerComponent implements OnInit {
   
   /**Tutor ID is determined by routing param and is used to GET tutor meetings*/
-  tutorId:string;
+  opponentId:string;
   /**Peer ID is determined by localStorage of current user and is used to GET peer meetings */
-  peerId:string;
+  selfId:string;
   
   /**A list of events for tutor */
-  tutorEvents: CalendarEvent[] = []
+  opponentEvents: CalendarEvent<EventMeta>[] = []
   /**A list of events for peer, AKA current User */
-  peerEvents: CalendarEvent[] = []
+  selfEvents: CalendarEvent<EventMeta>[] = []
   /**Events to be put into the view */
-  events: CalendarEvent[] = [];
+  events: CalendarEvent<EventMeta>[] = [];
   
   /**Used to keep track of the Date in the calendar view */
   viewDate = new Date();
@@ -96,17 +100,18 @@ export class SchedulerComponent implements OnInit {
     private zone:NgZone,
     private meetingScheduleService: MeetingScheduleService,
     private localStorageService: LocalStorageService,
+    private userService: UserService,
     public matDialog: MatDialog,
   ) 
   {
-    this.activatedRoute.params.subscribe(params => this.tutorId = params['studentid'] );
+    this.activatedRoute.params.subscribe(params => this.opponentId = params['studentid'] );
   }
 
   /**Plan:
    * 
    * 0. tutor Id is already populated with route param in cnstructor
    * 1. peer Id populated from local storage
-   * 2. get tutor meeting list by tutor's student id. map to tutor eventlist. mark them green if it's a matched meeting.
+   * 2. get tutor meeting list by tutor's student id. map to tutor eventlist. mark colors accordingly (see colors const)
    * 3. Push tutor eventlist to events
    * 4. peer do the same...
    * 5. push peer list as well
@@ -115,29 +120,40 @@ export class SchedulerComponent implements OnInit {
    * 3,4?> if play with uniclass schedule, need service that decipher schedule... rip
    */
   ngOnInit() {
-    this.peerId = this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key];
+    this.selfId = this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key];
 
-    this.meetingScheduleService.getMeetingsByTutorId(this.tutorId).subscribe(
+    this.userService.getByStudentId(this.opponentId).subscribe(student=>{USERS[0].name = student.name; this.refresh.next()})
+
+    this.userService.getByStudentId(this.selfId).subscribe(student=>{USERS[1].name = student.name; this.refresh.next()})
+
+
+
+    this.meetingScheduleService.getMeetingsByStudentId(this.opponentId).subscribe(
       meetings => {
-        this.tutorEvents = meetings.map(
-          (m):CalendarEvent<EventMeta> => {
+        this.opponentEvents = meetings.map(
+          (oppoM):CalendarEvent<EventMeta> => {
             let resultEvent:CalendarEvent<EventMeta> = {
-              start: new Date(m.start),
-              end: new Date(m.end),
-              title: EVENT_TITLE + m.meeting_id, //TODO: need to make some description
-              id: m.meeting_id,
-              color: m.peer_id === this.peerId? colors.green : colors.red,
+              start: new Date(oppoM.start),
+              end: new Date(oppoM.end),
+              title: EVENT_TITLE + oppoM.meeting_id, //TODO: need to make some description
+              id: oppoM.meeting_id,
+              color: COLORS.red, //default red. will change later
               meta: {
                 //https://stackoverflow.com/a/38874807
                 //spread operator to do deep cloning:
-                user: {...users[0]},
-                meeting: {...m}
+                //FIX! user must be the same object reference
+                user: USERS[0],
+                meeting: {...oppoM}
               },
             }
 
-            //check if it is a meeting b/w tutor and peer
-            if (m.tutor_id===this.tutorId && m.peer_id===this.peerId) {
-              resultEvent.meta.user.color = colors.green;
+            //check if opponent is my tutor and self is opponent's peer
+            if (oppoM.tutor_id===this.opponentId && oppoM.peer_id===this.selfId) {
+              resultEvent.color = COLORS.green;
+            }
+            //check if opponent is my peer and self is opponent's tutor
+            if (oppoM.tutor_id===this.selfId && oppoM.peer_id===this.opponentId) {
+              resultEvent.color = COLORS.blue;
             }
 
             return resultEvent;
@@ -145,38 +161,43 @@ export class SchedulerComponent implements OnInit {
         )
         //another spread operator shenanigan.
         //https://stackoverflow.com/a/30846567
-        this.events.push(...this.tutorEvents);
+        this.events.push(...this.opponentEvents);
         //refresh the view
         this.refresh.next();
+
+        console.log(JSON.stringify(this.opponentEvents, null, 4))
       },
       err => console.log(err)
     )
 
-    this.meetingScheduleService.getMeetingsByPeerId(this.peerId).subscribe(
+    this.meetingScheduleService.getMeetingsByStudentId(this.selfId).subscribe(
       meetings => {
-        this.peerEvents = meetings.map(
-          (m):CalendarEvent<EventMeta> => {
+        this.selfEvents = meetings.map(
+          (selfM):CalendarEvent<EventMeta> => {
             let resultEvent:CalendarEvent<EventMeta> = {
-              start: new Date(m.start),
-              end: new Date(m.end),
-              title: EVENT_TITLE + m.meeting_id, //TODO: need to make some description
-              id: m.meeting_id,
-              color: m.tutor_id === this.tutorId? colors.green : colors.blue,
+              start: new Date(selfM.start),
+              end: new Date(selfM.end),
+              title: EVENT_TITLE + selfM.meeting_id, //TODO: need to make some description
+              id: selfM.meeting_id,
+              color: COLORS.yellow, //default yellow. will change later
               meta: {
-                user: {...users[1]},
-                meeting: {...m}
+                user: USERS[1],
+                meeting: {...selfM}
               }
             }
 
-            //check if it is a meeting b/w tutor and peer
-            if (m.tutor_id===this.tutorId && m.peer_id===this.peerId) {
-              resultEvent.meta.user.color = colors.green;
+            //check if opponent is my tutor and self is opponent's peer
+            if (selfM.tutor_id===this.opponentId && selfM.peer_id===this.selfId) {
+              resultEvent.color = COLORS.green;
             }
-
+            //check if opponent is my peer and self is opponent's tutor
+            if (selfM.tutor_id===this.selfId && selfM.peer_id===this.opponentId) {
+              resultEvent.color = COLORS.blue;
+            }
             return resultEvent;
           }
         )
-        this.events.push(...this.peerEvents);
+        this.events.push(...this.selfEvents);
         //refresh the view
         this.refresh.next();
       },
@@ -194,11 +215,11 @@ export class SchedulerComponent implements OnInit {
    * @param action 
    * @param event 
    */
-  handleEvent(action: string, event: CalendarEvent): void {
-    if (event.id) {
-
+  handleEvent(action: string, event: CalendarEvent<EventMeta>): void {
+    if (event.meta.meeting.peer_id === this.selfId && event.meta.meeting.tutor_id === this.opponentId) {
     }
     console.log (action+": "+JSON.stringify(event));
+    
   }
 
   /**TODO: when clicked on an empty hour segment, user can make meeting with tutor
@@ -242,7 +263,13 @@ export class SchedulerComponent implements OnInit {
 
   /**TODO: open add class modal
    */
-  openDialog(): void {
+  openAddScheduleDialog(date: Date): void {
+    let addScheduleEventData:AddScheduleEventData;
+
+    addScheduleEventData = {
+      start: date
+    }
+
     const dialogRef = this.matDialog.open(AddScheduleModalComponent, {
       width: '250px',
       data: {name: "ASDF_NAME", animal: "QWERT_NAME"}
