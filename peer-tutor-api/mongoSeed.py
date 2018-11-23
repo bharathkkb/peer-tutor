@@ -64,6 +64,14 @@ def seedUsersMeetings():
     meetingCol.insert_one(meeting5)
     meetingCol.insert_one(meeting6)
     meetingCol.insert_one(meeting7)
+
+    rating1 = {"rating_id": "01", "given": "02", "received": "04",
+               "rating_score": "4", "comment": "02 to 04 Very good comment"}
+    rating2 = {"rating_id": "02", "given": "06", "received": "04",
+               "rating_score": "5", "comment": "06 to 04 good comment"}
+    ratingCol = mydb["ratings"]
+    ratingCol.insert_one(rating1)
+    ratingCol.insert_one(rating2)
     print("Finished seeding students and meetings")
 
 
