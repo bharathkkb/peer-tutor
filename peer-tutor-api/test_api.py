@@ -655,6 +655,144 @@ def test_modify_meeting_data(url):
 
 """
 **************************************
+Rating Driver Tests
+**************************************
+"""
+# check get rating by id
+
+
+def test_get_rating_by_id(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/rating/id/01')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert data["rating_id"] == "01"
+    assert data["given"] == "02"
+    assert data["received"] == "04"
+    assert data["comment"] == "02 to 04 Very good comment"
+    assert data["rating_score"] == "4"
+
+# check get rating by wrong id
+
+
+def test_get_rating_by_id_fail(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/rating/id/99999')
+    data = json.loads(response.content)
+    assert response.status_code == 404
+# check get rating by given student id
+
+
+def test_get_rating_by_given_id(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/rating/given/02')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert len(data) == 1
+    for rating in data:
+        assert rating["rating_id"] == "01"
+        assert rating["given"] == "02"
+        assert rating["received"] == "04"
+        assert rating["comment"] == "02 to 04 Very good comment"
+        assert rating["rating_score"] == "4"
+# check get rating by received student id
+
+
+def test_get_rating_by_received_id(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/rating/received/04')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert len(data) == 2
+    for rating in data:
+        assert rating["rating_id"] == "01" or "02"
+        assert rating["given"] == "02" or "06"
+        assert rating["received"] == "04"
+        assert rating["comment"] == "02 to 04 Very good comment" or "06 to 04 good comment"
+        assert rating["rating_score"] == "4" or "5"
+
+
+# check adding rating
+def test_put_rating_data(url):
+    rating_dict = dict()
+    rating_dict["rating_id"] = "03"
+    rating_dict["given"] = "00011"
+    rating_dict["received"] = "00012"
+    rating_dict["rating_score"] = "1"
+    rating_dict["comment"] = "lorem imposeom3"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/rating', data=json.dumps(rating_dict), headers=headers)
+    assert putResponse.status_code == 201
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["rating_id"] == rating_dict["rating_id"]
+    assert data["given"] == rating_dict["given"]
+    assert data["received"] == rating_dict["received"]
+    assert data["rating_score"] == rating_dict["rating_score"]
+    assert data["comment"] == rating_dict["comment"]
+
+# check modifying the rating added above
+
+
+def test_modify_rating_data(url):
+    rating_dict = dict()
+    rating_dict["rating_id"] = "03"
+    rating_dict["given"] = "00011"
+    rating_dict["received"] = "00012"
+    rating_dict["rating_score"] = "1"
+    rating_dict["comment"] = "lorem imposeom5"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/rating', data=json.dumps(rating_dict), headers=headers)
+    assert putResponse.status_code == 200
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["rating_id"] == rating_dict["rating_id"]
+    assert data["given"] == rating_dict["given"]
+    assert data["received"] == rating_dict["received"]
+    assert data["rating_score"] == rating_dict["rating_score"]
+    assert data["comment"] == rating_dict["comment"]
+
+# check adding rating without given student id
+
+
+def test_put_rating_data_fail(url):
+    rating_dict = dict()
+    rating_dict["rating_id"] = "05"
+    rating_dict["received"] = "00012"
+    rating_dict["rating_score"] = "1"
+    rating_dict["comment"] = "lorem imposeom fail"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/rating', data=json.dumps(rating_dict), headers=headers)
+    assert putResponse.status_code == 400
+    data = json.loads(putResponse.content)
+
+
+# check modifying rating without providing correct given student id
+
+
+def test_modify_rating_data_fail(url):
+    rating_dict = dict()
+    rating_dict["rating_id"] = "03"
+    rating_dict["given"] = "00014"
+    rating_dict["received"] = "00012"
+    rating_dict["rating_score"] = "1"
+    rating_dict["comment"] = "lorem imposeom fail"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/rating', data=json.dumps(rating_dict), headers=headers)
+    assert putResponse.status_code == 400
+    data = json.loads(putResponse.content)
+
+
+"""
+**************************************
 **************************************
 **************************************
 Multi Driver Tests

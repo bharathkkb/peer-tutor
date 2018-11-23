@@ -188,6 +188,120 @@ paths:
               $ref: '#/definitions/deptObj'
         400:
           description: bad input parameter
+  /rating/id/{ratingID}:
+    get:
+      summary: returns a rating
+      operationId: rating_driver.getRatingByIdWrapperResponse
+      tags:
+        - "rating"
+      description: |
+        Get a rating by passing the rating ID
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: ratingID
+        description: rating obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: rating obj
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/rating'
+        400:
+          description: bad input parameter
+  /rating/given/{givenStudentId}:
+    get:
+      summary: returns an array of ratings
+      operationId: rating_driver.getRatingsByGivenStudentId
+      tags:
+        - "rating"
+      description: |
+        Get a rating by passing the givenStudentId
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: givenStudentId
+        description: rating obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: rating obj
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/rating'
+        400:
+          description: bad input parameter
+
+  /rating/received/{recStudentId}:
+    get:
+      summary: returns an array of ratings
+      operationId: rating_driver.getRatingsByReceivedStudentId
+      tags:
+        - "rating"
+      description: |
+        Get a rating by passing the receivedStudentId
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: recStudentId
+        description: rating obj is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: rating obj
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/rating'
+        400:
+          description: bad input parameter
+  /rating:
+    put:
+      summary: add a new rating, modify an existing rating
+      operationId: rating_driver.putRating
+      tags:
+        - "rating"
+      description: |
+        Add a new rating or modify an existing rating
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: ratingData
+        description: input rating obj
+        required: true
+        schema:
+            $ref: '#/definitions/rating'
+      responses:
+        200:
+          description: rating was updated
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/rating'
+        201:
+          description: rating was created
+          schema:
+            type: object
+            items:
+              type: object
+              $ref: '#/definitions/rating'
+        400:
+          description: bad input parameter
+
   /student/id/{studentID}:
     get:
       summary: returns a student
@@ -617,3 +731,21 @@ definitions:
       dept-name:
         type: string
         example: "COMPUTER SCIENCE"
+  rating:
+    type: object
+    properties:
+      rating_id:
+        type: string
+        example: "01"
+      given:
+        type: string
+        example: "03"
+      received:
+        type: string
+        example: "02"
+      rating_score:
+        type: string
+        example: "4"
+      comment:
+        type: string
+        example: "Excellent tutor"
