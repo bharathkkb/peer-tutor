@@ -672,6 +672,14 @@ def test_get_rating_by_id(url):
     assert data["comment"] == "02 to 04 Very good comment"
     assert data["rating_score"] == "4"
 
+# check get rating by id
+
+
+def test_get_avg_rating_by_id(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/rating/avg/04')
+    assert response.status_code == 200
+
 # check get rating by wrong id
 
 
