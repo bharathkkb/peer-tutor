@@ -1,6 +1,6 @@
 import { RegisterPage } from './register.po';
 import { LoginPage } from './login.po';
-import { element, by, browser } from 'protractor';
+import { element, by, browser, protractor } from 'protractor';
 
 describe('workspace-project App', () => {
   let page: RegisterPage;
@@ -21,7 +21,12 @@ describe('workspace-project App', () => {
       password: "password1235",
     };
     page.fillRegInfo(uniqueReg);
-    
+
+    //TODO: monitor if routing have problem
+    loginPage.navigateTo();
+    let EC = protractor.ExpectedConditions
+    browser.wait(EC.presenceOf(element(by.css("input#login-username"))));
+
     loginPage.fillCredentials({username: uniqueReg.email, password: uniqueReg.password});
 
     expect(element(by.css('.content .row.mt-4')).isPresent()).toBeTruthy();
