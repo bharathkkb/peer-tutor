@@ -11,25 +11,26 @@ import { MeetingScheduleService, LocalStorageService, CURRENT_USER } from '../_s
 
 import { v4 } from 'uuid'
 
-//Place holder colors
 const colors = {
+  /**Red is for Tutor */
   red: {
     primary: '#ad2121',
     secondary: '#FAE3E3'
   },
+  /**Blue is for user */
   blue: {
     primary: '#1e90ff',
     secondary: '#D1E8FF'
   },
+  /**Green is for meeting of the two */
   green: {
     primary: '#009933',
     secondary: '#99ff99'
   },
-  
 };
 
 //Place holder data
-let users = [
+const users = [
   {
     id: 0,
     name: 'Tutor',
@@ -45,6 +46,23 @@ let users = [
 //place holder title
 const EVENT_TITLE = "SOME EVENT"
 
+/**Meta Data for a event. Contain info about meetings*/
+class EventMeta {
+  user: {id: number; name: string; color: {primary: string; secondary: string;}};
+  meeting: {
+    /**_id may not be useful */
+    "_id"?: {
+      "$oid": string;
+    },
+    "meeting_id": string;
+    "peer_id": string;
+    /**neither is selfReserved */
+    "selfReserved"?: boolean;
+    "tutor_id": string;
+    [x:string]: any;
+  }
+}
+
 @Component({
   selector: 'app-scheduler',
   templateUrl: './scheduler.component.html',
@@ -52,21 +70,124 @@ const EVENT_TITLE = "SOME EVENT"
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchedulerComponent implements OnInit {
-
+  
   /**Tutor ID is determined by routing param and is used to GET tutor meetings*/
   tutorId:string;
   /**Peer ID is determined by localStorage of current user and is used to GET peer meetings */
   peerId:string;
-
+  
   /**A list of events for tutor */
   tutorEvents: CalendarEvent[] = []
   /**A list of events for peer, AKA current User */
   peerEvents: CalendarEvent[] = []
-
+  /**Events to be put into the view */
+  events: CalendarEvent[] = [];
+  
   /**Used to keep track of the Date in the calendar view */
   viewDate = new Date();
 
-  /**TODO: when user click it's own event, a modal pop up.
+  /**A refresher for Angular Calendar. Need to put in directive. DO NOT TOUCH */
+  refresh: Subject<any> = new Subject();
+  
+  /**get route parameters
+   */
+  constructor(
+    private activatedRoute:ActivatedRoute,
+    private zone:NgZone,
+    private meetingScheduleService: MeetingScheduleService,
+    private localStorageService: LocalStorageService,
+    public matDialog: MatDialog,
+  ) 
+  {
+    this.activatedRoute.params.subscribe(params => this.tutorId = params['studentid'] );
+  }
+
+  /**Plan:
+   * 
+   * 0. tutor Id is already populated with route param in cnstructor
+   * 1. peer Id populated from local storage
+   * 2. get tutor meeting list by tutor's student id. map to tutor eventlist. mark them green if it's a matched meeting.
+   * 3. Push tutor eventlist to events
+   * 4. peer do the same...
+   * 5. push peer list as well
+   * 
+   * 
+   * 3,4?> if play with uniclass schedule, need service that decipher schedule... rip
+   */
+  ngOnInit() {
+    this.peerId = this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key];
+
+    this.meetingScheduleService.getMeetingsByTutorId(this.tutorId).subscribe(
+      meetings => {
+        this.tutorEvents = meetings.map(
+          (m):CalendarEvent<EventMeta> => {
+            let resultEvent:CalendarEvent<EventMeta> = {
+              start: new Date(m.start),
+              end: new Date(m.end),
+              title: EVENT_TITLE + m.meeting_id, //TODO: need to make some description
+              id: m.meeting_id,
+              color: m.peer_id === this.peerId? colors.green : colors.red,
+              meta: {
+                //https://stackoverflow.com/a/38874807
+                //spread operator to do deep cloning:
+                user: {...users[0]},
+                meeting: {...m}
+              },
+            }
+
+            //check if it is a meeting b/w tutor and peer
+            if (m.tutor_id===this.tutorId && m.peer_id===this.peerId) {
+              resultEvent.meta.user.color = colors.green;
+            }
+
+            return resultEvent;
+          }
+        )
+        //another spread operator shenanigan.
+        //https://stackoverflow.com/a/30846567
+        this.events.push(...this.tutorEvents);
+        //refresh the view
+        this.refresh.next();
+      },
+      err => console.log(err)
+    )
+
+    this.meetingScheduleService.getMeetingsByPeerId(this.peerId).subscribe(
+      meetings => {
+        this.peerEvents = meetings.map(
+          (m):CalendarEvent<EventMeta> => {
+            let resultEvent:CalendarEvent<EventMeta> = {
+              start: new Date(m.start),
+              end: new Date(m.end),
+              title: EVENT_TITLE + m.meeting_id, //TODO: need to make some description
+              id: m.meeting_id,
+              color: m.tutor_id === this.tutorId? colors.green : colors.blue,
+              meta: {
+                user: {...users[1]},
+                meeting: {...m}
+              }
+            }
+
+            //check if it is a meeting b/w tutor and peer
+            if (m.tutor_id===this.tutorId && m.peer_id===this.peerId) {
+              resultEvent.meta.user.color = colors.green;
+            }
+
+            return resultEvent;
+          }
+        )
+        this.events.push(...this.peerEvents);
+        //refresh the view
+        this.refresh.next();
+      },
+      err => console.log(err)
+    )
+
+    console.log (new Date());
+
+  }
+
+  /**TODO: when user click their's own event, a modal pop up.
    * 
    * User then can either edit or cancel the meeting
    * 
@@ -74,73 +195,11 @@ export class SchedulerComponent implements OnInit {
    * @param event 
    */
   handleEvent(action: string, event: CalendarEvent): void {
+    if (event.id) {
+
+    }
     console.log (action+": "+JSON.stringify(event));
   }
-
-  //Place holder event
-  events: CalendarEvent[] = [
-    {
-      title: 'An event',
-      color: users[0].color,
-      start: addHours(startOfDay(new Date()), 5),
-      meta: {
-        user: users[0]
-      },
-      // resizable: {
-      //   beforeStart: true,
-      //   afterEnd: true
-      // },
-    },
-    {
-      title: 'Another event',
-      color: users[1].color,
-      start: addHours(startOfDay(new Date()), 2),
-      end: addHours(startOfDay(new Date()), 3),
-      meta: {
-        user: users[1]
-      },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-    },
-    {
-      title: 'An event',
-      color: users[0].color,
-      start: addDays(addHours(startOfDay(new Date()), 5),1),
-      meta: {
-        user: users[0]
-      },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-    },
-    {
-      title: 'Another event',
-      color: users[1].color,
-      start: addDays(addHours(startOfDay(new Date()), 2),-1),
-      meta: {
-        user: users[1]
-      },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-    },
-    {
-      title: 'An 3rd event',
-      color: colors.green,
-      start: addHours(startOfDay(new Date()), 7),
-      meta: {
-        user: users[0]
-      },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-    }
-  ];
 
   /**TODO: when clicked on an empty hour segment, user can make meeting with tutor
    * 
@@ -179,16 +238,7 @@ export class SchedulerComponent implements OnInit {
   }
 
 
-  constructor(
-    private activatedRoute:ActivatedRoute,
-    private zone:NgZone,
-    private meetingScheduleService: MeetingScheduleService,
-    private localStorageService: LocalStorageService,
-    public matDialog: MatDialog,
-  ) 
-  {
-    this.activatedRoute.params.subscribe(params => this.tutorId = params['studentid'] );
-  }
+  
 
   /**TODO: open add class modal
    */
@@ -200,89 +250,13 @@ export class SchedulerComponent implements OnInit {
 
   }
 
-  /**A refresher for Angular Calendar. Need to put in directive. DO NOT TOUCH */
-  refresh: Subject<any> = new Subject();
 
   // clickToRefresh(){
   //   this.refresh.next();
   // }
 
 
-  /**Plan:
-   * 
-   * 1. get tutor meeting list by tutor's student id
-   * 2. get user student meeting list by current user's student id
-   * 3. populate tutor time schedule (include uniclass schedule?). Everything is red first
-   * 4. populate current user's time schedule (include uniclass schedule?). Everything is blue first
-   * 5. find corresponding meeting, mark them green
-   * 
-   * 3,4?> if play with uniclass schedule, need service that decipher schedule... rip
-   * 
-   * 
-   * 
-   */
-  ngOnInit() {
-    // interval(3000).subscribe(v=>{
-    //   this.events.push({
-    //     title: 'Dynamic',
-    //     color: users[0].color,
-    //     start: addHours(startOfDay(new Date()), v),
-    //     meta: {
-    //       user: users[0]
-    //     },
-    //     resizable: {
-    //       beforeStart: false,
-    //       afterEnd: false
-    //     },
-    //     draggable: false
-    //   })
-    //   this.refresh.next();
-    //   console.log(JSON.stringify(this.events))
-    // })
-
-    this.peerId = this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key];
-
-    this.meetingScheduleService.getMeetingsByTutorId(this.tutorId).subscribe(
-      meetings => {
-        this.tutorEvents = meetings.map(
-          (m):CalendarEvent => {
-            let resultEvent:CalendarEvent = {
-              start: new Date(m.start),
-              end: new Date(m.end),
-              title: EVENT_TITLE + m.meeting_id, //TODO: need to make some description
-              id: m.meeting_id,
-              color: m.peer_id === this.peerId? colors.green : colors.red,
-            }
-            return resultEvent;
-          }
-        )
-      },
-      err => console.log(err)
-    )
-
-    this.meetingScheduleService.getMeetingsByPeerId(this.peerId).subscribe(
-      meetings => {
-        this.peerEvents = meetings.map(
-          (m):CalendarEvent => {
-            let resultEvent:CalendarEvent = {
-              start: new Date(m.start),
-              end: new Date(m.end),
-              title: EVENT_TITLE + m.meeting_id, //TODO: need to make some description
-              id: m.meeting_id,
-              color: m.tutor_id === this.tutorId? colors.green : colors.blue,
-            }
-            return resultEvent;
-          }
-        )
-      },
-      err => console.log(err)
-    )
-
-
-
-    console.log (new Date());
-    
-  }
+  
 
   startDragToCreate(segment: DayViewHourSegment,
     mouseDownEvent: MouseEvent,
