@@ -8,7 +8,7 @@
                 <p class="card-text">Instructor: {{c.instructor}}</p>
                 <p class="card-text">{{c["start-time"]}}~{{c["end-time"]}}, {{c.days}}</p>
                 <p class="card-text">{{c.location}}</p>
-                <a routerLink="/class/{{c._id}}" class="card-link">Class Detail</a>
+                <a routerLink="/class/{{c['class-code']}}" class="card-link">Class Detail</a>
 
             </div>
         </div>

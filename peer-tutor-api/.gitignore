@@ -2,9 +2,13 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
 wb-unittests/reports/*
 wb-unittests/test-reports/*
 feature-html-report/*
+**/test-reports/*
+**/feature-html-report/*
+
 # C extensions
 *.so
 

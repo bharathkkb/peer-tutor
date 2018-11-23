@@ -9,9 +9,9 @@ coverage==4.5.2
 Flask==1.0.2
 Flask-Cors==3.0.6
 flex==6.13.2
+html-testRunner==1.1.2
 idna==2.7
 inflection==0.3.1
-Jinja2==2.10
 jsonpointer==1.14
 jsonschema==2.6.0
 MarkupSafe==1.0
@@ -22,12 +22,15 @@ pymongo==3.7.2
 pytest==3.9.3
 pytest-cov==2.6.0
 pytest-flask==0.14.0
+pytest-html==1.19.0
+pytest-metadata==1.7.0
 PyYAML==3.13
 requests==2.20.0
 rfc3987==1.3.8
 six==1.11.0
 strict-rfc3339==0.7
 swagger-spec-validator==2.4.1
+unittest-xml-reporting==2.2.0
 urllib3==1.24
 validate-email==1.3
 Werkzeug==0.14.1
