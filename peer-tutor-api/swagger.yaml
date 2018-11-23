@@ -214,6 +214,31 @@ paths:
               $ref: '#/definitions/rating'
         400:
           description: bad input parameter
+  /rating/avg/{studentId}:
+    get:
+      summary: returns a weighted rating for a student
+      operationId: rating_driver.getAllAvgRating
+      tags:
+        - "rating"
+      description: |
+        Get weighted avg of a particular student
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: studentId
+        description: weighted avg is returned
+        required: true
+        type: string
+      responses:
+        200:
+          description: rating obj
+          schema:
+            type: string
+            example: "4.34"
+
+        400:
+          description: bad input parameter
   /rating/given/{givenStudentId}:
     get:
       summary: returns an array of ratings

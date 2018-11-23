@@ -43,6 +43,26 @@ def getRatingsByReceivedStudentId(recStudentId):
     return json.loads(json_util.dumps(allRatings))
 
 
+def getAllAvgRating(studentId):
+    allRatings = mongoDriver().getFind("peer-tutor-db", "ratings")
+    totalNumber = 0
+    totalRatings = 0
+    totalRatingForStudent = 0
+    totalNumberStudent = 0
+    minRatingToBeShown = 1
+    for rating in allRatings:
+        totalNumber += 1
+        totalRatings += int(rating["rating_score"])
+        if(studentId == rating["received"]):
+            totalNumberStudent += 1
+            totalRatingForStudent += int(rating["rating_score"])
+    avgTotalRating = totalRatings / totalNumber
+    avgStudentRating = totalRatingForStudent / totalNumberStudent
+    weightedRating = ((totalNumberStudent / (totalNumberStudent + minRatingToBeShown)) * avgStudentRating) + \
+        (minRatingToBeShown / (totalNumberStudent + minRatingToBeShown)) * avgTotalRating
+    return round(weightedRating, 3)
+
+
 def putRating(ratingData):
     if(not (ratingData.get("rating_id", False) and ratingData.get("received", False) and ratingData.get("given", False) and ratingData.get("rating_score", False))):
         return json.loads(json.dumps({"error": "All required fields are not defined"})), 400
@@ -74,10 +94,4 @@ def putRating(ratingData):
 
 # just for testing purpose
 if __name__ == "__main__":
-    rating_dict = dict()
-    rating_dict["rating_id"] = "02"
-    rating_dict["given"] = "01"
-    rating_dict["received"] = "02"
-    rating_dict["rating_score"] = "1"
-    rating_dict["comment"] = "lorem imposeom3"
-    print(putRating(rating_dict))
+    print(getAllAvgRating("04"))
