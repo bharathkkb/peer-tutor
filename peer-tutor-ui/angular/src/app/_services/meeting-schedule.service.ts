@@ -10,6 +10,8 @@ interface MeetingObjType {
   "tutor_id": string;
   "selfReserved"?: boolean;
   "_id"?: any;
+  "title"?: string;
+  [x:string]:any;
 }
 
 const TEMP_HOST = "http://firen777-networklab.ddns.net:5000";
