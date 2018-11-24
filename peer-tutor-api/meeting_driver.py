@@ -58,12 +58,14 @@ def putMeeting(meetingData):
         else:
             meetingData["selfReserved"] = False
 
-        if(not (meetingData.get("start", False) and meetingData.get("end", False))):
-            return json.loads(json.dumps({"error": "Either start or end is not defined"})), 400
+        if(not (meetingData.get("start", False) and meetingData.get("end", False) and meetingData.get("meeting_title", False))):
+            return json.loads(json.dumps({"error": "Either start, end or meeting title is not defined"})), 400
 
         timeB = TimeBlock(meetingData["start"], meetingData["end"])
+
         newMeetingData = Meeting(
-            updateMeeting["meeting_id"], meetingData["peer_id"], meetingData["tutor_id"], time=timeB)
+            updateMeeting["meeting_id"], meetingData["peer_id"], meetingData["tutor_id"], time=timeB, meeting_title=meetingData["meeting_title"], location=meetingData.get("location", None))
+        print(newMeetingData.get_json())
         # update the meeting info in db
         mongoDriver().updateDict("peer-tutor-db", "meetings",
                                  updateMeeting, newMeetingData.get_json())
@@ -76,25 +78,29 @@ def putMeeting(meetingData):
         else:
             meetingData["selfReserved"] = False
 
-        if(not (meetingData.get("start", False) and meetingData.get("end", False))):
-            return json.loads(json.dumps({"error": "Either start or end is not defined"})), 400
+        if(not (meetingData.get("start", False) and meetingData.get("end", False) and meetingData.get("meeting_title", False))):
+            return json.loads(json.dumps({"error": " Either start, end or meeting title is not defined"})), 400
         timeB = TimeBlock(meetingData["start"], meetingData["end"])
 
         m = Meeting(meetingData["meeting_id"],
-                    meetingData["peer_id"], meetingData["tutor_id"], time=timeB)
+                    meetingData["peer_id"], meetingData["tutor_id"], time=timeB, meeting_title=meetingData["meeting_title"], location=meetingData.get("location", None))
 
         # add meeting to the peer student object
 
         from student_driver import getStudentById, putStudent
         peer = getStudentById(
             meetingData["peer_id"], unfurlMeetings=False, unfurlUniClass=False)
-        print(meetingData["peer_id"])
+        tutor = getStudentById(
+            meetingData["tutor_id"], unfurlMeetings=False, unfurlUniClass=False)
+        if not peer:
+            return json.loads(json.dumps({"error": " Peer with that id could not be found"})), 400
+        if not tutor:
+            return json.loads(json.dumps({"error": " Tutor with that id could not be found"})), 400
         peer["meetings"].append(meetingData["meeting_id"])
         putStudent(peer)
 
         # add meeting to the tutor student object
-        tutor = getStudentById(
-            meetingData["tutor_id"], unfurlMeetings=False, unfurlUniClass=False)
+
         tutor["meetings"].append(meetingData["meeting_id"])
         putStudent(tutor)
 

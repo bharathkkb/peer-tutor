@@ -504,6 +504,7 @@ def test_get_meeting_by_peer_id_data(url):
         assert meeting["peer_id"] == "00011"
         assert meeting["meeting_id"] == "06" or "02"
         assert meeting["tutor_id"] == "10001" or "10002" or "00011"
+        assert meeting["meeting_title"] == "title2" or "title3"
 
 # check get meeting by wrong id
 
@@ -525,6 +526,8 @@ def test_get_meeting_by_tutor_id_data(url):
         assert meeting["tutor_id"] == "10001"
         assert meeting["meeting_id"] == "06" or "05"
         assert meeting["peer_id"] == "00011" or "00012"
+        assert meeting["meeting_title"] == "title2"
+        assert meeting["location"] == "test location2"
 
 # check get meeting by wrong tutor id
 
@@ -546,6 +549,8 @@ def test_get_meeting_by_meeting_id_data(url):
     assert data["meeting_id"] == "06"
     assert data["peer_id"] == "00011"
     assert data["tutor_id"] == "10001"
+    assert data["meeting_title"] == "title2"
+    assert data["location"] == "test location2"
 
 # check get meeting by wrong meeting id
 
@@ -587,6 +592,8 @@ def test_put_meeting_data(url):
     putMeeting["peer_id"] = "10003"
     putMeeting["start"] = "11-18-2018 11:00 AM"
     putMeeting["end"] = "11-18-2018 10:00 AM"
+    putMeeting["meeting_title"] = "added this new meeting"
+    putMeeting["location"] = "test location"
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.put(
@@ -599,6 +606,8 @@ def test_put_meeting_data(url):
     assert data["tutor_id"] == putMeeting["tutor_id"]
     assert data["start"] == putMeeting["start"]
     assert data["end"] == putMeeting["end"]
+    assert data["location"] == putMeeting["location"]
+    assert data["meeting_title"] == putMeeting["meeting_title"]
 
 # check adding meeting without meeting start
 
@@ -608,6 +617,23 @@ def test_put_meeting_data_no_start_fail(url):
     putMeeting["meeting_id"] = "11135345646"
     putMeeting["tutor_id"] = "00011"
     putMeeting["peer_id"] = "10003"
+    putMeeting["end"] = "11-18-2018 10:00 AM"
+    putMeeting["meeting_title"] = "fail meeting"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/meeting', data=json.dumps(putMeeting), headers=headers)
+    assert putResponse.status_code == 400
+
+# check adding meeting without meeting title
+
+
+def test_put_meeting_data_no_title_fail(url):
+    putMeeting = dict()
+    putMeeting["meeting_id"] = "11135345646"
+    putMeeting["tutor_id"] = "00011"
+    putMeeting["peer_id"] = "10003"
+    putMeeting["start"] = "11-18-2018 11:00 AM"
     putMeeting["end"] = "11-18-2018 10:00 AM"
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
@@ -638,6 +664,8 @@ def test_modify_meeting_data(url):
     putMeeting["peer_id"] = "10004"
     putMeeting["start"] = "11-11-2018 1:00 PM"
     putMeeting["end"] = "11-11-2018 2:00 PM"
+    putMeeting["meeting_title"] = "edited this  meeting"
+    putMeeting["location"] = "test location2"
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.put(
@@ -651,6 +679,7 @@ def test_modify_meeting_data(url):
     assert data["peer_id"] == putMeeting["peer_id"]
     assert data["start"] == putMeeting["start"]
     assert data["end"] == putMeeting["end"]
+    assert data["meeting_title"] == putMeeting["meeting_title"]
 
 
 """
@@ -877,6 +906,7 @@ putMeeting["tutor_id"] = putStudentA["student_id"]
 putMeeting["peer_id"] = putStudentB["student_id"]
 putMeeting["start"] = "11-1-2018 1:00 PM"
 putMeeting["end"] = "11-1-2018 2:00 PM"
+putMeeting["meeting_title"] = "Example meeting title"
 
 
 def test_put_meeting_data_btw_A_B(url):
@@ -906,6 +936,7 @@ def test_get_meeting_data_btw_A_B(url):
     assert data["tutor_id"] == putStudentA["student_id"]
     assert data["start"] == putMeeting["start"]
     assert data["end"] == putMeeting["end"]
+    assert data["meeting_title"] == putMeeting["meeting_title"]
 
 
 def test_get_meeting_from_get_student_A(url):

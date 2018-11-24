@@ -36,7 +36,7 @@ def unfurl_enrolled_classes(dbClass):
 
 def getClassById(classId, unfurlClass=True):
     query = dict()
-    query["class-code"] = classId
+    query["class-code"] = str(classId)
     uniclass = json.loads(json_util.dumps(mongoDriver().getFindOne(
         "peer-tutor-db", "uni_class", query, exclude)))
     if(unfurlClass):
@@ -70,7 +70,9 @@ def getDepartments():
 
 def putStudentInClass(studentID, classId):
     from student_driver import getStudentById
+    print(classId)
     uniclass = getClassById(classId)
+    print(uniclass)
     student = getStudentById(studentID)
     if(uniclass.get("students", False)):
 
