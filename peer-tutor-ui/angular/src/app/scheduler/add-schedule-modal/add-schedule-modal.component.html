@@ -1,11 +1,22 @@
-<h1 mat-dialog-title>placeholder title</h1>
+<h1 mat-dialog-title>Edit the Meeting</h1>
 <div mat-dialog-content>
-  <p>What's your favorite animal?</p>
-  <mat-form-field>
-    <input matInput [(ngModel)]="data.animal">
-  </mat-form-field>
+  <form [formGroup]="modalForm">
+    <mat-form-field>
+      <input type="text" placeholder="Title"
+      matInput formControlName="eventTitle" id="event-title-input">
+    </mat-form-field>
+    <p>{{startTime}}</p>
+    <mat-form-field>
+      <mat-select placeholder="duration"
+      formControlName="eventDuration" id="event-dur-select">
+        <mat-option *ngFor="let durOpt of durationFilteredOpt" [value]="durOpt.v">
+          {{durOpt.t}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="onSaveClick()" cdkFocusInitial>Ok</button>
 </div>

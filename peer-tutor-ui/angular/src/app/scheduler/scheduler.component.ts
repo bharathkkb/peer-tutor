@@ -51,7 +51,7 @@ let USERS = [
 const EVENT_TITLE = "SOME EVENT"
 
 /**Meta Data for a event. Contain info about meetings*/
-class EventMeta {
+export interface EventMeta {
   user: {id: number; name: string;};
   meeting: {
     /**_id may not be useful */
@@ -79,6 +79,8 @@ export class SchedulerComponent implements OnInit {
   opponentId:string;
   /**Peer ID is determined by localStorage of current user and is used to GET peer meetings */
   selfId:string;
+  /**class name selected in route. used to automatically denote meeting title */
+  className:string;
   
   /**A list of events for tutor */
   opponentEvents: CalendarEvent<EventMeta>[] = []
@@ -104,10 +106,10 @@ export class SchedulerComponent implements OnInit {
     public matDialog: MatDialog,
   ) 
   {
-    this.activatedRoute.params.subscribe(params => this.opponentId = params['studentid'] );
+    this.activatedRoute.params.subscribe(params => {this.opponentId = params['studentid']; this.className = params['classname']}  );
   }
 
-  /**Plan:
+  /**Routine:
    * 
    * 0. tutor Id is already populated with route param in cnstructor
    * 1. peer Id populated from local storage
@@ -212,10 +214,10 @@ export class SchedulerComponent implements OnInit {
    * @param event 
    */
   handleEvent(action: string, event: CalendarEvent<EventMeta>): void {
-    if (event.meta.meeting.peer_id === this.selfId && event.meta.meeting.tutor_id === this.opponentId) {
+    if (event.meta.meeting.peer_id === this.selfId) {
+      this.openEditScheduleDialog(event);
+      console.log (action+": "+JSON.stringify(event));
     }
-    console.log (action+": "+JSON.stringify(event));
-    
   }
 
   /**TODO: when clicked on an empty hour segment, user can make meeting with tutor
@@ -284,48 +286,23 @@ export class SchedulerComponent implements OnInit {
     }
   }
 
-  /**TODO: dont think i need this
-   * 
-   * @param param0 
+  /**TODO: open edit class modal
    */
-  eventTimesChanged({
-    event,
-    newStart,
-    newEnd
-  }: CalendarEventTimesChangedEvent): void {
-    event.start = newStart;
-    event.end = newEnd;
-    this.events = [...this.events];
-  }
-
-  /**TODO: dont think i need this
-   * 
-   * spread operator MAY due to pointer/reference shenanigan
-   * 
-   * @param param0 
-   */
-  userChanged({ event, newUser }) {
-    event.color = newUser.color;
-    event.meta.user = newUser;
-    this.events = [...this.events];
-  }
-
-
-  
-
-  /**TODO: open add class modal
-   */
-  openAddScheduleDialog(startTime: Date, endTime: Date = null): void {
+  openEditScheduleDialog(event:CalendarEvent<EventMeta>): void {
     let addScheduleEventInputData:AddScheduleEventInputData;
 
     addScheduleEventInputData = {
-      start: startTime,
-      end: endTime
+      start: event.start,
+      end: event.end,
+      title: event.title,
+      hoursToConflict: 0.5 //changeLater
     }
+
+    
 
     const dialogRef = this.matDialog.open(AddScheduleModalComponent, {
       width: '250px',
-      data: {name: "ASDF_NAME", animal: "QWERT_NAME"}
+      data: addScheduleEventInputData,
     });
 
   }

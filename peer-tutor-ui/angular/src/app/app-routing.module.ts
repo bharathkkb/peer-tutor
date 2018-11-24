@@ -33,8 +33,19 @@ const routes: Routes = [
     redirectTo: 'login'
   },
   {
-    path: 'schedule/:studentid',
+    path: 'schedule/:classname/:studentid', //Making schedule w/ this route can automatically schedule class title
     component: SchedulerComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'schedule/:studentid', //this route compare self user and targeted user's schedule
+    component: SchedulerComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'schedule', //this route only manage user's own schedule
+    component: SchedulerComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'about',
