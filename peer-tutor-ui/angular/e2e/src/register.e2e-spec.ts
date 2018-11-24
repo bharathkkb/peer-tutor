@@ -23,17 +23,23 @@ describe('workspace-project App', () => {
     page.fillRegInfo(uniqueReg);
 
     //TODO: monitor if routing have problem
-    loginPage.navigateTo();
+    page.getRegFailMsgElem().isPresent().then(
+      result => {
+        if (result) {return loginPage.navigateTo()}
+      }
+    )
     let EC = protractor.ExpectedConditions
     browser.wait(EC.presenceOf(element(by.css("input#login-username"))));
 
     loginPage.fillCredentials({username: uniqueReg.email, password: uniqueReg.password});
 
+    browser.wait(EC.presenceOf(element(by.css(".content .row.mt-4"))));
     expect(element(by.css('.content .row.mt-4')).isPresent()).toBeTruthy();
   });
 
   it('should fail the register if studentId has already been registered', ()=>{
     page.navigateTo();
+    expect(page.getRegFailMsgElem().isPresent()).toBeFalsy();
     page.fillRegInfo();
     page.navigateTo();
     page.fillRegInfo();
