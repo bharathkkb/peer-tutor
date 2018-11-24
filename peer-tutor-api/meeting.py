@@ -38,8 +38,9 @@ class Meeting:
         timeB = self.time.get_json()
         meeting_dict["start"] = timeB["start"]
         meeting_dict["end"] = timeB["end"]
-        # meeting_dict["meeting_title"] = self.meeting_title
-        # meeting_dict["location"] = self.location
+        meeting_dict["meeting_title"] = self.meeting_title
+        if(self.location is not None):
+            meeting_dict["location"] = self.location
         return meeting_dict
 
     def get_meeting_id(self):

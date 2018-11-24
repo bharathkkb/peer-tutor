@@ -747,6 +747,12 @@ definitions:
       end:
         type: string
         example: "11-1-2018 2:00 PM"
+      meeting_title:
+        type: string
+        example: "Example meeting"
+      location:
+        type: string
+        example: "Example Location"
   deptObj:
     type: object
     properties:
