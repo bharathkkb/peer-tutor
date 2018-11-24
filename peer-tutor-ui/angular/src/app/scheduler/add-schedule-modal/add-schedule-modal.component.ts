@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 /**
  * 
  */
-export interface AddScheduleEventData {
+export interface AddScheduleEventInputData {
   start: Date
   end?: Date
 }
@@ -27,7 +27,7 @@ export class AddScheduleModalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AddScheduleModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: AddScheduleEventData) {}
+    @Inject(MAT_DIALOG_DATA) public data: AddScheduleEventInputData) {}
 
   onNoClick(): void {
     this.dialogRef.close();

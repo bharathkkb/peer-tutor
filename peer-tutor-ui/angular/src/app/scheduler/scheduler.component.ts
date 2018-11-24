@@ -2,14 +2,14 @@ import { Component, OnInit, ChangeDetectionStrategy, NgZone } from '@angular/cor
 import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarEventAction } from 'angular-calendar';
 import { interval, Subject } from 'rxjs'
 
-import { addHours, startOfDay, addDays } from 'date-fns';
+import { addHours, startOfDay, addDays, isWithinRange, subMinutes, addMinutes } from 'date-fns';
 import { ActivatedRoute } from '@angular/router';
 import { DayViewHourSegment } from 'calendar-utils';
 import { MatDialog } from '@angular/material';
-import { AddScheduleModalComponent, AddScheduleEventData } from './add-schedule-modal/add-schedule-modal.component';
+import { AddScheduleModalComponent, AddScheduleEventInputData } from './add-schedule-modal/add-schedule-modal.component';
 import { MeetingScheduleService, LocalStorageService, CURRENT_USER, UserService } from '../_services';
 
-import { v4 } from 'uuid'
+import { v4 as uuidV4} from 'uuid'
 
 /**Color for Red, Green, Blue */
 const COLORS = {
@@ -126,7 +126,7 @@ export class SchedulerComponent implements OnInit {
 
     this.userService.getByStudentId(this.selfId).subscribe(student=>{USERS[1].name = student.name; this.refresh.next()})
 
-
+    console.log(uuidV4());
 
     this.meetingScheduleService.getMeetingsByStudentId(this.opponentId).subscribe(
       meetings => {
@@ -164,8 +164,6 @@ export class SchedulerComponent implements OnInit {
         this.events.push(...this.opponentEvents);
         //refresh the view
         this.refresh.next();
-
-        console.log(JSON.stringify(this.opponentEvents, null, 4))
       },
       err => console.log(err)
     )
@@ -204,8 +202,6 @@ export class SchedulerComponent implements OnInit {
       err => console.log(err)
     )
 
-    console.log (new Date());
-
   }
 
   /**TODO: when user click their's own event, a modal pop up.
@@ -229,7 +225,63 @@ export class SchedulerComponent implements OnInit {
    * @param date 
    */
   hourSegmentClicked(date: Date){
-    console.log(date);
+    // if both opponent and self is free in those time segment
+    let canSchedule = true;
+    for (let e of this.events) {
+      if (isWithinRange(date, e.start, subMinutes(e.end, 1))) 
+      {
+        canSchedule = false;
+        break;  
+      }
+    }
+    
+    if (canSchedule) {
+      let newMeeting = {
+        "end": addMinutes(date, 30).toString(),
+        "meeting_id": uuidV4(),
+        "peer_id": this.selfId,
+        "start": date.toString(),
+        "tutor_id": this.opponentId,
+      }
+
+      this.meetingScheduleService.putMeeting(newMeeting).subscribe(
+        data => {
+          console.log("success: " + JSON.stringify(data));
+        }
+      )
+
+      let newOpponentEvent:CalendarEvent<EventMeta> = {
+        start: date,
+        end: addMinutes(date, 30),
+        title: EVENT_TITLE+newMeeting.meeting_id,
+        id: newMeeting.meeting_id,
+        color: COLORS.green,
+        meta: {
+          user: USERS[0],
+          meeting: {...newMeeting}
+        }
+      }
+
+      let newSelfEvent:CalendarEvent<EventMeta> = {
+        start: date,
+        end: addMinutes(date, 30),
+        title: EVENT_TITLE+newMeeting.meeting_id,
+        id: newMeeting.meeting_id,
+        color: COLORS.green,
+        meta: {
+          user: USERS[1],
+          meeting: {...newMeeting}
+        }
+      }
+      
+      this.events.push(newOpponentEvent, newSelfEvent);
+
+      this.refresh.next();
+
+    }
+    else {
+      console.log('cannot schedule!')
+    }
   }
 
   /**TODO: dont think i need this
@@ -263,11 +315,12 @@ export class SchedulerComponent implements OnInit {
 
   /**TODO: open add class modal
    */
-  openAddScheduleDialog(date: Date): void {
-    let addScheduleEventData:AddScheduleEventData;
+  openAddScheduleDialog(startTime: Date, endTime: Date = null): void {
+    let addScheduleEventInputData:AddScheduleEventInputData;
 
-    addScheduleEventData = {
-      start: date
+    addScheduleEventInputData = {
+      start: startTime,
+      end: endTime
     }
 
     const dialogRef = this.matDialog.open(AddScheduleModalComponent, {
