@@ -53,7 +53,7 @@ export class AddScheduleModalComponent implements OnInit {
     this.modalForm = this.formBuilder.group({
       eventTitle: this.data.title,
       eventLocation: this.data.location,
-      eventDuration: differenceInMinutes(this.data.end, this.data.start),
+      eventDuration: differenceInMinutes(this.data.end, this.data.start)?differenceInMinutes(this.data.end, this.data.start):180,
     })
 
   }

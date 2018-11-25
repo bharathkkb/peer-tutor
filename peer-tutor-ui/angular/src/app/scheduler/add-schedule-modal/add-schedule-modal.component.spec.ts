@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddScheduleModalComponent } from './add-schedule-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MatInputModule, MatSelectModule } from '@angular/material';
+import { MatFormFieldModule, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MatInputModule, MatSelectModule, MatIconModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AddScheduleModalComponent', () => {
@@ -21,6 +21,7 @@ describe('AddScheduleModalComponent', () => {
         MatDialogModule,
         MatInputModule,
         MatSelectModule,
+        MatIconModule,
       ],
       providers: [
         {provide: MatDialogRef, useValue: {}},

@@ -326,19 +326,18 @@ export class SchedulerComponent implements OnInit {
 
     let concernedDateList = this.events.filter(e=>isAfter(e.start, editEvent.start)).map(e=>e.start);
     let closestConflictDate = closestTo(editEvent.start, concernedDateList);
-    if (closestConflictDate){ //if not undefine, AKA there exist next conflict time
-      let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
-  
-      console.log("MinFLAG: "+minuteToConflict);
-  
-      while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
-        minIndex++;
-      }
-      console.log("INDEX: "+minIndex)
+    let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
+
+    console.log("MinFLAG: "+minuteToConflict);
+
+    while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
+      minIndex++;
     }
-    else {
-      minIndex = 5
-    }
+    console.log(`MININDEX FLAG: ${minIndex} || ${minToConflictOpts[minIndex]}`)
+
+    if (minIndex>5) {minIndex=5;}
+    
+    console.log(`MININDEX FLAG: ${minIndex} || ${minToConflictOpts[minIndex]}`)
     addScheduleEventInputData.minutesToConflict = minToConflictOpts[minIndex];
 
     //open dialog
