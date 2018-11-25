@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { addHours, addMinutes } from 'date-fns';
+import { addHours, addMinutes, differenceInMinutes } from 'date-fns';
 
 export type MinutesToConflictOptions = 30 | 60 | 90 | 120 | 150 | 180
 
@@ -53,7 +53,7 @@ export class AddScheduleModalComponent implements OnInit {
     this.modalForm = this.formBuilder.group({
       eventTitle: this.data.title,
       eventLocation: this.data.location,
-      eventDuration: 30,
+      eventDuration: differenceInMinutes(this.data.end, this.data.start),
     })
 
   }

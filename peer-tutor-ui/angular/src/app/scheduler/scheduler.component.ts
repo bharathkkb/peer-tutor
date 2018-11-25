@@ -118,8 +118,6 @@ export class SchedulerComponent implements OnInit {
 
     this.userService.getByStudentId(this.selfId).subscribe(student=>{USERS[1].name = student.name; this.refresh.next()})
 
-    console.log(uuidV4());
-
     this.populateEventViewSubRoutine()
 
   }
@@ -301,18 +299,24 @@ export class SchedulerComponent implements OnInit {
     }
 
     //calculate HoursToConflict... messy type issue hack here~
-    let concernedDateList = this.events.filter(e=>isAfter(e.start, editEvent.start)).map(e=>e.start);
-    let closestConflictDate = closestTo(editEvent.start, concernedDateList);
-    let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
-
-    console.log("MinFLAG: "+minuteToConflict);
-
     const minToConflictOpts:Array<MinutesToConflictOptions> = [30 , 60 , 90 , 120 , 150 , 180];
     let minIndex = 0;
-    while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
-      minIndex++;
+
+    let concernedDateList = this.events.filter(e=>isAfter(e.start, editEvent.start)).map(e=>e.start);
+    let closestConflictDate = closestTo(editEvent.start, concernedDateList);
+    if (closestConflictDate){ //if not undefine, AKA there exist next conflict time
+      let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
+  
+      console.log("MinFLAG: "+minuteToConflict);
+  
+      while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
+        minIndex++;
+      }
+      console.log("INDEX: "+minIndex)
     }
-    console.log("INDEX: "+minIndex)
+    else {
+      minIndex = 5
+    }
     addScheduleEventInputData.minutesToConflict = minToConflictOpts[minIndex];
 
     //open dialog
@@ -334,6 +338,33 @@ export class SchedulerComponent implements OnInit {
           this.meetingScheduleService.putMeeting(editEvent.meta.meeting).subscribe(
             meeting=>{
               console.log(`PUT complete!`);
+              this.populateEventViewSubRoutine();
+            },
+            err=>{console.log(err)}
+          )
+        }
+        else if (result.action === "delete") {
+          console.log(`AFTERCLOSE: reach`)
+
+          //TODO: proper deleteion needed
+
+          editEvent.meta.meeting.start = "DELETE";
+          editEvent.meta.meeting.end = "DELETE";
+          editEvent.meta.meeting.meeting_title = result.title;
+          editEvent.meta.meeting.location = result.location;
+
+          this.meetingScheduleService.putMeeting(editEvent.meta.meeting).subscribe(
+            meeting=>{
+              console.log(`Delete complete!`);
+              this.populateEventViewSubRoutine();
+            },
+            err=>{console.log(err)}
+          )
+        }
+        else {
+          this.meetingScheduleService.putMeeting(editEvent.meta.meeting).subscribe(
+            meeting=>{
+              console.log(`No-op complete!`);
               this.populateEventViewSubRoutine();
             },
             err=>{console.log(err)}

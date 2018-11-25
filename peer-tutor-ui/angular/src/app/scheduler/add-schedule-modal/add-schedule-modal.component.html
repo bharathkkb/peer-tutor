@@ -21,6 +21,7 @@
   </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button (click)="onSaveClick()" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="onSaveClick()" cdkFocusInitial>Edit</button>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-icon-button (click)="onDeleteClick()"><mat-icon>delete_forever</mat-icon></button>
 </div>
