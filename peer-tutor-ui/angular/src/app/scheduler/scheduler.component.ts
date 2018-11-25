@@ -127,7 +127,18 @@ export class SchedulerComponent implements OnInit {
 
     this.meetingScheduleService.getMeetingsByStudentId(this.opponentId).subscribe(
       meetings => {
-        this.opponentEvents = meetings.map(
+        this.opponentEvents = meetings
+        .filter(
+          (oppoM) => {
+            let dateStart = new Date(oppoM.start);
+            let dateEnd = new Date(oppoM.end);
+            if (!isNaN(dateStart.getTime()) && !isNaN(dateEnd.getTime())) {
+              return true;
+            }
+            return false;
+          }
+        )
+        .map(
           (oppoM):CalendarEvent<EventMeta> => {
             let resultEvent:CalendarEvent<EventMeta> = {
               start: new Date(oppoM.start),
@@ -167,7 +178,18 @@ export class SchedulerComponent implements OnInit {
 
     this.meetingScheduleService.getMeetingsByStudentId(this.selfId).subscribe(
       meetings => {
-        this.selfEvents = meetings.map(
+        this.selfEvents = meetings
+        .filter(
+          (selfM) => {
+            let dateStart = new Date(selfM.start);
+            let dateEnd = new Date(selfM.end);
+            if (!isNaN(dateStart.getTime()) && !isNaN(dateEnd.getTime())) {
+              return true;
+            }
+            return false;
+          }
+        )
+        .map(
           (selfM):CalendarEvent<EventMeta> => {
             let resultEvent:CalendarEvent<EventMeta> = {
               start: new Date(selfM.start),
