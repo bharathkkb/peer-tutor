@@ -35,7 +35,7 @@ export class UniClass{
     "title": string;
     "units": string;
     "section": string;
-    "students": string[]
+    "students": any[]
 }
 
 /**
