@@ -42,7 +42,7 @@ export interface UniClass{
 /**
  * Sumary of a UniClass
  */
-export class UniClassSum {
+export interface UniClassSum {
     "_id": string;
     "class-name": string;
     "class-code": string;
