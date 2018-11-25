@@ -1,11 +1,19 @@
 ﻿/**
  * TODO: Finalize respond format
  */
-export class User {
-    id: string;
-    username: string;
+export interface UserRegister {
+    student_id: string;
     password: string;
-    firstName: string;
-    lastName: string;
+    name: string;
     email: string;
+}
+
+export interface Student {
+    "_id"?: any;
+    "enrolled_classes": any[],
+    "meetings": any[],
+    "name": string,
+    "password"?: string,
+    "student_id": string,
+    "username": string
 }
