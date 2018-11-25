@@ -3,12 +3,13 @@ body{
     height: 100%;
 }
 
-.btn-group {
-    .btn-fab{
-        position: fixed !important;
-        right: 2em;
-        bottom: 2em
-    }
+.mat-button-bottom-right-fixed {
+    top: auto;
+    right: 20px;
+    bottom: 20px;
+    left: auto;
+    position: fixed;
+    background-color: green;
 }
 
 .example-form {

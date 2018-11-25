@@ -9,7 +9,7 @@ export class HomePage {
   /**Return add class floating button as element
    */
   getAddClassBtnElem(){
-    return element(by.css('a.btn.btn-success.btn-fab'));
+    return element(by.css('.mat-button-bottom-right-fixed'));
   }
 
   /**Return add class modal as element
