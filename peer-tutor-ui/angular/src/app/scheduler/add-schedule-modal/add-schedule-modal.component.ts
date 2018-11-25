@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { addHours } from 'date-fns';
+import { addHours, addMinutes } from 'date-fns';
 
 export type MinutesToConflictOptions = 30 | 60 | 90 | 120 | 150 | 180
 
@@ -47,6 +47,8 @@ export class AddScheduleModalComponent implements OnInit {
     this.startTime = this.data.start.toLocaleString();
 
     this.durationFilteredOpt = this.durationOpt.filter(opt=> opt.v<=this.data.minutesToConflict);
+    console.log("Filtered_FLAG: "+ this.data.minutesToConflict)
+    console.log("Filtered_FLAG: "+JSON.stringify(this.durationFilteredOpt))
 
     this.modalForm = this.formBuilder.group({
       eventTitle: this.data.title,
@@ -74,12 +76,13 @@ export class AddScheduleModalComponent implements OnInit {
   }
 
   onActionClick(action:"edit" | "noop" | "delete") {
+    console.log(`Duration: ${this.modalForm.get("eventDuration").value}`)
     let result:AddScheduleResult = {
       action: action,
       start: this.data.start,
-      end: addHours(this.data.start, this.modalForm.get("eventDuration").value),
-      title: this.modalForm.get("eventTitle").value,
-      location: this.modalForm.get("eventLocation").value,
+      end: addMinutes(this.data.start, this.modalForm.get("eventDuration").value),
+      title: this.modalForm.get("eventTitle").value ? this.modalForm.get("eventTitle").value : "A meeting",
+      location: this.modalForm.get("eventLocation").value ? this.modalForm.get("eventLocation").value : "",
     }
 
     this.dialogRef.close(result);

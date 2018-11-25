@@ -120,6 +120,13 @@ export class SchedulerComponent implements OnInit {
 
     console.log(uuidV4());
 
+    this.populateEventViewSubRoutine()
+
+  }
+
+  populateEventViewSubRoutine(){
+    this.events = [];
+
     this.meetingScheduleService.getMeetingsByStudentId(this.opponentId).subscribe(
       meetings => {
         this.opponentEvents = meetings.map(
@@ -193,7 +200,6 @@ export class SchedulerComponent implements OnInit {
       },
       err => console.log(err)
     )
-
   }
 
   /**TODO: when user click their's own event, a modal pop up.
@@ -299,11 +305,14 @@ export class SchedulerComponent implements OnInit {
     let closestConflictDate = closestTo(editEvent.start, concernedDateList);
     let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
 
+    console.log("MinFLAG: "+minuteToConflict);
+
     const minToConflictOpts:Array<MinutesToConflictOptions> = [30 , 60 , 90 , 120 , 150 , 180];
     let minIndex = 0;
-    while (minIndex<minToConflictOpts.length && minuteToConflict>=minToConflictOpts[minIndex]){
+    while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
       minIndex++;
     }
+    console.log("INDEX: "+minIndex)
     addScheduleEventInputData.minutesToConflict = minToConflictOpts[minIndex];
 
     //open dialog
@@ -315,12 +324,20 @@ export class SchedulerComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result=>{
         if (result.action === "edit") {
+          console.log(`AFTERCLOSE: reach`)
+
           editEvent.meta.meeting.start = result.start.toString();
           editEvent.meta.meeting.end = result.end.toString();
           editEvent.meta.meeting.meeting_title = result.title;
           editEvent.meta.meeting.location = result.location;
 
-          this.meetingScheduleService.putMeeting(editEvent.meta.meeting);
+          this.meetingScheduleService.putMeeting(editEvent.meta.meeting).subscribe(
+            meeting=>{
+              console.log(`PUT complete!`);
+              this.populateEventViewSubRoutine();
+            },
+            err=>{console.log(err)}
+          )
         }
       }
     )
