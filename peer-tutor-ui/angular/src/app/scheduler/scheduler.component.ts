@@ -137,7 +137,7 @@ export class SchedulerComponent implements OnInit {
             let resultEvent:CalendarEvent<EventMeta> = {
               start: new Date(oppoM.start),
               end: new Date(oppoM.end),
-              title: EVENT_TITLE + oppoM.meeting_id, //TODO: need to make some description
+              title: oppoM.meeting_title, //TODO: need to make some description
               id: oppoM.meeting_id,
               color: COLORS.red, //default red. will change later
               meta: {
@@ -177,7 +177,7 @@ export class SchedulerComponent implements OnInit {
             let resultEvent:CalendarEvent<EventMeta> = {
               start: new Date(selfM.start),
               end: new Date(selfM.end),
-              title: EVENT_TITLE + selfM.meeting_id, //TODO: need to make some description
+              title: selfM.meeting_title, //TODO: need to make some description
               id: selfM.meeting_id,
               color: COLORS.yellow, //default yellow. will change later
               meta: {
@@ -220,9 +220,9 @@ export class SchedulerComponent implements OnInit {
     }
   }
 
-  /**TODO: when clicked on an empty hour segment, user can make meeting with tutor
+  /**when clicked on an empty hour segment, user can make meeting with tutor
    * 
-   * TO BE REVISE, RESTRICTION? ETC.
+   * if classname param meter exist, use that as a title
    * 
    * @param date 
    */
@@ -244,6 +244,7 @@ export class SchedulerComponent implements OnInit {
         "peer_id": this.selfId,
         "start": date.toString(),
         "tutor_id": this.opponentId,
+        "meeting_title": this.className? this.className : "A meeting",
       }
 
       this.meetingScheduleService.putMeeting(newMeeting).subscribe(
@@ -255,7 +256,7 @@ export class SchedulerComponent implements OnInit {
       let newOpponentEvent:CalendarEvent<EventMeta> = {
         start: date,
         end: addMinutes(date, 30),
-        title: EVENT_TITLE+newMeeting.meeting_id,
+        title: newMeeting.meeting_title,
         id: newMeeting.meeting_id,
         color: COLORS.green,
         meta: {
@@ -267,7 +268,7 @@ export class SchedulerComponent implements OnInit {
       let newSelfEvent:CalendarEvent<EventMeta> = {
         start: date,
         end: addMinutes(date, 30),
-        title: EVENT_TITLE+newMeeting.meeting_id,
+        title: newMeeting.meeting_title,
         id: newMeeting.meeting_id,
         color: COLORS.green,
         meta: {
@@ -306,14 +307,6 @@ export class SchedulerComponent implements OnInit {
     });
 
   }
-
-
-  // clickToRefresh(){
-  //   this.refresh.next();
-  // }
-
-
-  
 
   startDragToCreate(segment: DayViewHourSegment,
     mouseDownEvent: MouseEvent,

@@ -10,7 +10,8 @@ interface MeetingObjType {
   "tutor_id": string;
   "selfReserved"?: boolean;
   "_id"?: any;
-  "title"?: string;
+  "meeting_title": string;
+  "location"?: string;
   [x:string]:any;
 }
 

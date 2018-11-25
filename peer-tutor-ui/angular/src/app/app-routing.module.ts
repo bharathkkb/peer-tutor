@@ -11,9 +11,19 @@ import { SchedulerComponent } from './scheduler/scheduler.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: HomePageComponent,
-    canActivate: [AuthGuard]
+    path: 'schedule/:classname/:studentid', //Making schedule w/ this route can automatically schedule class title
+    component: SchedulerComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'schedule/:studentid', //this route compare self user and targeted user's schedule
+    component: SchedulerComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'schedule', //this route only manage user's own schedule
+    component: SchedulerComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'class/:id',
@@ -33,27 +43,17 @@ const routes: Routes = [
     redirectTo: 'login'
   },
   {
-    path: 'schedule/:classname/:studentid', //Making schedule w/ this route can automatically schedule class title
-    component: SchedulerComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'schedule/:studentid', //this route compare self user and targeted user's schedule
-    component: SchedulerComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'schedule', //this route only manage user's own schedule
-    component: SchedulerComponent,
-    canActivate: [AuthGuard],
-  },
-  {
     path: 'about',
     component: AboutComponent,
   },
   {
     path: 'contact',
     component: ContactComponent,
+  },
+  {
+    path: '',
+    component: HomePageComponent,
+    canActivate: [AuthGuard]
   },
 ];
 
