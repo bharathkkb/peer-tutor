@@ -21,7 +21,7 @@
 }
  * ```
  */
-export class UniClass{
+export interface UniClass{
     "_id": any;
     "dept-name": string;
     "dept-id": string;
@@ -35,7 +35,8 @@ export class UniClass{
     "title": string;
     "units": string;
     "section": string;
-    "students": any[]
+    "students": any[];
+    [x:string]: any;
 }
 
 /**
@@ -54,4 +55,5 @@ export class UniClassSum {
     "end-time": string;
     "title": string;
     "section": string;
+    [x:string]: any;
   }
