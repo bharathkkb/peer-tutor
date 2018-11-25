@@ -1,18 +1,23 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { addHours } from 'date-fns';
+
+export type MinutesToConflictOptions = 30 | 60 | 90 | 120 | 150 | 180
 
 export interface AddScheduleEventInputData {
   start: Date;
   end?: Date;
-  hoursToConflict: 0.5 | 1.0 | 1.5 | 2.0 | 2.5 | 3.0;
+  minutesToConflict: MinutesToConflictOptions
   title: string;
+  location: string;
 }
 
 export interface AddScheduleResult {
   start: Date;
   end: Date;
   title: string;
+  location: string;
   action: "edit" | "noop" | "delete";
 }
 
@@ -28,12 +33,12 @@ export class AddScheduleModalComponent implements OnInit {
   modalForm: FormGroup;
 
   durationOpt = [
-    {v:0.5, t:"30m"},
-    {v:1.0, t:"1h"},
-    {v:1.5, t:"1h 30m"},
-    {v:2.0, t:"2h"},
-    {v:2.5, t:"2h 30m"},
-    {v:3.0, t:"3h"},
+    {v:0.5*60, t:"30m"},
+    {v:1.0*60, t:"1h"},
+    {v:1.5*60, t:"1h 30m"},
+    {v:2.0*60, t:"2h"},
+    {v:2.5*60, t:"2h 30m"},
+    {v:3.0*60, t:"3h"},
   ]
 
   durationFilteredOpt: any[];
@@ -41,12 +46,14 @@ export class AddScheduleModalComponent implements OnInit {
   ngOnInit() {
     this.startTime = this.data.start.toLocaleString();
 
-    this.durationFilteredOpt = this.durationOpt.filter(opt=> opt.v<=this.data.hoursToConflict);
+    this.durationFilteredOpt = this.durationOpt.filter(opt=> opt.v<=this.data.minutesToConflict);
 
     this.modalForm = this.formBuilder.group({
       eventTitle: this.data.title,
-      eventDuration: 0.5,
+      eventLocation: this.data.location,
+      eventDuration: 30,
     })
+
   }
 
   constructor(
@@ -54,12 +61,28 @@ export class AddScheduleModalComponent implements OnInit {
     public dialogRef: MatDialogRef<AddScheduleModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddScheduleEventInputData) {}
 
-  onNoClick(): void {
-    this.dialogRef.close();
+  onNoClick(){
+    this.onActionClick("noop");
   }
 
-  onSaveClick() {
+  onSaveClick(){
+    this.onActionClick("edit");
+  }
 
+  onDeleteClick(){
+    this.onActionClick("delete");
+  }
+
+  onActionClick(action:"edit" | "noop" | "delete") {
+    let result:AddScheduleResult = {
+      action: action,
+      start: this.data.start,
+      end: addHours(this.data.start, this.modalForm.get("eventDuration").value),
+      title: this.modalForm.get("eventTitle").value,
+      location: this.modalForm.get("eventLocation").value,
+    }
+
+    this.dialogRef.close(result);
   }
 
 }

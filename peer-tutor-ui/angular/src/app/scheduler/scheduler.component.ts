@@ -2,14 +2,15 @@ import { Component, OnInit, ChangeDetectionStrategy, NgZone } from '@angular/cor
 import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarEventAction } from 'angular-calendar';
 import { interval, Subject } from 'rxjs'
 
-import { addHours, startOfDay, addDays, isWithinRange, subMinutes, addMinutes } from 'date-fns';
+import { addHours, startOfDay, addDays, isWithinRange, subMinutes, addMinutes, isAfter, closestTo, differenceInMinutes } from 'date-fns';
 import { ActivatedRoute } from '@angular/router';
 import { DayViewHourSegment } from 'calendar-utils';
-import { MatDialog } from '@angular/material';
-import { AddScheduleModalComponent, AddScheduleEventInputData } from './add-schedule-modal/add-schedule-modal.component';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { AddScheduleModalComponent, AddScheduleEventInputData, MinutesToConflictOptions, AddScheduleResult } from './add-schedule-modal/add-schedule-modal.component';
 import { MeetingScheduleService, LocalStorageService, CURRENT_USER, UserService } from '../_services';
 
 import { v4 as uuidV4} from 'uuid'
+import { Meeting } from '../_models';
 
 /**Color for Red, Green, Blue */
 const COLORS = {
@@ -53,18 +54,7 @@ const EVENT_TITLE = "SOME EVENT"
 /**Meta Data for a event. Contain info about meetings*/
 export interface EventMeta {
   user: {id: number; name: string;};
-  meeting: {
-    /**_id may not be useful */
-    "_id"?: {
-      "$oid": string;
-    },
-    "meeting_id": string;
-    "peer_id": string;
-    /**neither is selfReserved */
-    "selfReserved"?: boolean;
-    "tutor_id": string;
-    [x:string]: any;
-  }
+  meeting: Meeting;
 }
 
 @Component({
@@ -238,21 +228,24 @@ export class SchedulerComponent implements OnInit {
     }
     
     if (canSchedule) {
-      let newMeeting = {
+      //make a Meeting w/ 30 min duration
+      let newMeeting:Meeting = {
         "end": addMinutes(date, 30).toString(),
         "meeting_id": uuidV4(),
         "peer_id": this.selfId,
         "start": date.toString(),
         "tutor_id": this.opponentId,
         "meeting_title": this.className? this.className : "A meeting",
+        "location": "",
       }
-
+      //PUT the meeting
       this.meetingScheduleService.putMeeting(newMeeting).subscribe(
         data => {
           console.log("success: " + JSON.stringify(data));
         }
       )
 
+      //new Opponent Event
       let newOpponentEvent:CalendarEvent<EventMeta> = {
         start: date,
         end: addMinutes(date, 30),
@@ -264,7 +257,7 @@ export class SchedulerComponent implements OnInit {
           meeting: {...newMeeting}
         }
       }
-
+      //same go for Self Event
       let newSelfEvent:CalendarEvent<EventMeta> = {
         start: date,
         end: addMinutes(date, 30),
@@ -277,8 +270,10 @@ export class SchedulerComponent implements OnInit {
         }
       }
       
+      //push them both
       this.events.push(newOpponentEvent, newSelfEvent);
 
+      //refresh the view
       this.refresh.next();
 
     }
@@ -287,27 +282,57 @@ export class SchedulerComponent implements OnInit {
     }
   }
 
-  /**TODO: open edit class modal
+  /**TODO: revisit if to reuse add event/edit event
    */
-  openEditScheduleDialog(event:CalendarEvent<EventMeta>): void {
-    let addScheduleEventInputData:AddScheduleEventInputData;
-
-    addScheduleEventInputData = {
-      start: event.start,
-      end: event.end,
-      title: event.title,
-      hoursToConflict: 0.5 //changeLater
+  openEditScheduleDialog(editEvent:CalendarEvent<EventMeta>): void {
+    //prepare data object for dialog input
+    let addScheduleEventInputData:AddScheduleEventInputData = {
+      start: editEvent.start,
+      end: editEvent.end,
+      title: editEvent.title,
+      location: editEvent.meta.meeting.location,
+      minutesToConflict: 30 //changeLater
     }
 
-    
+    //calculate HoursToConflict... messy type issue hack here~
+    let concernedDateList = this.events.filter(e=>isAfter(e.start, editEvent.start)).map(e=>e.start);
+    let closestConflictDate = closestTo(editEvent.start, concernedDateList);
+    let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
 
-    const dialogRef = this.matDialog.open(AddScheduleModalComponent, {
+    const minToConflictOpts:Array<MinutesToConflictOptions> = [30 , 60 , 90 , 120 , 150 , 180];
+    let minIndex = 0;
+    while (minIndex<minToConflictOpts.length && minuteToConflict>=minToConflictOpts[minIndex]){
+      minIndex++;
+    }
+    addScheduleEventInputData.minutesToConflict = minToConflictOpts[minIndex];
+
+    //open dialog
+    const dialogRef:MatDialogRef<AddScheduleModalComponent,AddScheduleResult> = this.matDialog.open(AddScheduleModalComponent, {
       width: '250px',
       data: addScheduleEventInputData,
     });
 
+    dialogRef.afterClosed().subscribe(
+      result=>{
+        if (result.action === "edit") {
+          editEvent.meta.meeting.start = result.start.toString();
+          editEvent.meta.meeting.end = result.end.toString();
+          editEvent.meta.meeting.meeting_title = result.title;
+          editEvent.meta.meeting.location = result.location;
+
+          this.meetingScheduleService.putMeeting(editEvent.meta.meeting);
+        }
+      }
+    )
+
   }
 
+  /**TODO: useless?
+   * 
+   * @param segment 
+   * @param mouseDownEvent 
+   * @param segmentElement 
+   */
   startDragToCreate(segment: DayViewHourSegment,
     mouseDownEvent: MouseEvent,
     segmentElement: HTMLElement){
