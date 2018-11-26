@@ -11,6 +11,7 @@ import { MeetingScheduleService, LocalStorageService, CURRENT_USER, UserService 
 
 import { v4 as uuidV4} from 'uuid'
 import { Meeting } from '../_models';
+import { PopupMsgComponent } from '../popup-msg/popup-msg.component';
 
 /**Color for Red, Green, Blue */
 const COLORS = {
@@ -306,6 +307,9 @@ export class SchedulerComponent implements OnInit {
 
     }
     else {
+      const popDialogRef:MatDialogRef<PopupMsgComponent> = this.matDialog.open(PopupMsgComponent, 
+        {data: {title:'Uh Oh!', msg:'There are time conflict and you cannot schedule a meeting at this time!'}}
+      )
       console.log('cannot schedule!')
     }
   }
