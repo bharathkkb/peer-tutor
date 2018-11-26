@@ -5,11 +5,13 @@ import sys
 # This is class we want to test. So, we need to import it
 from meeting import Meeting
 
+
 class Meeting_testing(unittest.TestCase):
     """
     The basic class that inherits unittest.TestCase
     """
-    meeting = Meeting("123", "009340877", "009123456", "17:30-18:45", "CS 152 Tutoring", "DH 223", False)  # instantiate the student Class
+    meeting = Meeting("123", "009340877", "009123456", "17:30-18:45",
+                      "CS 152 Tutoring", "DH 223", False)  # instantiate the student Class
 
     def test_get_meeting_id(self):
         assert self.meeting.get_meeting_id() == "123"
@@ -60,6 +62,7 @@ class Meeting_testing(unittest.TestCase):
     def test_set_selfReserved(self):
         self.meeting.set_selfReserved(True)
         assert self.meeting.get_selfReserved() == True
+
 
 if __name__ == '__main__':
     # begin the unittest.main()
