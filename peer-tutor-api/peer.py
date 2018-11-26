@@ -1,17 +1,16 @@
-from student import Student
-from timeBlock import TimeBlock
-from meeting import Meeting
-from uniClass import UniClass
+# from student import Student
+# from timeBlock import TimeBlock
+# from meeting import Meeting
+# from uniClass import UniClass
 
 
-class Peer(Student):
+class Peer:
     """
     Returns a ```peer``` object with the given peer Id, peer_ratings.
 
     """
 
     def __init__(self, student_id, name, username, password, enrolled_classes,  meetings, schedules, peer_id, peer_ratings):
-        super().__init__(student_id, name, username, password, enrolled_classes,  meetings, schedules)
         self.peer_id = peer_id
         self.peer_ratings = peer_ratings
         print("A peer object is created.")
