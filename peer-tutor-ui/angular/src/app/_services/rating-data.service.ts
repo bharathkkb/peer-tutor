@@ -15,7 +15,7 @@ export class RatingDataService {
   }
 
   getRatingAvgByStudentId(id: string) {
-    return this.http.get<Rating>(environment.apipath.getRatingAvgByStudentId + id);
+    return this.http.get<number>(environment.apipath.getRatingAvgByStudentId + id);
   }
 
   getRatingsByGivenStudentId(id: string) {

@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogModule, MatIconModule, MatSelectModule, MatTableModule, MatListModule} from '@angular/material';
+import { MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogModule, MatIconModule, MatSelectModule, MatTableModule, MatListModule, MatSortModule, MatProgressSpinnerModule} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -52,6 +52,7 @@ import { PopupMsgComponent } from './popup-msg/popup-msg.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -59,12 +60,13 @@ import { PopupMsgComponent } from './popup-msg/popup-msg.component';
     MatListModule,
     MatIconModule,
     MatSelectModule,
+    MatSortModule,
     //Material Auto Complete mess
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
     MatButtonModule,
-    BrowserAnimationsModule,
+    MatProgressSpinnerModule,
     CalendarModule.forRoot({
       provide: DateAdapter,  //Angular Calendar or Angular Material???!!!
       useFactory: adapterFactory
