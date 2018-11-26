@@ -11,25 +11,26 @@ import { MeetingScheduleService, LocalStorageService, CURRENT_USER, UserService 
 
 import { v4 as uuidV4} from 'uuid'
 import { Meeting } from '../_models';
+import { PopupMsgComponent } from '../popup-msg/popup-msg.component';
 
 /**Color for Red, Green, Blue */
 const COLORS = {
-  /**Red is for Opponent event, unrelated to user*/
+  /**Red is for event unrelated to user. No READ/WRITE allowed*/
   red: {
     primary: '#ad2121',
     secondary: '#FAE3E3'
   },
-  /**Yellow is for Self event, unrelated to opponent */
+  /**Yellow is for event where user is the tutor. You can READ but cannot WRITE the event */
   yellow: {
     primary: '#e3bc08',
     secondary: '#FDF1BA'
   },
-  /**Blue is for event with User as tutor and Opponent as peer */
+  /**Blue is for event with User as a peer. You can READ and WRITE the event*/
   blue: {
     primary: '#1e90ff',
     secondary: '#D1E8FF'
   },
-  /**Green is for event with Opponent as tutor and User as peer */
+  /**Green is special case of blue where the opponent is also the event tutor*/
   green: {
     primary: '#009933',
     secondary: '#99ff99'
@@ -145,7 +146,7 @@ export class SchedulerComponent implements OnInit {
               end: new Date(oppoM.end),
               title: oppoM.meeting_title, //TODO: need to make some description
               id: oppoM.meeting_id,
-              color: COLORS.red, //default red. will change later
+              color: COLORS.red, //default red. Red means none of the user's business. Will double check later
               meta: {
                 //https://stackoverflow.com/a/38874807
                 //spread operator to do deep cloning:
@@ -155,13 +156,13 @@ export class SchedulerComponent implements OnInit {
               },
             }
 
-            //check if opponent is my tutor and self is opponent's peer
+            //check if opponent is event tutor and self is event peer
             if (oppoM.tutor_id===this.opponentId && oppoM.peer_id===this.selfId) {
               resultEvent.color = COLORS.green;
             }
-            //check if opponent is my peer and self is opponent's tutor
-            if (oppoM.tutor_id===this.selfId && oppoM.peer_id===this.opponentId) {
-              resultEvent.color = COLORS.blue;
+            //check if self is event tutor
+            if (oppoM.tutor_id===this.selfId) {
+              resultEvent.color = COLORS.yellow;
             }
 
             return resultEvent;
@@ -196,20 +197,20 @@ export class SchedulerComponent implements OnInit {
               end: new Date(selfM.end),
               title: selfM.meeting_title, //TODO: need to make some description
               id: selfM.meeting_id,
-              color: COLORS.yellow, //default yellow. will change later
+              color: COLORS.blue, //default blue. Blue means user is the peer of the event. Will double check later
               meta: {
                 user: USERS[1],
                 meeting: {...selfM}
               }
             }
 
-            //check if opponent is my tutor and self is opponent's peer
+            //check if opponent is event tutor and self is event peer
             if (selfM.tutor_id===this.opponentId && selfM.peer_id===this.selfId) {
               resultEvent.color = COLORS.green;
             }
-            //check if opponent is my peer and self is opponent's tutor
-            if (selfM.tutor_id===this.selfId && selfM.peer_id===this.opponentId) {
-              resultEvent.color = COLORS.blue;
+            //check if self is event tutor
+            if (selfM.tutor_id===this.selfId) {
+              resultEvent.color = COLORS.yellow;
             }
             return resultEvent;
           }
@@ -232,7 +233,9 @@ export class SchedulerComponent implements OnInit {
   handleEvent(action: string, event: CalendarEvent<EventMeta>): void {
     if (event.meta.meeting.peer_id === this.selfId) {
       this.openEditScheduleDialog(event);
-      console.log (action+": "+JSON.stringify(event));
+    }
+    else {
+      this.openEditScheduleDialog(event, true);
     }
   }
 
@@ -304,20 +307,26 @@ export class SchedulerComponent implements OnInit {
 
     }
     else {
+      const popDialogRef:MatDialogRef<PopupMsgComponent> = this.matDialog.open(PopupMsgComponent, 
+        {data: {title:'Uh Oh!', msg:'There are time conflict and you cannot schedule a meeting at this time!'}}
+      )
       console.log('cannot schedule!')
     }
   }
 
-  /**TODO: revisit if to reuse add event/edit event
+  /**
+   * 
+   * @param editEvent the event to be rendered and editted
+   * @param readOnly are you blocked from editting or not?
    */
-  openEditScheduleDialog(editEvent:CalendarEvent<EventMeta>): void {
+  openEditScheduleDialog(editEvent:CalendarEvent<EventMeta>, readOnly:boolean = false): void {
     //prepare data object for dialog input
     let addScheduleEventInputData:AddScheduleEventInputData = {
-      start: editEvent.start,
-      end: editEvent.end,
-      title: editEvent.title,
-      location: editEvent.meta.meeting.location,
-      minutesToConflict: 30 //changeLater
+      event: editEvent,
+      minutesToConflict: 30, //changeLater
+
+      readOnly: readOnly,
+      
     }
 
     //calculate HoursToConflict... messy type issue hack here~
@@ -326,23 +335,18 @@ export class SchedulerComponent implements OnInit {
 
     let concernedDateList = this.events.filter(e=>isAfter(e.start, editEvent.start)).map(e=>e.start);
     let closestConflictDate = closestTo(editEvent.start, concernedDateList);
+    
     let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
-
-    console.log("MinFLAG: "+minuteToConflict);
-
     while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
       minIndex++;
     }
-    console.log(`MININDEX FLAG: ${minIndex} || ${minToConflictOpts[minIndex]}`)
-
-    if (minIndex>5) {minIndex=5;}
+    if (minIndex>5 || concernedDateList.length===0 ) {minIndex=5;}
     
-    console.log(`MININDEX FLAG: ${minIndex} || ${minToConflictOpts[minIndex]}`)
     addScheduleEventInputData.minutesToConflict = minToConflictOpts[minIndex];
 
     //open dialog
     const dialogRef:MatDialogRef<AddScheduleModalComponent,AddScheduleResult> = this.matDialog.open(AddScheduleModalComponent, {
-      width: '250px',
+      // width: '250px',
       data: addScheduleEventInputData,
     });
 
@@ -377,15 +381,6 @@ export class SchedulerComponent implements OnInit {
           this.meetingScheduleService.putMeeting(editEvent.meta.meeting).subscribe(
             meeting=>{
               console.log(`Delete complete!`);
-              this.populateEventViewSubRoutine();
-            },
-            err=>{console.log(err)}
-          )
-        }
-        else {
-          this.meetingScheduleService.putMeeting(editEvent.meta.meeting).subscribe(
-            meeting=>{
-              console.log(`No-op complete!`);
               this.populateEventViewSubRoutine();
             },
             err=>{console.log(err)}

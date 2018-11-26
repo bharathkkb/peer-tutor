@@ -1,6 +1,8 @@
 <h1 mat-dialog-title>Edit the Meeting</h1>
 <div mat-dialog-content>
+  
   <form [formGroup]="modalForm">
+    <h5>{{schedulePreface}}{{tutorpeerName}}</h5>
     <mat-form-field>
       <input type="text" placeholder="Title"
       matInput formControlName="eventTitle" id="event-title-input">
@@ -21,7 +23,7 @@
   </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onSaveClick()" cdkFocusInitial>Edit</button>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-icon-button (click)="onDeleteClick()"><mat-icon>delete_forever</mat-icon></button>
+  <button mat-button (click)="onSaveClick()" cdkFocusInitial *ngIf="!data.readOnly">Edit</button>
+  <button mat-icon-button (click)="onDeleteClick()" *ngIf="!data.readOnly"><mat-icon>delete_forever</mat-icon></button>
 </div>

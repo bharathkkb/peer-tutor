@@ -25,6 +25,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { AddScheduleModalComponent } from './scheduler/add-schedule-modal/add-schedule-modal.component';
 import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
+import { PopupMsgComponent } from './popup-msg/popup-msg.component';
 
 
 @NgModule({
@@ -42,9 +43,11 @@ import { ContactComponent } from './contact/contact.component';
     AddScheduleModalComponent,
     AboutComponent,
     ContactComponent,
+    PopupMsgComponent,
   ],
   entryComponents: [
     AddScheduleModalComponent,
+    PopupMsgComponent,
   ],
   imports: [
     BrowserModule,
