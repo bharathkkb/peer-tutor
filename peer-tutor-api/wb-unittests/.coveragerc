@@ -1,0 +1,8 @@
+[report]
+exclude_lines =
+      pragma: no cover
+      def get_json*
+      def __str__*
+      if __name__ == '__main__'*
+      def set_student*
+      def get_student*

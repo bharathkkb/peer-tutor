@@ -1,5 +1,6 @@
 [run]
 omit = env/*
+      wb-unittests/*
       __pycache__
       .pytest_cache
       comment.py
@@ -8,3 +9,14 @@ omit = env/*
       tutor.py
       scraperClassesLoader.py
       timeblock.py
+      server.py
+      uniClass.py
+
+[report]
+exclude_lines =
+      pragma: no cover
+      def __str__*
+      except ConnectionFailure*
+      if __name__ == "__main__"*
+      def parseArgs*
+      except Exception*

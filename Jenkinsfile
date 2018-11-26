@@ -19,7 +19,7 @@ pipeline {
               pip install -r requirements.txt
               pytest -q test_api.py --url=http://10.0.0.188:5000  --local=0 -vv -s --cov-config .coveragerc --cov=. --cov-report=html --html=feature-html-report/index.html
               cd wb-unittests
-              coverage run -m unittest discover -s . -p '*_testing.py' -v
+              coverage run --rcfile=.coveragerc -m unittest discover -s . -p '*_testing.py' -v
               coverage report
               coverage html
               python unittest_runner_xml.py
