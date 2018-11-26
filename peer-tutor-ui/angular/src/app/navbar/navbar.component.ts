@@ -36,10 +36,5 @@ export class NavbarComponent implements OnInit {
       else {this.isVisible = true;}
     });
   }
-  logout() {
-     // logout
-     this.authenticationService.logout();
-     this.router.navigate(['/', 'login']);
-  }
 
 }
