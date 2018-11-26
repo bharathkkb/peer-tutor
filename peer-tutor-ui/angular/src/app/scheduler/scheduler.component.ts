@@ -232,7 +232,9 @@ export class SchedulerComponent implements OnInit {
   handleEvent(action: string, event: CalendarEvent<EventMeta>): void {
     if (event.meta.meeting.peer_id === this.selfId) {
       this.openEditScheduleDialog(event);
-      console.log (action+": "+JSON.stringify(event));
+    }
+    else {
+      this.openEditScheduleDialog(event, true);
     }
   }
 
@@ -308,16 +310,19 @@ export class SchedulerComponent implements OnInit {
     }
   }
 
-  /**TODO: revisit if to reuse add event/edit event
+  /**
+   * 
+   * @param editEvent the event to be rendered and editted
+   * @param readOnly are you blocked from editting or not?
    */
-  openEditScheduleDialog(editEvent:CalendarEvent<EventMeta>): void {
+  openEditScheduleDialog(editEvent:CalendarEvent<EventMeta>, readOnly:boolean = false): void {
     //prepare data object for dialog input
     let addScheduleEventInputData:AddScheduleEventInputData = {
-      start: editEvent.start,
-      end: editEvent.end,
-      title: editEvent.title,
-      location: editEvent.meta.meeting.location,
-      minutesToConflict: 30 //changeLater
+      event: editEvent,
+      minutesToConflict: 30, //changeLater
+
+      readOnly: readOnly,
+      
     }
 
     //calculate HoursToConflict... messy type issue hack here~
@@ -328,21 +333,18 @@ export class SchedulerComponent implements OnInit {
     let closestConflictDate = closestTo(editEvent.start, concernedDateList);
     let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
 
-    console.log("MinFLAG: "+minuteToConflict);
 
     while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
       minIndex++;
     }
-    console.log(`MININDEX FLAG: ${minIndex} || ${minToConflictOpts[minIndex]}`)
 
     if (minIndex>5) {minIndex=5;}
     
-    console.log(`MININDEX FLAG: ${minIndex} || ${minToConflictOpts[minIndex]}`)
     addScheduleEventInputData.minutesToConflict = minToConflictOpts[minIndex];
 
     //open dialog
     const dialogRef:MatDialogRef<AddScheduleModalComponent,AddScheduleResult> = this.matDialog.open(AddScheduleModalComponent, {
-      width: '250px',
+      // width: '250px',
       data: addScheduleEventInputData,
     });
 
@@ -377,15 +379,6 @@ export class SchedulerComponent implements OnInit {
           this.meetingScheduleService.putMeeting(editEvent.meta.meeting).subscribe(
             meeting=>{
               console.log(`Delete complete!`);
-              this.populateEventViewSubRoutine();
-            },
-            err=>{console.log(err)}
-          )
-        }
-        else {
-          this.meetingScheduleService.putMeeting(editEvent.meta.meeting).subscribe(
-            meeting=>{
-              console.log(`No-op complete!`);
               this.populateEventViewSubRoutine();
             },
             err=>{console.log(err)}

@@ -1,16 +1,19 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { addHours, addMinutes, differenceInMinutes } from 'date-fns';
+import { addMinutes, differenceInMinutes } from 'date-fns';
+import { UserService, LocalStorageService } from 'src/app/_services';
+import { EventMeta } from '../scheduler.component';
+import { CalendarEvent } from 'calendar-utils';
+import { Student } from '../../_models'
 
 export type MinutesToConflictOptions = 30 | 60 | 90 | 120 | 150 | 180
 
 export interface AddScheduleEventInputData {
-  start: Date;
-  end?: Date;
+  event: CalendarEvent<EventMeta>,
   minutesToConflict: MinutesToConflictOptions
-  title: string;
-  location: string;
+
+  readOnly: boolean;
 }
 
 export interface AddScheduleResult {
@@ -28,6 +31,9 @@ export interface AddScheduleResult {
 })
 export class AddScheduleModalComponent implements OnInit {
 
+  schedulePreface: "You scheduled this meeting with tutor: " | "This meeting is scheduled by peer: " = "This meeting is scheduled by peer: ";
+  tutorpeerName:string = "<strong>XSS!!??</strong>";
+  imPeerFlag:boolean = true;
   startTime: string;
 
   modalForm: FormGroup;
@@ -44,22 +50,41 @@ export class AddScheduleModalComponent implements OnInit {
   durationFilteredOpt: any[];
 
   ngOnInit() {
-    this.startTime = this.data.start.toLocaleString();
+    this.startTime = this.data.event.start.toLocaleString();
+    let currUserStudentId = <Student>this.localStorageService.getCurrentUser();
+    if (currUserStudentId.student_id === this.data.event.meta.meeting.peer_id){ //I am peer.
+      this.schedulePreface = "You scheduled this meeting with tutor: ";
+      this.userService.getByStudentId(this.data.event.meta.meeting.tutor_id).subscribe(
+        student => {this.tutorpeerName = student.name;}
+      )
+    }
+    else if (currUserStudentId.student_id === this.data.event.meta.meeting.tutor_id) { //I am tutor.
+      this.schedulePreface = "This meeting is scheduled by peer: ";
+      this.userService.getByStudentId(this.data.event.meta.meeting.peer_id).subscribe(
+        student => {this.tutorpeerName = student.name;}
+      )
+    }
 
     this.durationFilteredOpt = this.durationOpt.filter(opt=> opt.v<=this.data.minutesToConflict);
-    console.log("Filtered_FLAG: "+ this.data.minutesToConflict)
-    console.log("Filtered_FLAG: "+JSON.stringify(this.durationFilteredOpt))
 
     this.modalForm = this.formBuilder.group({
-      eventTitle: this.data.title,
-      eventLocation: this.data.location,
-      eventDuration: differenceInMinutes(this.data.end, this.data.start)?differenceInMinutes(this.data.end, this.data.start):180,
+      eventTitle: this.data.event.meta.meeting.meeting_title,
+      eventLocation: this.data.event.meta.meeting.location,
+      eventDuration: differenceInMinutes(this.data.event.end, this.data.event.start)?differenceInMinutes(this.data.event.end, this.data.event.start):180,
     })
+
+    if (this.data.readOnly) {
+      this.modalForm.disable();
+    }
+
+
 
   }
 
   constructor(
     private formBuilder: FormBuilder,
+    private localStorageService:LocalStorageService,
+    private userService:UserService,
     public dialogRef: MatDialogRef<AddScheduleModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddScheduleEventInputData) {}
 
@@ -79,8 +104,8 @@ export class AddScheduleModalComponent implements OnInit {
     console.log(`Duration: ${this.modalForm.get("eventDuration").value}`)
     let result:AddScheduleResult = {
       action: action,
-      start: this.data.start,
-      end: addMinutes(this.data.start, this.modalForm.get("eventDuration").value),
+      start: this.data.event.start,
+      end: addMinutes(this.data.event.start, this.modalForm.get("eventDuration").value),
       title: this.modalForm.get("eventTitle").value ? this.modalForm.get("eventTitle").value : "A meeting",
       location: this.modalForm.get("eventLocation").value ? this.modalForm.get("eventLocation").value : "",
     }
