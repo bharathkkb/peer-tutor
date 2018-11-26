@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 //TODO: change to proper host on production
-const host = 'http://firen777-networklab.ddns.net:5000';
+const host = 'http://35.231.189.173:5000';
 
 export const environment = {
   production: false,
@@ -41,6 +41,17 @@ export const environment = {
     getMeetingByTutorId: host+"/test/api/meeting/tutor/id/",
     /**GET request, Need to append ***Student ID*** as path parameter */
     getMeetingByStudentId: host+"/test/api/meeting/student/id/",
+
+    /**PUT request */
+    putRating: host+"/test/api/rating",
+    /**GET request, Need to append ***Student ID*** as path parameter */
+    getRatingAvgByStudentId: host+"/test/api/rating/avg/",
+    /**GET request, Need to append ***Student ID of Given*** as path parameter */
+    getRatingsByGivenStudentId: host+"/test/api/rating/given/",
+    /**GET request, Need to append ***Rating ID*** as path parameter */
+    getRatingByRatingId: host+"/test/api/rating/id/",
+    /**GET request, Need to append ***Student ID of Received*** as path parameter */
+    getRatingsByReceivedStudentId: host+"/test/api/rating/received/",
   }
 };
 

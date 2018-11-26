@@ -1,12 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-
-import { Observable } from 'rxjs'
-import { ActivatedRoute } from '@angular/router'
+import {Component , OnInit} from '@angular/core';
+import { Router } from '@angular/router';
 import { ClassDataService } from '../_services';
 import { UniClass } from '../_models/uniclass';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router'
+import { Student } from '../_models'
+import { RatingDataService } from '../_services';
+import { DataSource } from '@angular/cdk/table';
+import { Observable, BehaviorSubject, of, ReplaySubject } from 'rxjs';
+import { CollectionViewer } from '@angular/cdk/collections';
 
-class UniClassDetail{
+
+
+/**UniClass Detail is used to actually render class's detail 
+ * as well as retaining List of student in a detailed manner  
+ */
+interface UniClassDetail{
+  /**kinda useless */
   "_id": string;
   "dept-name": string;
   "dept-id": string;
@@ -22,6 +31,17 @@ class UniClassDetail{
   "title": string;
   "units": string;
   "section": string;
+  "students": Student[];
+}
+
+/**StudentElement is elements used to render list of students enrolled in the class.
+ * Need to retrieve rating and comment on top of the student info.
+ */
+interface StudentElement {
+  name: string;
+  rating: "N/A"|number;
+  comment: string;
+  student_id: string;
 }
 
 @Component({
@@ -29,9 +49,10 @@ class UniClassDetail{
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss']
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit{
 
   classId$: string;
+
   uniClassDetail: UniClassDetail = {
     "_id": "",
     "dept-name": "",
@@ -48,16 +69,37 @@ export class DetailsComponent implements OnInit {
     "title": "",
     "units": "",
     "section": "",
+    "students": [],
   };
 
-  constructor(private classDataService:ClassDataService, private route:ActivatedRoute, private router:Router) {
+  constructor(
+    private classDataService:ClassDataService, 
+    private ratingDataService:RatingDataService,
+    private route:ActivatedRoute, 
+    private router:Router
+    ) {
     this.route.params.subscribe(x=>{this.classId$=x.id;}) // "/details/:id" in app routing
+  }
+  displayedColumns$: string[] = ['name', 'rating', 'comment', 'option'];
+  studentElementSource$:StudentElement[] = [];
+  studentElement$:ReplaySubject<StudentElement[]> = new ReplaySubject<StudentElement[]>();
+  
+
+  goBack() {
+    this.router.navigate([""]);
+  }
+
+  schedule(student:StudentElement) {
+    this.router.navigate(["/","schedule",this.uniClassDetail["class-name"],student.student_id])
   }
 
   ngOnInit() {
-    // this.(this.user$).subscribe(x=>this.user$=x);
+
+    
+    //GET class by class-code
     this.classDataService.getById(this.classId$).subscribe(
       (uniClass:UniClass)=>{
+        //transform result into detail
         this.uniClassDetail = {
           _id: uniClass._id,
           "dept-name": uniClass["dept-name"],
@@ -74,16 +116,73 @@ export class DetailsComponent implements OnInit {
           title: uniClass.title,
           units: uniClass.units,
           section: uniClass.section,
-        }  
+          "students": uniClass.students,
+        };
+
+        //iterate the list of student and GET their rating accordingly
+        for (let s of this.uniClassDetail.students){
+          let tempStudentElem:StudentElement={
+            name: s.name,
+            rating: "N/A",
+            comment: "N/A",
+            student_id: s.student_id.toString(),
+          };
+          this.ratingDataService.getRatingAvgByStudentId(tempStudentElem.student_id).subscribe(
+            r=>{ // avg Rating exist
+              tempStudentElem.rating = r;
+              this.ratingDataService.getRatingsByReceivedStudentId(tempStudentElem.student_id).subscribe(
+                ratings=>{ //last comment exist
+                  if (ratings.length>0) {
+                    console.log("FLAG1");
+                    if (ratings[ratings.length-1].comment.length > 30) {
+                      tempStudentElem.comment = ratings[ratings.length-1].comment.substring(0,30) + "..."
+                    }
+                    else {
+                      tempStudentElem.comment = ratings[ratings.length-1].comment
+                    }
+                    // console.log(tempStudentElem.comment)
+                  }
+                  this.studentElementSource$.push(tempStudentElem);
+                  this.studentElement$.next(this.studentElementSource$);
+                  console.log(JSON.stringify(this.studentElementSource$));
+                },
+                err => { //error retrieving last comment
+                  console.log("Error getting rating comment")
+                  this.studentElementSource$.push(tempStudentElem);
+                  this.studentElement$.next(this.studentElementSource$);
+                }
+              )
+            },
+            error => {
+              console.log("Error getting avg Rating")
+              this.studentElementSource$.push(tempStudentElem);
+              this.studentElement$.next(this.studentElementSource$);
+            }
+          )
+        }
       }
     )
   }
+}
 
-  /**
-   * Navigate back to home page
-   */
-  goBack(){
-    this.router.navigate([""]);
+/**DataSource for Dynamic data */
+export class StudentElementDataSource implements DataSource<StudentElement> {
+
+  private lessonsSubject = new BehaviorSubject<StudentElement[]>([]);
+
+  constructor() {}
+
+  connect(collectionViewer: CollectionViewer): Observable<StudentElement[]> {
+    return null;
   }
 
+  disconnect(collectionViewer: CollectionViewer): void {
+
+  }
+
+  loadLessons(courseId: number, filter: string,
+              sortDirection: string, pageIndex: number, pageSize: number) {
+    
+  }  
 }
+
