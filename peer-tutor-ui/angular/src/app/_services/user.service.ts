@@ -18,12 +18,11 @@ export class UserService {
         return this.http.get<Student[]>(environment.apipath.getStudentsByName + name);
     }
 
-    register(user: any) {
+    register(user: UserRegister) {
         return this.http.post<UserRegister>(environment.apipath.register, user);
     }
 
-    //Not in used
-    update(user: any) {
+    update(user: Student) {
         return this.http.put<Student>(environment.apipath.putStudent, user);
     }
 }

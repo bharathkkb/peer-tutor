@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router'
 import { Student } from '../_models'
 import { RatingDataService } from '../_services';
 import { DataSource } from '@angular/cdk/table';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { Observable, BehaviorSubject, of, ReplaySubject } from 'rxjs';
 import { CollectionViewer } from '@angular/cdk/collections';
 
 
@@ -81,8 +81,8 @@ export class DetailsComponent implements OnInit{
     this.route.params.subscribe(x=>{this.classId$=x.id;}) // "/details/:id" in app routing
   }
   displayedColumns$: string[] = ['name', 'rating', 'comment', 'option'];
-  studentElementSource:StudentElement[] = [];
-  studentElement$:Observable<StudentElement[]> = of([{"name":"Bharath Baiju","rating":2.733,"comment":"2 give 1 a 4 long long long lo...","student_id":"1"}]);
+  studentElementSource$:StudentElement[] = [];
+  studentElement$:ReplaySubject<StudentElement[]> = new ReplaySubject<StudentElement[]>();
   
 
   goBack() {
@@ -142,18 +142,21 @@ export class DetailsComponent implements OnInit{
                     }
                     // console.log(tempStudentElem.comment)
                   }
-                  this.studentElementSource.push(tempStudentElem);
-                  console.log(JSON.stringify(this.studentElementSource));
+                  this.studentElementSource$.push(tempStudentElem);
+                  this.studentElement$.next(this.studentElementSource$);
+                  console.log(JSON.stringify(this.studentElementSource$));
                 },
                 err => { //error retrieving last comment
                   console.log("Error getting rating comment")
-                  this.studentElementSource.push(tempStudentElem);
+                  this.studentElementSource$.push(tempStudentElem);
+                  this.studentElement$.next(this.studentElementSource$);
                 }
               )
             },
             error => {
               console.log("Error getting avg Rating")
-              this.studentElementSource.push(tempStudentElem)
+              this.studentElementSource$.push(tempStudentElem);
+              this.studentElement$.next(this.studentElementSource$);
             }
           )
         }

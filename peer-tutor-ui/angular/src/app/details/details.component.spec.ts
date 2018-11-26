@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetailsComponent } from './details.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http/';
-import { MatTableModule, MatListModule, MatIconModule, MatSelectModule } from '@angular/material';
+import { MatTableModule, MatListModule, MatIconModule, MatSelectModule, MatProgressSpinnerModule } from '@angular/material';
 
 describe('DetailsComponent', () => {
   let component: DetailsComponent;
@@ -17,6 +17,7 @@ describe('DetailsComponent', () => {
         HttpClientModule,
         MatTableModule,
         MatListModule,
+        MatProgressSpinnerModule,
       ],
       providers: [ ]
     })
