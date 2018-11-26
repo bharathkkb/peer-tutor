@@ -26,6 +26,7 @@ import { AddScheduleModalComponent } from './scheduler/add-schedule-modal/add-sc
 import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { PopupMsgComponent } from './popup-msg/popup-msg.component';
+import { StudentComponent } from './student/student.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { PopupMsgComponent } from './popup-msg/popup-msg.component';
     AboutComponent,
     ContactComponent,
     PopupMsgComponent,
+    StudentComponent,
   ],
   entryComponents: [
     AddScheduleModalComponent,
