@@ -38,24 +38,24 @@ class Rating:
         """
         return a rating's score
         """
-        return self.score
+        return self.rating_score
 
     def set_score(self, score):
         """
         set rating's score
         """
-        self.score = score
+        self.rating_score = score
         return True
 
     def get_comments(self):
         """
         return rating's comments
         """
-        return self.comments
+        return self.comment
 
     def set_comments(self, comments):
         """
         set rating's comments
         """
-        self.comments = comments
+        self.comment = comments
         return True

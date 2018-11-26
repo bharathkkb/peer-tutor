@@ -10,8 +10,8 @@ class Peer(Student):
 
     """
 
-    def __init__(self, student_id, name, enrolled_classes, schedule, meetings, peer_id, peer_ratings):
-        super().__init__(student_id, name, enrolled_classes, schedule, meetings)
+    def __init__(self, student_id, name, username, password, enrolled_classes,  meetings, schedules, peer_id, peer_ratings):
+        super().__init__(student_id, name, username, password, enrolled_classes,  meetings, schedules)
         self.peer_id = peer_id
         self.peer_ratings = peer_ratings
         print("A peer object is created.")
@@ -51,7 +51,7 @@ class Peer(Student):
         """
         return student object
         """
-        return Student(self.student_id, self.name, self.enrolled_classes, self.schedule, self.meetings)
+        return Student(self.student_id, self.name, self.username, self.password, self.enrolled_classes, self.meetings, self.schedule)
 
     def set_student(self, student):
         """
@@ -59,6 +59,8 @@ class Peer(Student):
         """
         self.student_id = student.get_student_id()
         self.name = student.get_name()
+        self.username = student.get_username()
+        self.password = student.get_password()
         self.enrolled_classes = student.get_enrolled_classes()
         self.schedule = student.get_schedules()
         self.meetings = student.get_meetings()
