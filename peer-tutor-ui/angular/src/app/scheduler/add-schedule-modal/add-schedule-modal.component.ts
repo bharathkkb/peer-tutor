@@ -31,8 +31,8 @@ export interface AddScheduleResult {
 })
 export class AddScheduleModalComponent implements OnInit {
 
-  schedulePreface: "You scheduled this meeting with tutor: " | "This meeting is scheduled by peer: " = "This meeting is scheduled by peer: ";
-  tutorpeerName:string = "<strong>XSS!!??</strong>";
+  schedulePreface: "You scheduled this meeting with tutor: " | "This meeting is scheduled by peer: " | "" = "";
+  tutorpeerName:string = "";
   imPeerFlag:boolean = true;
   startTime: string;
 

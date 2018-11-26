@@ -331,14 +331,12 @@ export class SchedulerComponent implements OnInit {
 
     let concernedDateList = this.events.filter(e=>isAfter(e.start, editEvent.start)).map(e=>e.start);
     let closestConflictDate = closestTo(editEvent.start, concernedDateList);
+    
     let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
-
-
     while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
       minIndex++;
     }
-
-    if (minIndex>5) {minIndex=5;}
+    if (minIndex>5 || concernedDateList.length===0 ) {minIndex=5;}
     
     addScheduleEventInputData.minutesToConflict = minToConflictOpts[minIndex];
 
