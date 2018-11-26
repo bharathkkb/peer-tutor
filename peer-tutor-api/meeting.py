@@ -59,7 +59,7 @@ class Meeting:
         """
         return meeting's tutor
         """
-        return self.tutor
+        return self.tutor_id
 
     def get_time(self):
         """
@@ -84,35 +84,30 @@ class Meeting:
         set peer
         """
         self.peer_id = peer_id
-        return True
 
     def set_tutor(self, tutor_id):
         """
         set tutor
         """
         self.tutor_id = tutor_id
-        return True
 
     def set_time(self, time):
         """
         set time
         """
         self.time = time
-        return True
 
     def set_meeting_title(self, meeting_title):
         """
         set meetingTitle
         """
         self.meeting_title = meeting_title
-        return True
 
     def set_location(self, location):
         """
         set start_time
         """
         self.location = location
-        return True
 
     def set_selfReserved(self, selfReserved):
         """
@@ -126,3 +121,10 @@ class Meeting:
         set selfReserved
         """
         return self.selfReserved
+
+    def set_meeting_id(self, meeting_id):
+        """
+        set meeting's id
+        """
+        self.meeting_id = meeting_id
+
