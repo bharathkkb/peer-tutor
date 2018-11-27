@@ -67,7 +67,7 @@ pipeline {
                 npm install
                 npm rebuild node-sass
                 ng test --browsers headlessChrome --watch=false
-                ng e2e --mock
+                ng e2e
                 """
 
 
