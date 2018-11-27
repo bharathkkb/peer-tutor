@@ -974,6 +974,77 @@ def test_get_meeting_from_get_student_B(url):
     for meeting in data["meetings"]:
         assert str(meeting["meeting_id"]) in putMeeting["meeting_id"]
 
+
+"""
+**************************************
+Multi Driver Test #2
+Add 2 new students to the same class and check if the class then has both students
+**************************************
+"""
+putStudentC = dict()
+putStudentC["name"] = "StudentInClassA"
+putStudentC["student_id"] = "1232122"
+putStudentC["username"] = "StudentInClassA@gmail.com"
+putStudentC["password"] = "pass123"
+putStudentC["enrolled_classes"] = ["24415"]
+
+putStudentD = dict()
+putStudentD["name"] = "StudentInClassB"
+putStudentD["student_id"] = "1232123"
+putStudentD["username"] = "StudentInClassB@gmail.com"
+putStudentD["password"] = "pass123"
+putStudentD["enrolled_classes"] = ["24415"]
+
+
+def test_multi_driver_test1_add_studentInClassA(url):
+
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/student', data=json.dumps(putStudentC), headers=headers)
+    assert putResponse.status_code == 201
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["student_id"] == putStudentC["student_id"]
+    assert data["name"] == putStudentC["name"]
+    assert data["password"] == putStudentC["password"]
+    assert data["username"] == putStudentC["username"]
+    assert len(data["enrolled_classes"]) == len(
+        putStudentC["enrolled_classes"])
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]
+                   ) in putStudentC["enrolled_classes"]
+
+
+def test_multi_driver_test1_add_studentInClassB(url):
+
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/student', data=json.dumps(putStudentD), headers=headers)
+    assert putResponse.status_code == 201
+    data = json.loads(putResponse.content)
+    # test if insert was success
+    assert data["student_id"] == putStudentD["student_id"]
+    assert data["name"] == putStudentD["name"]
+    assert data["password"] == putStudentD["password"]
+    assert data["username"] == putStudentD["username"]
+    assert len(data["enrolled_classes"]) == len(
+        putStudentD["enrolled_classes"])
+    for enrolled_class in data["enrolled_classes"]:
+        assert str(enrolled_class["class-code"]
+                   ) in putStudentD["enrolled_classes"]
+
+
+def test_get_uniclass_with_both_students(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/uniclass/id/24415')
+    data = json.loads(response.content)
+    assert response.status_code == 200
+    assert data["class-code"] == "24415"
+    assert len(data["students"]) == 2
+    for student in data["students"]:
+        assert student["student_id"] == putStudentC["student_id"] or putStudentD["student_id"]
 # this is for debugging individual tests
 # if __name__ == "__main__":
 #     test_hello_data()
