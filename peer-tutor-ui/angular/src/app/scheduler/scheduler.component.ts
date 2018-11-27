@@ -124,58 +124,61 @@ export class SchedulerComponent implements OnInit {
   }
 
   populateEventViewSubRoutine(){
+
     this.events = [];
 
-    this.meetingScheduleService.getMeetingsByStudentId(this.opponentId).subscribe(
-      meetings => {
-        this.opponentEvents = meetings
-        .filter(
-          (oppoM) => {
-            let dateStart = new Date(oppoM.start);
-            let dateEnd = new Date(oppoM.end);
-            if (!isNaN(dateStart.getTime()) && !isNaN(dateEnd.getTime())) {
-              return true;
+    if (this.opponentId) {
+      this.meetingScheduleService.getMeetingsByStudentId(this.opponentId).subscribe(
+        meetings => {
+          this.opponentEvents = meetings
+          .filter(
+            (oppoM) => {
+              let dateStart = new Date(oppoM.start);
+              let dateEnd = new Date(oppoM.end);
+              if (!isNaN(dateStart.getTime()) && !isNaN(dateEnd.getTime())) {
+                return true;
+              }
+              return false;
             }
-            return false;
-          }
-        )
-        .map(
-          (oppoM):CalendarEvent<EventMeta> => {
-            let resultEvent:CalendarEvent<EventMeta> = {
-              start: new Date(oppoM.start),
-              end: new Date(oppoM.end),
-              title: oppoM.meeting_title, //TODO: need to make some description
-              id: oppoM.meeting_id,
-              color: COLORS.red, //default red. Red means none of the user's business. Will double check later
-              meta: {
-                //https://stackoverflow.com/a/38874807
-                //spread operator to do deep cloning:
-                //FIX! user must be the same object reference
-                user: USERS[0],
-                meeting: {...oppoM}
-              },
+          )
+          .map(
+            (oppoM):CalendarEvent<EventMeta> => {
+              let resultEvent:CalendarEvent<EventMeta> = {
+                start: new Date(oppoM.start),
+                end: new Date(oppoM.end),
+                title: oppoM.meeting_title, //TODO: need to make some description
+                id: oppoM.meeting_id,
+                color: COLORS.red, //default red. Red means none of the user's business. Will double check later
+                meta: {
+                  //https://stackoverflow.com/a/38874807
+                  //spread operator to do deep cloning:
+                  //FIX! user must be the same object reference
+                  user: USERS[0],
+                  meeting: {...oppoM}
+                },
+              }
+  
+              //check if opponent is event tutor and self is event peer
+              if (oppoM.tutor_id===this.opponentId && oppoM.peer_id===this.selfId) {
+                resultEvent.color = COLORS.green;
+              }
+              //check if self is event tutor
+              if (oppoM.tutor_id===this.selfId) {
+                resultEvent.color = COLORS.yellow;
+              }
+  
+              return resultEvent;
             }
-
-            //check if opponent is event tutor and self is event peer
-            if (oppoM.tutor_id===this.opponentId && oppoM.peer_id===this.selfId) {
-              resultEvent.color = COLORS.green;
-            }
-            //check if self is event tutor
-            if (oppoM.tutor_id===this.selfId) {
-              resultEvent.color = COLORS.yellow;
-            }
-
-            return resultEvent;
-          }
-        )
-        //another spread operator shenanigan.
-        //https://stackoverflow.com/a/30846567
-        this.events.push(...this.opponentEvents);
-        //refresh the view
-        this.refresh.next();
-      },
-      err => console.log(err)
-    )
+          )
+          //another spread operator shenanigan.
+          //https://stackoverflow.com/a/30846567
+          this.events.push(...this.opponentEvents);
+          //refresh the view
+          this.refresh.next();
+        },
+        err => console.log(err)
+      )
+    }
 
     this.meetingScheduleService.getMeetingsByStudentId(this.selfId).subscribe(
       meetings => {
@@ -234,7 +237,7 @@ export class SchedulerComponent implements OnInit {
     if (event.meta.meeting.peer_id === this.selfId) {
       this.openEditScheduleDialog(event);
     }
-    else {
+    else if (event.meta.meeting.tutor_id === this.selfId){
       this.openEditScheduleDialog(event, true);
     }
   }
@@ -246,72 +249,76 @@ export class SchedulerComponent implements OnInit {
    * @param date 
    */
   hourSegmentClicked(date: Date){
-    // if both opponent and self is free in those time segment
-    let canSchedule = true;
-    for (let e of this.events) {
-      if (isWithinRange(date, e.start, subMinutes(e.end, 1))) 
-      {
-        canSchedule = false;
-        break;  
-      }
-    }
-    
-    if (canSchedule) {
-      //make a Meeting w/ 30 min duration
-      let newMeeting:Meeting = {
-        "end": addMinutes(date, 30).toString(),
-        "meeting_id": uuidV4(),
-        "peer_id": this.selfId,
-        "start": date.toString(),
-        "tutor_id": this.opponentId,
-        "meeting_title": this.className? this.className : "A meeting",
-        "location": "",
-      }
-      //PUT the meeting
-      this.meetingScheduleService.putMeeting(newMeeting).subscribe(
-        data => {
-          console.log("success: " + JSON.stringify(data));
-        }
-      )
-
-      //new Opponent Event
-      let newOpponentEvent:CalendarEvent<EventMeta> = {
-        start: date,
-        end: addMinutes(date, 30),
-        title: newMeeting.meeting_title,
-        id: newMeeting.meeting_id,
-        color: COLORS.green,
-        meta: {
-          user: USERS[0],
-          meeting: {...newMeeting}
-        }
-      }
-      //same go for Self Event
-      let newSelfEvent:CalendarEvent<EventMeta> = {
-        start: date,
-        end: addMinutes(date, 30),
-        title: newMeeting.meeting_title,
-        id: newMeeting.meeting_id,
-        color: COLORS.green,
-        meta: {
-          user: USERS[1],
-          meeting: {...newMeeting}
+    if (this.opponentId){ //Only when there is opponent. other wise no scheduling
+      //TODO: MAY do Self Scheduling
+      // if both opponent and self is free in those time segment
+      let canSchedule = true;
+      for (let e of this.events) {
+        if (isWithinRange(date, e.start, subMinutes(e.end, 1))) 
+        {
+          canSchedule = false;
+          break;  
         }
       }
       
-      //push them both
-      this.events.push(newOpponentEvent, newSelfEvent);
-
-      //refresh the view
-      this.refresh.next();
-
+      if (canSchedule) {
+        //make a Meeting w/ 30 min duration
+        let newMeeting:Meeting = {
+          "end": addMinutes(date, 30).toString(),
+          "meeting_id": uuidV4(),
+          "peer_id": this.selfId,
+          "start": date.toString(),
+          "tutor_id": this.opponentId,
+          "meeting_title": this.className? this.className : "A meeting",
+          "location": "",
+        }
+        //PUT the meeting
+        this.meetingScheduleService.putMeeting(newMeeting).subscribe(
+          data => {
+            console.log("success: " + JSON.stringify(data));
+          }
+        )
+  
+        //new Opponent Event
+        let newOpponentEvent:CalendarEvent<EventMeta> = {
+          start: date,
+          end: addMinutes(date, 30),
+          title: newMeeting.meeting_title,
+          id: newMeeting.meeting_id,
+          color: COLORS.green,
+          meta: {
+            user: USERS[0],
+            meeting: {...newMeeting}
+          }
+        }
+        //same go for Self Event
+        let newSelfEvent:CalendarEvent<EventMeta> = {
+          start: date,
+          end: addMinutes(date, 30),
+          title: newMeeting.meeting_title,
+          id: newMeeting.meeting_id,
+          color: COLORS.green,
+          meta: {
+            user: USERS[1],
+            meeting: {...newMeeting}
+          }
+        }
+        
+        //push them both
+        this.events.push(newOpponentEvent, newSelfEvent);
+  
+        //refresh the view
+        this.refresh.next();
+  
+      }
+      else {
+        const popDialogRef:MatDialogRef<PopupMsgComponent> = this.matDialog.open(PopupMsgComponent, 
+          {data: {title:'Uh Oh!', msg:'There are time conflict and you cannot schedule a meeting at this time!'}}
+        )
+        console.log('cannot schedule!')
+      }
     }
-    else {
-      const popDialogRef:MatDialogRef<PopupMsgComponent> = this.matDialog.open(PopupMsgComponent, 
-        {data: {title:'Uh Oh!', msg:'There are time conflict and you cannot schedule a meeting at this time!'}}
-      )
-      console.log('cannot schedule!')
-    }
+
   }
 
   /**

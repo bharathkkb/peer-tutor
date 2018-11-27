@@ -29,8 +29,9 @@
       <div class="col-sm-12 col-md-4 col-lg-2">Rating: {{r.rating_score}}</div>
     </div>
   </div>
-  <hr class="my-4">
   <div *ngIf="!self_flag$">
+    <button class="btn btn-danger mt-4" (click)="schedule()">Schedule</button>
+    <hr class="my-4">
     <h3>Rate This Peer</h3>
     <form class="example-form" [formGroup]="reviewFormGroup$">
       <mat-form-field>

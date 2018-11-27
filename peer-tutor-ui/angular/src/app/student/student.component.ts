@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService, CURRENT_USER, UserService, RatingDataService, ClassDataService } from '../_services';
 import { Student, Rating, UniClassSum, UniClass } from '../_models';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -42,6 +42,7 @@ export class StudentComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private localStorageService:LocalStorageService,
     private ratingDataService:RatingDataService,
     private userService: UserService,
@@ -124,6 +125,10 @@ export class StudentComponent implements OnInit {
 
     this.reviewFormGroup$.reset();
     
+  }
+
+  schedule(){
+    this.router.navigate(['/','schedule',this.student_id$]);
   }
 
 }
