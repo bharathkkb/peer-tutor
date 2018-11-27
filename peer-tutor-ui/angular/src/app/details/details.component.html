@@ -60,7 +60,7 @@
 
   <ng-container matColumnDef="rating">
     <th mat-header-cell *matHeaderCellDef> Rating </th>
-    <td mat-cell *matCellDef="let element"> {{element.rating}} <div *ngIf="element.rate_count!==0">(Rated {{element.rate_count}} times)</div></td>
+    <td mat-cell *matCellDef="let element"> {{element.rating}} <span *ngIf="element.rate_count!==0">(Rated {{element.rate_count}} times)</span></td>
   </ng-container>
 
   <ng-container matColumnDef="comment">
