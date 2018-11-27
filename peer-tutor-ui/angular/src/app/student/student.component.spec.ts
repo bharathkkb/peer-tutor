@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StudentComponent } from './student.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
+import { MatProgressSpinnerModule } from '@angular/material';
 
 describe('StudentComponent', () => {
   let component: StudentComponent;
@@ -14,6 +15,7 @@ describe('StudentComponent', () => {
       imports: [
         RouterTestingModule,
         HttpClientModule,
+        MatProgressSpinnerModule,
       ]
     })
     .compileComponents();

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LocalStorageService, CURRENT_USER, UserService, RatingDataService } from '../_services';
-import { Student, Rating } from '../_models';
+import { LocalStorageService, CURRENT_USER, UserService, RatingDataService, ClassDataService } from '../_services';
+import { Student, Rating, UniClassSum, UniClass } from '../_models';
 
 @Component({
   selector: 'app-student',
@@ -13,14 +13,22 @@ export class StudentComponent implements OnInit {
   student_id$: string = "";
   self_flag$: boolean = false;
 
-  studentObj$: Student;
-  studentRatings$: Rating[];
+  studentObj$: Student = {
+    enrolled_classes: [],
+    meetings: [],
+    name: "",
+    student_id: "",
+    username: "",
+  };
+  studentRatings$: Rating[] = [];
+  enrolledClasses$: UniClassSum[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private localStorageService:LocalStorageService,
     private ratingDataService:RatingDataService,
     private userService: UserService,
+    private classDataService:ClassDataService,
   ) 
   { 
     this.route.params.subscribe(param=>{
@@ -38,7 +46,10 @@ export class StudentComponent implements OnInit {
 
   ngOnInit() {
     this.userService.getByStudentId(this.student_id$).subscribe(
-      student=>{this.studentObj$ = student},
+      student=>{
+        this.studentObj$ = student;
+        this.enrolledClasses$ = this.studentObj$.enrolled_classes.map((c:UniClass)=>{return this.classDataService.toClassSum(c)});
+      },
       err=>{console.log(err)}
     )
     this.ratingDataService.getRatingsByReceivedStudentId(this.student_id$).subscribe(
