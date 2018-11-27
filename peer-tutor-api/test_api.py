@@ -979,7 +979,6 @@ def test_get_meeting_from_get_student_B(url):
 **************************************
 Multi Driver Test #2
 Add 2 new students to the same class and check if the class then has both students
-Schedule a meeting between the both of them
 **************************************
 """
 putStudentC = dict()
@@ -1041,7 +1040,6 @@ def test_get_uniclass_with_both_students(url):
     testAPIBasePath = "{}/test/api".format(url)
     response = requests.get(testAPIBasePath + '/uniclass/id/24415')
     data = json.loads(response.content)
-    print(data)
     assert response.status_code == 200
     assert data["class-code"] == "24415"
     assert len(data["students"]) == 2
