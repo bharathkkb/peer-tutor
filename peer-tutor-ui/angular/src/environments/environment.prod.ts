@@ -1,5 +1,5 @@
 //TODO: change to proper host on production
-const host = 'http://localhost:5000';
+const host = 'http://35.231.189.173:5000';
 
 export const environment = {
   production: true,
