@@ -10,6 +10,9 @@ const CURRENT_USER = {
   },
   student_id: {
     key: "student_id",
+  },
+  name: {
+    key: "name",
   }
 }
 //"{"_id":{"$oid":"5bee39df011dd6000a99f0bd"},"enrolled_classes":[],"meetings":[],"name":"first1 last1","password":"password1","schedules":[],"student_id":"1","username":"test1@gmail.com"}"

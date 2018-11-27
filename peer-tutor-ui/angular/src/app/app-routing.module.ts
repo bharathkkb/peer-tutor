@@ -8,6 +8,7 @@ import { RegisterComponent } from './register';
 import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { SchedulerComponent } from './scheduler/scheduler.component';
+import { StudentComponent } from './student/student.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,16 @@ const routes: Routes = [
     path: 'class/:id',
     component: DetailsComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'student/:id',
+    component: StudentComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'student',
+    component: StudentComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'login',

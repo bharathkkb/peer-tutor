@@ -67,7 +67,7 @@ export class HomePageComponent implements OnInit {
       map(v=>this._filterDeptName(v))
     )
 
-    this.filteredClassName = this.modalForm.get('deptName').valueChanges.pipe(
+    this.filteredClassName = this.modalForm.get('className').valueChanges.pipe(
       startWith(''),
       map(v=>this._filterClassName(v))
     ) 
@@ -114,7 +114,7 @@ export class HomePageComponent implements OnInit {
     const enrolledClassesName = this.enrolledClasses$.map(c=>c["class-name"].toLowerCase()) //Exclude current enrolling class
 
     const untrimmedResult = this.classNameOpt$.filter(option => {
-      return option.toLowerCase().indexOf(filterValue) === 0 //filterValue is beginning of substring of option
+      return option.toLowerCase().includes(filterValue) //filterValue is substring of option
         && !enrolledClassesName.includes(option.toLowerCase()) //exclude currently enrolled classes
     });
 

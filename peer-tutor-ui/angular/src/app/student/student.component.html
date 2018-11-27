@@ -1,0 +1,56 @@
+<div class="jumbotron">
+  <div *ngIf="studentObj$.student_id!==''; then student else spinner"></div>
+</div>
+<ng-template #student>
+  <h2 class="text-center">{{studentObj$.name}}</h2>
+  <h3 class="text-center">Email: {{studentObj$.username}}</h3>
+  <hr class="my-4">
+  <h3>Enrolled Class:</h3>
+  <div class="row mt-4">
+    <div *ngFor="let c of enrolledClasses$" class="col-sm-12 col-md-6 col-lg-4">
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <h4 class="card-title">{{c["class-name"]}}</h4>
+          <h5 class="card-title">{{c.title}}</h5>
+          <p class="card-text">Instructor: {{c.instructor}}</p>
+          <p class="card-text">{{c["start-time"]}}~{{c["end-time"]}}, {{c.days}}</p>
+          <p class="card-text">{{c.location}}</p>
+          <a routerLink="/class/{{c['class-code']}}" class="card-link">Class Detail</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="my-4">
+  <h3>Peer's Review</h3>
+  <div class="card mt-4" *ngFor="let r of studentRatingsSum$">
+    <div class="row">
+      <div class="col-sm-12 col-md-4 col-lg-2">{{r.giver_name}}</div>
+      <div class="col-sm-12 col-md-8 col-lg-8">{{r.comment}}</div>
+      <div class="col-sm-12 col-md-4 col-lg-2">Rating: {{r.rating_score}}</div>
+    </div>
+  </div>
+  <hr class="my-4">
+  <div *ngIf="!self_flag$">
+    <h3>Rate This Peer</h3>
+    <form class="example-form" [formGroup]="reviewFormGroup$">
+      <mat-form-field>
+        <mat-select placeholder="Rating" formControlName="review-rating" id="review-rating-select">
+          <mat-option value="5">5</mat-option>
+          <mat-option value="4">4</mat-option>
+          <mat-option value="3">3</mat-option>
+          <mat-option value="2">2</mat-option>
+          <mat-option value="1">1</mat-option>
+        </mat-select>
+      </mat-form-field>
+    
+      <mat-form-field class="example-full-width">
+        <textarea matInput placeholder="Leave a comment" formControlName="review-comment" id="review-comment-textarea"></textarea>
+      </mat-form-field>
+
+      <button mat-button class="submit-btn" type="button" [disabled]="!reviewFormGroup$.valid" (click)="submitReview()">Submit</button>
+    </form>
+  </div>
+
+</ng-template>
+<ng-template #spinner>Loading... <mat-spinner></mat-spinner></ng-template>
+
