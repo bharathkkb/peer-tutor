@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService, CURRENT_USER, UserService, RatingDataService, ClassDataService } from '../_services';
 import { Student, Rating, UniClassSum, UniClass } from '../_models';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { v4 as uuidV4} from 'uuid';
 
 /**purely used for display */
 interface RatingSummary {
@@ -21,6 +22,7 @@ interface RatingSummary {
 })
 export class StudentComponent implements OnInit {
 
+  /**Student Id for this profile */
   student_id$: string = "";
   self_flag$: boolean = false;
 
@@ -100,6 +102,28 @@ export class StudentComponent implements OnInit {
 
   submitReview(){
     console.log("Submitted")
+
+    let resultRating:Rating = {
+      comment: this.reviewFormGroup$.get("review-comment").value,
+      given: this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key],
+      received: this.student_id$,
+      rating_id: uuidV4(),
+      rating_score: this.reviewFormGroup$.get("review-rating").value,
+    }
+
+    this.ratingDataService.putRating(resultRating).subscribe(
+      r => {
+        let newRatingSum:RatingSummary = {
+          giver_name: this.localStorageService.getCurrentUser()[CURRENT_USER.name.key],
+          comment: r.comment,
+          rating_score: r.rating_score
+        }
+        this.studentRatingsSum$.push(newRatingSum);
+      }
+    )
+
+    this.reviewFormGroup$.reset();
+    
   }
 
 }
