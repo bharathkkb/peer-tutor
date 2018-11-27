@@ -71,11 +71,8 @@ def getDepartments():
 def putStudentInClass(studentID, classId):
     from student_driver import getStudentById
     print(classId)
-    uniclass = getClassById(classId)
-    print(uniclass)
-    student = getStudentById(studentID)
+    uniclass = getClassById(classId, unfurlClass=False)
     if(uniclass.get("students", False)):
-
         if(studentID not in uniclass["students"]):
             uniclass["students"].append(studentID)
     else:

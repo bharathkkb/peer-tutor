@@ -110,6 +110,8 @@ def putStudent(studentData):
         s = Student(studentData["student_id"], studentData["name"],
                     studentData["username"], studentData["password"], studentData.get("enrolled_classes", list()), studentData.get("meetings", list()))
         print(s.get_json())
+        if(studentData.get("enrolled_classes", False) and len(studentData["enrolled_classes"]) > 0):
+            updateUniClassStudentData(studentData)
         # add the new student to db
         mongoDriver().putDict("peer-tutor-db", "student", s.get_json())
         # return new student obj with 201 status code
