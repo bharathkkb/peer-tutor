@@ -20,5 +20,5 @@ export interface Rating{
     /**The Score. Keep it a string of number */
     "rating_score": string,
     /**Student ID who receive the rating */
-    "received": "02"
+    "received": string
 }
