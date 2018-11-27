@@ -3,6 +3,16 @@ import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService, CURRENT_USER, UserService, RatingDataService, ClassDataService } from '../_services';
 import { Student, Rating, UniClassSum, UniClass } from '../_models';
 
+/**purely used for display */
+interface RatingSummary {
+  /**Comment given to the receiver */
+  "comment": string;
+  /**Student name who gave the rating */
+  "giver_name": string;
+  /**The Score. Keep it a string of number */
+  "rating_score": string,
+}
+
 @Component({
   selector: 'app-student',
   templateUrl: './student.component.html',
@@ -21,6 +31,7 @@ export class StudentComponent implements OnInit {
     username: "",
   };
   studentRatings$: Rating[] = [];
+  studentRatingsSum$:RatingSummary[] = [];
   enrolledClasses$: UniClassSum[] = [];
 
   constructor(
@@ -50,11 +61,29 @@ export class StudentComponent implements OnInit {
         this.studentObj$ = student;
         this.enrolledClasses$ = this.studentObj$.enrolled_classes.map((c:UniClass)=>{return this.classDataService.toClassSum(c)});
       },
-      err=>{console.log(err)}
+      err=>{console.log(`Error retrieve student profile: ${err}`)}
     )
     this.ratingDataService.getRatingsByReceivedStudentId(this.student_id$).subscribe(
-      ratings=>{this.studentRatings$ = ratings},
-      err=>{console.log(err)}
+      ratings=>{ //a list of Rating
+        this.studentRatings$ = ratings
+        this.studentRatingsSum$ = this.studentRatings$.map( //Map the Rating into a renderable Rating Summary
+          r=>{
+            let rSum:RatingSummary = {
+              comment: r.comment,
+              giver_name: "", //No name here... FML
+              rating_score: r.rating_score,
+            };
+            return rSum;
+          }
+        );
+        for(let i=0; i<this.studentRatingsSum$.length; i++){ //send GET to retrieve name for every rating...
+          this.userService.getByStudentId(this.studentRatings$[i].given).subscribe(
+            s=>{this.studentRatingsSum$[i].giver_name = s.name},
+            err=>{console.log(`Error retrieve students who rated: ${err}`)}
+          )
+        }
+      },
+      err=>{console.log(`Error retrieve rating list: ${err}`)}
     )
   }
 
