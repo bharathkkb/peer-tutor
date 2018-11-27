@@ -127,7 +127,7 @@ export class SchedulerComponent implements OnInit {
 
     this.events = [];
 
-    if (this.opponentId) {
+    if (this.opponentId && this.opponentId!=this.selfId) {
       this.meetingScheduleService.getMeetingsByStudentId(this.opponentId).subscribe(
         meetings => {
           this.opponentEvents = meetings
@@ -249,7 +249,7 @@ export class SchedulerComponent implements OnInit {
    * @param date 
    */
   hourSegmentClicked(date: Date){
-    if (this.opponentId){ //Only when there is opponent. other wise no scheduling
+    if (this.opponentId && this.opponentId!=this.selfId) { //Only when there is opponent AND opponent ID is not self (AKA not self schedule). other wise no scheduling
       //TODO: MAY do Self Scheduling
       // if both opponent and self is free in those time segment
       let canSchedule = true;
@@ -330,26 +330,27 @@ export class SchedulerComponent implements OnInit {
     //prepare data object for dialog input
     let addScheduleEventInputData:AddScheduleEventInputData = {
       event: editEvent,
-      minutesToConflict: 30, //changeLater
+      // minutesToConflict: 30, //changeLater
+      //New: actually dont even use it
 
       readOnly: readOnly,
       
     }
 
     //calculate HoursToConflict... messy type issue hack here~
-    const minToConflictOpts:Array<MinutesToConflictOptions> = [30 , 60 , 90 , 120 , 150 , 180];
-    let minIndex = 0;
+    // const minToConflictOpts:Array<MinutesToConflictOptions> = [30 , 60 , 90 , 120 , 150 , 180];
+    // let minIndex = 0;
 
-    let concernedDateList = this.events.filter(e=>isAfter(e.start, editEvent.start)).map(e=>e.start);
-    let closestConflictDate = closestTo(editEvent.start, concernedDateList);
+    // let concernedDateList = this.events.filter(e=>isAfter(e.start, editEvent.start)).map(e=>e.start);
+    // let closestConflictDate = closestTo(editEvent.start, concernedDateList);
     
-    let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
-    while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
-      minIndex++;
-    }
-    if (minIndex>5 || concernedDateList.length===0 ) {minIndex=5;}
+    // let minuteToConflict = differenceInMinutes(closestConflictDate, editEvent.start);
+    // while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
+    //   minIndex++;
+    // }
+    // if (minIndex>5 || concernedDateList.length===0 ) {minIndex=5;}
     
-    addScheduleEventInputData.minutesToConflict = minToConflictOpts[minIndex];
+    // addScheduleEventInputData.minutesToConflict = minToConflictOpts[minIndex];
 
     //open dialog
     const dialogRef:MatDialogRef<AddScheduleModalComponent,AddScheduleResult> = this.matDialog.open(AddScheduleModalComponent, {
