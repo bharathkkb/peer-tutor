@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { addMinutes, differenceInMinutes } from 'date-fns';
-import { UserService, LocalStorageService } from 'src/app/_services';
+import { addMinutes, differenceInMinutes, isAfter, closestTo } from 'date-fns';
+import { UserService, LocalStorageService, MeetingScheduleService } from 'src/app/_services';
 import { EventMeta } from '../scheduler.component';
 import { CalendarEvent } from 'calendar-utils';
 import { Student } from '../../_models'
@@ -11,7 +11,7 @@ export type MinutesToConflictOptions = 30 | 60 | 90 | 120 | 150 | 180
 
 export interface AddScheduleEventInputData {
   event: CalendarEvent<EventMeta>,
-  minutesToConflict: MinutesToConflictOptions
+  minutesToConflict?: MinutesToConflictOptions
 
   readOnly: boolean;
 }
@@ -31,10 +31,16 @@ export interface AddScheduleResult {
 })
 export class AddScheduleModalComponent implements OnInit {
 
+  tutor_id:string = "";
+  peer_id:string = "";
+  concernedStartTimeList: Date[] = [];
+  closestTime: Date;
+  minutesToConflict: 30 | 60 | 90 | 120 | 150 | 180 = 180;
+
   schedulePreface: "You scheduled this meeting with tutor: " | "This meeting is scheduled by peer: " | "" = "";
   tutorpeerName:string = "";
   imPeerFlag:boolean = true;
-  startTime: string;
+  startTime: string = "";
 
   modalForm: FormGroup;
 
@@ -50,6 +56,40 @@ export class AddScheduleModalComponent implements OnInit {
   durationFilteredOpt: any[];
 
   ngOnInit() {
+    this.peer_id = this.data.event.meta.meeting.peer_id;
+    this.tutor_id = this.data.event.meta.meeting.tutor_id;
+
+    //Prepare for the unholy callback hell because I suck at RxJS
+    this.meetingScheduleService.getMeetingsByStudentId(this.peer_id).subscribe(
+      peerMeetings=>{
+        this.concernedStartTimeList.push(
+          ...peerMeetings.map(m=>new Date(m.start))
+            .filter(d=>!isNaN(d.getTime()))
+            .filter(d=>isAfter(d, this.startTime))
+        );
+        this.meetingScheduleService.getMeetingsByStudentId(this.tutor_id).subscribe(
+          tutorMeetings=>{
+            this.concernedStartTimeList.push(
+              ...tutorMeetings.map(m=>new Date(m.start))
+                .filter(d=>!isNaN(d.getTime()))
+                .filter(d=>isAfter(d, this.startTime))
+            );
+            let closestConflictDate = closestTo(this.startTime, this.concernedStartTimeList);
+            const minToConflictOpts:Array<MinutesToConflictOptions> = [30 , 60 , 90 , 120 , 150 , 180];
+            let minIndex = 0;
+            let minuteToConflict = differenceInMinutes(closestConflictDate, this.startTime);
+            while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
+              minIndex++;
+            }
+            if (minIndex>5 || this.concernedStartTimeList.length===0 ) {minIndex=5;}
+            this.minutesToConflict = minToConflictOpts[minIndex];
+            this.durationFilteredOpt = this.durationOpt.filter(opt=> opt.v<=this.minutesToConflict); //change to more updated one
+          }
+        );
+      },
+    );
+    
+
     this.startTime = this.data.event.start.toLocaleString();
     let currUserStudentId = <Student>this.localStorageService.getCurrentUser();
     if (currUserStudentId.student_id === this.data.event.meta.meeting.peer_id){ //I am peer.
@@ -65,7 +105,8 @@ export class AddScheduleModalComponent implements OnInit {
       )
     }
 
-    this.durationFilteredOpt = this.durationOpt.filter(opt=> opt.v<=this.data.minutesToConflict);
+    // this.durationFilteredOpt = this.durationOpt.filter(opt=> opt.v<=this.data.minutesToConflict); //abandoned
+    
 
     this.modalForm = this.formBuilder.group({
       eventTitle: this.data.event.meta.meeting.meeting_title,
@@ -77,14 +118,13 @@ export class AddScheduleModalComponent implements OnInit {
       this.modalForm.disable();
     }
 
-
-
   }
 
   constructor(
     private formBuilder: FormBuilder,
     private localStorageService:LocalStorageService,
     private userService:UserService,
+    private meetingScheduleService:MeetingScheduleService,
     public dialogRef: MatDialogRef<AddScheduleModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddScheduleEventInputData) {}
 
