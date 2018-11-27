@@ -8,7 +8,7 @@
       matInput formControlName="eventTitle" id="event-title-input">
     </mat-form-field>
     <mat-form-field>
-      <input type="text" placeholder="localtion"
+      <input type="text" placeholder="location"
       matInput formControlName="eventLocation" id="event-location-input">
     </mat-form-field>
     <p>{{startTime}}</p>
@@ -24,6 +24,6 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button (click)="onSaveClick()" cdkFocusInitial *ngIf="!data.readOnly">Edit</button>
+  <button mat-button (click)="onSaveClick()" cdkFocusInitial *ngIf="!data.readOnly">Confirm Edit</button>
   <button mat-icon-button (click)="onDeleteClick()" *ngIf="!data.readOnly"><mat-icon>delete_forever</mat-icon></button>
 </div>

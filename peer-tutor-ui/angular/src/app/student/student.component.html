@@ -8,20 +8,20 @@
   <h3>Enrolled Class:</h3>
   <div class="row mt-4">
     <div *ngFor="let c of enrolledClasses$" class="col-sm-12 col-md-6 col-lg-4">
-      <div class="card mb-4">
+      <div class="card mb-4" routerLink="/class/{{c['class-code']}}">
         <div class="card-body text-center">
           <h4 class="card-title">{{c["class-name"]}}</h4>
           <h5 class="card-title">{{c.title}}</h5>
           <p class="card-text">Instructor: {{c.instructor}}</p>
           <p class="card-text">{{c["start-time"]}}~{{c["end-time"]}}, {{c.days}}</p>
           <p class="card-text">{{c.location}}</p>
-          <a routerLink="/class/{{c['class-code']}}" class="card-link">Class Detail</a>
         </div>
       </div>
     </div>
   </div>
   <hr class="my-4">
-  <h3>Peer's Review</h3>
+  <h3 *ngIf="self_flag$">My Review</h3>
+  <h3 *ngIf="!self_flag$">Peer's Review</h3>
   <div class="card mt-4" *ngFor="let r of studentRatingsSum$">
     <div class="row">
       <div class="col-sm-12 col-md-4 col-lg-2">{{r.giver_name}}</div>
@@ -29,8 +29,9 @@
       <div class="col-sm-12 col-md-4 col-lg-2">Rating: {{r.rating_score}}</div>
     </div>
   </div>
-  <hr class="my-4">
   <div *ngIf="!self_flag$">
+    <button class="btn btn-danger mt-4" (click)="schedule()">Schedule</button>
+    <hr class="my-4">
     <h3>Rate This Peer</h3>
     <form class="example-form" [formGroup]="reviewFormGroup$">
       <mat-form-field>
