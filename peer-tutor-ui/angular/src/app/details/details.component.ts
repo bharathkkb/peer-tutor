@@ -40,6 +40,7 @@ interface UniClassDetail{
 interface StudentElement {
   name: string;
   rating: "N/A"|number;
+  rate_count: number;
   comment: string;
   student_id: string;
 }
@@ -124,6 +125,7 @@ export class DetailsComponent implements OnInit{
           let tempStudentElem:StudentElement={
             name: s.name,
             rating: "N/A",
+            rate_count: 0,
             comment: "N/A",
             student_id: s.student_id.toString(),
           };
@@ -133,7 +135,7 @@ export class DetailsComponent implements OnInit{
               this.ratingDataService.getRatingsByReceivedStudentId(tempStudentElem.student_id).subscribe(
                 ratings=>{ //last comment exist
                   if (ratings.length>0) {
-                    console.log("FLAG1");
+                    tempStudentElem.rate_count = ratings.length;
                     if (ratings[ratings.length-1].comment.length > 30) {
                       tempStudentElem.comment = ratings[ratings.length-1].comment.substring(0,30) + "..."
                     }
@@ -144,7 +146,6 @@ export class DetailsComponent implements OnInit{
                   }
                   this.studentElementSource$.push(tempStudentElem);
                   this.studentElement$.next(this.studentElementSource$);
-                  console.log(JSON.stringify(this.studentElementSource$));
                 },
                 err => { //error retrieving last comment
                   console.log("Error getting rating comment")
