@@ -1,11 +1,3 @@
-<p>
-  student works! {{student_id$}}, {{self_flag$}}
-  TODO: remove this debug msg
-</p>
-<!-- <p>{{studentObj$ | json}}</p>
-<p>{{studentRatings$ | json}}</p> -->
-
-
 <div class="jumbotron">
   <div *ngIf="studentObj$.student_id!==''; then student else spinner"></div>
 </div>
