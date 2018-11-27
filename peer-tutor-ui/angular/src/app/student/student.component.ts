@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService, CURRENT_USER, UserService, RatingDataService, ClassDataService } from '../_services';
 import { Student, Rating, UniClassSum, UniClass } from '../_models';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 /**purely used for display */
 interface RatingSummary {
@@ -34,12 +35,16 @@ export class StudentComponent implements OnInit {
   studentRatingsSum$:RatingSummary[] = [];
   enrolledClasses$: UniClassSum[] = [];
 
+  reviewFormGroup$: FormGroup;
+  reviewFormAvaliable$ = false;
+
   constructor(
     private route: ActivatedRoute,
     private localStorageService:LocalStorageService,
     private ratingDataService:RatingDataService,
     private userService: UserService,
     private classDataService:ClassDataService,
+    private formBuilder:FormBuilder,
   ) 
   { 
     this.route.params.subscribe(param=>{
@@ -56,6 +61,12 @@ export class StudentComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.reviewFormGroup$ = this.formBuilder.group({
+      "review-rating": ["",Validators.required],
+      "review-comment": ["",Validators.required],
+    })
+
     this.userService.getByStudentId(this.student_id$).subscribe(
       student=>{
         this.studentObj$ = student;
@@ -85,6 +96,10 @@ export class StudentComponent implements OnInit {
       },
       err=>{console.log(`Error retrieve rating list: ${err}`)}
     )
+  }
+
+  submitReview(){
+    console.log("Submitted")
   }
 
 }
