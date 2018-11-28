@@ -62,7 +62,7 @@ export class AddScheduleModalComponent implements OnInit {
 
     //Prepare for the unholy callback hell because I suck at RxJS
     if (this.peer_id === this.tutor_id){
-      console.log('SELF ADD MEETING FLAG!')
+      // console.log('SELF ADD MEETING FLAG!')
       this.meetingScheduleService.getMeetingsByStudentId(this.peer_id).subscribe(
         peerMeetings=>{
           this.concernedStartTimeList.push(
