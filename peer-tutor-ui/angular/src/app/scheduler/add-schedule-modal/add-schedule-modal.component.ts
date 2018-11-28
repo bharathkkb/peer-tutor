@@ -10,8 +10,8 @@ import { Student } from '../../_models'
 export type MinutesToConflictOptions = 30 | 60 | 90 | 120 | 150 | 180
 
 export interface AddScheduleEventInputData {
-  event: CalendarEvent<EventMeta>,
-  minutesToConflict?: MinutesToConflictOptions
+  event: CalendarEvent<EventMeta>;
+  minutesToConflict?: MinutesToConflictOptions;
 
   readOnly: boolean;
 }
@@ -35,7 +35,7 @@ export class AddScheduleModalComponent implements OnInit {
   peer_id:string = "";
   concernedStartTimeList: Date[] = [];
   closestTime: Date;
-  minutesToConflict: 30 | 60 | 90 | 120 | 150 | 180 = 180;
+  minutesToConflict: 30 | 60 | 90 | 120 | 150 | 180  | number = 180; ; //self reserve allow for all kind of number
 
   schedulePreface: "You scheduled this meeting with tutor: " | "This meeting is scheduled by peer: " | "" = "";
   tutorpeerName:string = "";

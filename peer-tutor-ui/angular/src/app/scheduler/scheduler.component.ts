@@ -208,11 +208,11 @@ export class SchedulerComponent implements OnInit {
             }
 
             //check if opponent is event tutor and self is event peer
-            if (selfM.tutor_id===this.opponentId && selfM.peer_id===this.selfId) {
+            if (selfM.tutor_id===this.opponentId && selfM.peer_id===this.selfId && selfM.peer_id!==this.selfId) {
               resultEvent.color = COLORS.green;
             }
-            //check if self is event tutor
-            if (selfM.tutor_id===this.selfId) {
+            //check if self is event tutor, but not self_reserve
+            if (selfM.tutor_id===this.selfId && selfM.peer_id!==this.selfId) {
               resultEvent.color = COLORS.yellow;
             }
             return resultEvent;
@@ -306,6 +306,61 @@ export class SchedulerComponent implements OnInit {
         
         //push them both
         this.events.push(newOpponentEvent, newSelfEvent);
+  
+        //refresh the view
+        this.refresh.next();
+  
+      }
+      else {
+        const popDialogRef:MatDialogRef<PopupMsgComponent> = this.matDialog.open(PopupMsgComponent, 
+          {data: {title:'Uh Oh!', msg:'There are time conflict and you cannot schedule a meeting at this time!'}}
+        )
+        console.log('cannot schedule!')
+      }
+    }
+    //Else, if it is self scheduling, do self reservation
+    else {
+      let canSchedule = true;
+      for (let e of this.events) {
+        if (isWithinRange(date, e.start, subMinutes(e.end, 1))) 
+        {
+          canSchedule = false;
+          break;  
+        }
+      }
+      
+      if (canSchedule) {
+        //make a Meeting w/ 30 min duration
+        let newMeeting:Meeting = {
+          "end": addMinutes(date, 30).toString(),
+          "meeting_id": uuidV4(),
+          "peer_id": this.selfId,
+          "start": date.toString(),
+          "tutor_id": this.selfId,
+          "meeting_title": this.className? this.className : "Self Reserve",
+          "location": "",
+        }
+        //PUT the meeting
+        this.meetingScheduleService.putMeeting(newMeeting).subscribe(
+          data => {
+            console.log("success: " + JSON.stringify(data));
+          }
+        )
+  
+        let newSelfEvent:CalendarEvent<EventMeta> = {
+          start: date,
+          end: addMinutes(date, 30),
+          title: newMeeting.meeting_title,
+          id: newMeeting.meeting_id,
+          color: COLORS.blue,
+          meta: {
+            user: USERS[1],
+            meeting: {...newMeeting}
+          }
+        }
+        
+        //push them both
+        this.events.push(newSelfEvent);
   
         //refresh the view
         this.refresh.next();
