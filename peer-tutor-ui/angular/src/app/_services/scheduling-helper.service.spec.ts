@@ -86,6 +86,75 @@ describe('SchedulingHelperService', () => {
     expect(ans.minList.length).toBe(21);
     expect(ans.minList).toEqual(mArr);
 
+  });
+
+  it('should turn min number into string', () => {
+    const service: SchedulingHelperService = TestBed.get(SchedulingHelperService);
+
+    expect(service.minToHrMinString(47)).toEqual('47 min');
+    expect(service.minToHrMinString(69)).toEqual('1 hr 9 min');
+
+  })
+
+  it('should turn min number list into string list', () => {
+    const service: SchedulingHelperService = TestBed.get(SchedulingHelperService);
+
+    let minList = [
+      1*30,
+      2*30,
+      3*30,
+      4*30,
+      5*30,
+      6*30,
+      7*30,
+      8*30,
+      9*30,
+      10*30,
+      11*30,
+      12*30,
+      13*30,
+      14*30,
+      15*30,
+      16*30,
+      17*30,
+      18*30,
+      19*30,
+      20*30,
+      21*30,
+      22*30,
+      23*30,
+      24*30,
+    ]
+
+    let stringList = [
+      '30 min',
+      '1 hr',
+      '1 hr 30 min',
+      '2 hr',
+      '2 hr 30 min',
+      '3 hr',
+      '3 hr 30 min',
+      '4 hr',
+      '4 hr 30 min',
+      '5 hr',
+      '5 hr 30 min',
+      '6 hr',
+      '6 hr 30 min',
+      '7 hr',
+      '7 hr 30 min',
+      '8 hr',
+      '8 hr 30 min',
+      '9 hr',
+      '9 hr 30 min',
+      '10 hr',
+      '10 hr 30 min',
+      '11 hr',
+      '11 hr 30 min',
+      '12 hr',
+    ]
+
+    expect(service.minListToHrMinStringList(minList)).toEqual(stringList);
+
   })
 
 });

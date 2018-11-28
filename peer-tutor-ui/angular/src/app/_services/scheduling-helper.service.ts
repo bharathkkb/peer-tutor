@@ -31,6 +31,31 @@ export class SchedulingHelperService {
     return {dateList: dArr, minList: mArr};
   }
 
-  
+  /**Given number of minute, return string "? hr ? min". If less than 1 hour, return "? min" only
+   * 
+   * @param min 
+   */
+  minToHrMinString(min:number):string{
+    let s = "";
+    if (min<60) {
+      s = `${min} min`;
+    }
+    else if(min%60 === 0){
+      s = `${Math.floor(min/60)} hr`;
+    }
+    else {
+      let h = Math.floor(min/60);
+      let m = min%60;
+      s = `${h} hr ${m} min`
+    }
+    return s;
+  }
 
+  /**Given a list of minute numbers, map to list of string of "? hr ? min".
+   * 
+   * @param minList 
+   */
+  minListToHrMinStringList(minList:number[]):string[]{
+    return minList.map(m=>this.minToHrMinString(m));
+  }
 }
