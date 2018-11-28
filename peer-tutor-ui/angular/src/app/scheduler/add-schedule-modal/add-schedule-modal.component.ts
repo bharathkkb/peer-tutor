@@ -1,11 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { addMinutes, differenceInMinutes, isAfter, closestTo } from 'date-fns';
+import { addMinutes, differenceInMinutes, isAfter, closestTo, endOfDay } from 'date-fns';
 import { UserService, LocalStorageService, MeetingScheduleService } from 'src/app/_services';
 import { EventMeta } from '../scheduler.component';
 import { CalendarEvent } from 'calendar-utils';
 import { Student } from '../../_models'
+import { SchedulingHelperService } from 'src/app/_services/scheduling-helper.service';
 
 export type MinutesToConflictOptions = 30 | 60 | 90 | 120 | 150 | 180
 
@@ -60,34 +61,59 @@ export class AddScheduleModalComponent implements OnInit {
     this.tutor_id = this.data.event.meta.meeting.tutor_id;
 
     //Prepare for the unholy callback hell because I suck at RxJS
-    this.meetingScheduleService.getMeetingsByStudentId(this.peer_id).subscribe(
-      peerMeetings=>{
-        this.concernedStartTimeList.push(
-          ...peerMeetings.map(m=>new Date(m.start))
-            .filter(d=>!isNaN(d.getTime()))
-            .filter(d=>isAfter(d, this.startTime))
-        );
-        this.meetingScheduleService.getMeetingsByStudentId(this.tutor_id).subscribe(
-          tutorMeetings=>{
-            this.concernedStartTimeList.push(
-              ...tutorMeetings.map(m=>new Date(m.start))
-                .filter(d=>!isNaN(d.getTime()))
-                .filter(d=>isAfter(d, this.startTime))
-            );
-            let closestConflictDate = closestTo(this.startTime, this.concernedStartTimeList);
-            const minToConflictOpts:Array<MinutesToConflictOptions> = [30 , 60 , 90 , 120 , 150 , 180];
-            let minIndex = 0;
-            let minuteToConflict = differenceInMinutes(closestConflictDate, this.startTime);
-            while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
-              minIndex++;
-            }
-            if (minIndex>5 || this.concernedStartTimeList.length===0 ) {minIndex=5;}
-            this.minutesToConflict = minToConflictOpts[minIndex];
-            this.durationFilteredOpt = this.durationOpt.filter(opt=> opt.v<=this.minutesToConflict); //change to more updated one
+    if (this.peer_id === this.tutor_id){
+      console.log('SELF ADD MEETING FLAG!')
+      this.meetingScheduleService.getMeetingsByStudentId(this.peer_id).subscribe(
+        peerMeetings=>{
+          this.concernedStartTimeList.push(
+            ...peerMeetings.map(m=>new Date(m.start))
+              .filter(d=>!isNaN(d.getTime()))
+              .filter(d=>isAfter(d, this.startTime))
+          );
+          this.concernedStartTimeList.push(endOfDay(this.data.event.start));
+          let closestConflictDate = closestTo(this.startTime, this.concernedStartTimeList);
+          let durationsMin = this.scheduleHelper.timeSplicing(this.data.event.start, closestConflictDate, 30).minList;
+          let durationsString = this.scheduleHelper.minListToHrMinStringList(durationsMin);
+          let durationOptForSelfReserve:{v:number, t:string}[] = []
+
+          for (let i=0; i<durationsMin.length; i++){
+            durationOptForSelfReserve.push({v:durationsMin[i], t:durationsString[i]});
           }
-        );
-      },
-    );
+
+          this.durationFilteredOpt = durationOptForSelfReserve
+        }
+      )
+    }
+    else {
+      this.meetingScheduleService.getMeetingsByStudentId(this.peer_id).subscribe(
+        peerMeetings=>{
+          this.concernedStartTimeList.push(
+            ...peerMeetings.map(m=>new Date(m.start))
+              .filter(d=>!isNaN(d.getTime()))
+              .filter(d=>isAfter(d, this.startTime))
+          );
+          this.meetingScheduleService.getMeetingsByStudentId(this.tutor_id).subscribe(
+            tutorMeetings=>{
+              this.concernedStartTimeList.push(
+                ...tutorMeetings.map(m=>new Date(m.start))
+                  .filter(d=>!isNaN(d.getTime()))
+                  .filter(d=>isAfter(d, this.startTime))
+              );
+              let closestConflictDate = closestTo(this.startTime, this.concernedStartTimeList);
+              const minToConflictOpts:Array<MinutesToConflictOptions> = [30 , 60 , 90 , 120 , 150 , 180];
+              let minIndex = 0;
+              let minuteToConflict = differenceInMinutes(closestConflictDate, this.startTime);
+              while (minIndex<minToConflictOpts.length && minuteToConflict>minToConflictOpts[minIndex]){
+                minIndex++;
+              }
+              if (minIndex>5 || this.concernedStartTimeList.length===0 ) {minIndex=5;}
+              this.minutesToConflict = minToConflictOpts[minIndex];
+              this.durationFilteredOpt = this.durationOpt.filter(opt=> opt.v<=this.minutesToConflict); //change to more updated one
+            }
+          );
+        },
+      );
+    }
     
 
     this.startTime = this.data.event.start.toLocaleString();
@@ -125,6 +151,7 @@ export class AddScheduleModalComponent implements OnInit {
     private localStorageService:LocalStorageService,
     private userService:UserService,
     private meetingScheduleService:MeetingScheduleService,
+    private scheduleHelper:SchedulingHelperService,
     public dialogRef: MatDialogRef<AddScheduleModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddScheduleEventInputData) {}
 

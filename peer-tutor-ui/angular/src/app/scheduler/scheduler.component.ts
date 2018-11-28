@@ -208,7 +208,7 @@ export class SchedulerComponent implements OnInit {
             }
 
             //check if opponent is event tutor and self is event peer
-            if (selfM.tutor_id===this.opponentId && selfM.peer_id===this.selfId && selfM.peer_id!==this.selfId) {
+            if (selfM.tutor_id===this.opponentId && selfM.peer_id===this.selfId) {
               resultEvent.color = COLORS.green;
             }
             //check if self is event tutor, but not self_reserve
