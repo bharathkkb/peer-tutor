@@ -6,7 +6,6 @@ import { MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatButtonMod
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { DetailsComponent } from './details/details.component';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -32,7 +31,6 @@ import { StudentComponent } from './student/student.component';
 @NgModule({
   declarations: [
     AppComponent,
-    SidebarComponent,
     DetailsComponent,
     LoginComponent,
     RegisterComponent,
