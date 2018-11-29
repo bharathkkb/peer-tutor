@@ -26,6 +26,7 @@ import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { PopupMsgComponent } from './popup-msg/popup-msg.component';
 import { StudentComponent } from './student/student.component';
+import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { StudentComponent } from './student/student.component';
     ContactComponent,
     PopupMsgComponent,
     StudentComponent,
+    ForgetPasswordComponent,
   ],
   entryComponents: [
     AddScheduleModalComponent,

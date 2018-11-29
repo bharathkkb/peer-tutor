@@ -32,7 +32,7 @@ export class NavbarComponent implements OnInit {
       filter(event=>event instanceof NavigationEnd) //then filter for only NavigationEnd Event
     )
     .subscribe((x:NavigationEnd)=>{
-      if (x.url.match(/\/login|\/register|\/logout/)) {this.isVisible = false;}
+      if (x.url.match(/\/login|\/register|\/logout|\/forgetpassword/)) {this.isVisible = false;}
       else {this.isVisible = true;}
     });
   }

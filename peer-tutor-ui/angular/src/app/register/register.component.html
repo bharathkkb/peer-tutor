@@ -53,6 +53,25 @@
                     Password need to be at least 8 characters long.
                 </small>
             </div>
+
+            <div class="form-group">
+                <label for="securequestion">Security Question</label>
+                <input type="text" class="form-control" name="securequestion" id="securequestion" placeholder="Security Question" 
+                    [(ngModel)]="secquestion" required #formquestion="ngModel"
+                    [class.is-invalid]="formquestion.invalid && formquestion.touched">
+                <small [class.d-none]="formquestion.valid || formquestion.untouched" class="text-danger">
+                    Security Question is required.
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="secureanswer">Security Answer</label>
+                <input type="text" class="form-control" name="secureanswer" id="secureanswer" placeholder="Security Answer" 
+                    [(ngModel)]="secanswer" required #formanswer="ngModel"
+                    [class.is-invalid]="formanswer.invalid && formanswer.touched">
+                <small [class.d-none]="formanswer.valid || formanswer.untouched" class="text-danger">
+                    Security Answer is required.
+                </small>
+            </div>
             <!-- Login submit / Registration -->
             <div class="form-group">
                 <button [disabled]="loginForm.form.invalid" class="btn btn-primary" (click)="tryregister()">Register</button>

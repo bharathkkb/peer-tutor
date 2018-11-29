@@ -2,6 +2,7 @@
 import { UserService } from '../_services';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { UserRegister } from '../_models';
 
 @Component({
   selector: 'app-register',
@@ -15,6 +16,8 @@ export class RegisterComponent implements OnInit {
     email:string;
     registerPassword:string;
     studentId:string;
+    secquestion:string;
+    secanswer:string;
 
     returnUrl:string;
     // private activatedRoute: ActivatedRoute;
@@ -29,11 +32,13 @@ export class RegisterComponent implements OnInit {
     tryregister() {
         this.submitted = true;
         
-        let registrationObj:any = {
+        let registrationObj:UserRegister = {
             name: this.firstname+" "+this.lastname,
             student_id: this.studentId.toString(),
             username: this.email,
             password: this.registerPassword, 
+            security_question: this.secquestion,
+            security_answer: this.secanswer,
         }
 
         this.userService.register(registrationObj)

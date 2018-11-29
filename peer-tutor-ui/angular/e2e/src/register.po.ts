@@ -7,6 +7,8 @@ class RegisterInfo{
   studentId: string;
   email: string;
   password: string;
+  secure_question: string 
+  secure_answer: string;
 };
 
 export class RegisterPage {
@@ -17,6 +19,8 @@ export class RegisterPage {
     studentId: "1",
     email: "test1@gmail.com",
     password: "password1",
+    secure_question: "What is my pet name?",
+    secure_answer: "doggy"
   };
 
   navigateTo() {
@@ -33,6 +37,9 @@ export class RegisterPage {
     element(by.css('input#studentid')).sendKeys(reg.studentId);
     element(by.css('input#email')).sendKeys(reg.email);
     element(by.css('input#registerPassword')).sendKeys(reg.password);
+    element(by.css('input#securequestion')).sendKeys(reg.secure_question);
+    element(by.css('input#secureanswer')).sendKeys(reg.secure_answer);
+
     element(by.css('button.btn.btn-primary')).click();
   }
 

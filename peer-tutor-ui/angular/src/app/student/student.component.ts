@@ -32,6 +32,7 @@ export class StudentComponent implements OnInit {
     name: "",
     student_id: "",
     username: "",
+    security_question: "",
   };
   studentRatings$: Rating[] = [];
   studentRatingsSum$:RatingSummary[] = [];
