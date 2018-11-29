@@ -90,6 +90,13 @@ def updateUniClassStudentData(studentData):
 
 
 def putStudent(studentData):
+    keys = studentData.keys()
+    requiredkeys = ["student_id", "username", "name",
+                    "password", "security_question", "security_answer"]
+    for key in requiredkeys:
+        if key not in keys:
+            return json.loads(json.dumps({"error": "{} is a required field".format(key)})), 400
+
     # check if old student exists in db
     if getStudentById(studentData["student_id"]):
         updateStudent = getStudentById(studentData["student_id"])
@@ -99,7 +106,7 @@ def putStudent(studentData):
             updateUniClassStudentData(studentData)
         # make new student with the same student id
         newStudentData = Student(
-            updateStudent["student_id"], studentData["name"], studentData["username"], studentData["password"], studentData.get("enrolled_classes", list()), studentData.get("meetings", list()))
+            updateStudent["student_id"], studentData["name"], studentData["username"], studentData["password"], studentData["security_question"], studentData["security_answer"], studentData.get("enrolled_classes", list()), studentData.get("meetings", list()))
         # update the student info in db
         mongoDriver().updateDict("peer-tutor-db", "student",
                                  updateStudent, newStudentData.get_json())
@@ -108,7 +115,7 @@ def putStudent(studentData):
     else:
         # make a new student
         s = Student(studentData["student_id"], studentData["name"],
-                    studentData["username"], studentData["password"], studentData.get("enrolled_classes", list()), studentData.get("meetings", list()))
+                    studentData["username"], studentData["password"], studentData["security_question"], studentData["security_answer"], studentData.get("enrolled_classes", list()), studentData.get("meetings", list()))
         print(s.get_json())
         if(studentData.get("enrolled_classes", False) and len(studentData["enrolled_classes"]) > 0):
             updateUniClassStudentData(studentData)

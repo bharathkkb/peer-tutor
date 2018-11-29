@@ -680,6 +680,12 @@ definitions:
       username:
         type: string
         example: 'bharath@gmail.com'
+      security_question:
+        type: string
+        example: 'What is your pets name?'
+      security_answer:
+        type: string
+        example: 'doggy'
       enrolled_classes:
         type: array
         items:

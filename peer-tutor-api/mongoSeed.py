@@ -16,21 +16,21 @@ def seedUsersMeetings():
     mydb = client["peer-tutor-db"]
     studentCol = mydb["student"]
     student1 = {"name": "Lifeng", "student_id": "02",
-                "username": "lifeng@gmail.com", "password": "pass123", "enrolled_classes": [24778, 30053, 29567], "meetings": [11, 13]}
+                "username": "lifeng@gmail.com", "password": "pass123", "enrolled_classes": [24778, 30053, 29567], "meetings": [11, 13], "security_answer": "doggy", "security_question": "Whats my pets name?"}
     student2 = {"name": "Albert", "student_id": "04",
-                "username": "albert@gmail.com", "password": "pass123", "enrolled_classes": [28583, 22052, 30143], "meetings": [12]}
+                "username": "albert@gmail.com", "password": "pass123", "enrolled_classes": [28583, 22052, 30143], "meetings": [12], "security_answer": "doggy", "security_question": "Whats my pets name?"}
     student3 = {"name": "Sheldon", "student_id": "06",
-                "username": "sheldon@gmail.com", "password": "sheldon123", "enrolled_classes": [28020, 27382, 22674], "meetings": []}
+                "username": "sheldon@gmail.com", "password": "sheldon123", "enrolled_classes": [28020, 27382, 22674], "meetings": [], "security_answer": "doggy", "security_question": "Whats my pets name?"}
     student4 = {"name": "TestStudent1", "student_id": "00011",
-                "username": "TestStudent1@gmail.com", "password": "test12", "enrolled_classes": [], "meetings": []}
+                "username": "TestStudent1@gmail.com", "password": "test12", "enrolled_classes": [], "meetings": [], "security_answer": "doggy", "security_question": "Whats my pets name?"}
     student5 = {"name": "TestStudent2", "student_id": "00012",
-                "username": "TestStudent2@gmail.com", "password": "34test", "enrolled_classes": [], "meetings": []}
+                "username": "TestStudent2@gmail.com", "password": "34test", "enrolled_classes": [], "meetings": [], "security_answer": "doggy", "security_question": "Whats my pets name?"}
     student6 = {"name": "TestStudent3", "student_id": "10002",
-                "username": "TestStudent3@gmail.com", "password": "blah1", "enrolled_classes": [], "meetings": []}
+                "username": "TestStudent3@gmail.com", "password": "blah1", "enrolled_classes": [], "meetings": [], "security_answer": "doggy", "security_question": "Whats my pets name?"}
     student7 = {"name": "TestStudent4", "student_id": "00011",
-                "username": "TestStudent4@gmail.com", "password": "blah2", "enrolled_classes": [], "meetings": []}
+                "username": "TestStudent4@gmail.com", "password": "blah2", "enrolled_classes": [], "meetings": [], "security_answer": "doggy", "security_question": "Whats my pets name?"}
     student8 = {"name": "TestStudent5", "student_id": "10003",
-                "username": "TestStudent5@gmail.com", "password": "blah3", "enrolled_classes": [], "meetings": []}
+                "username": "TestStudent5@gmail.com", "password": "blah3", "enrolled_classes": [], "meetings": [], "security_answer": "doggy", "security_question": "Whats my pets name?"}
     studentCol.insert_one(student1)
     studentCol.insert_one(student2)
     studentCol.insert_one(student3)

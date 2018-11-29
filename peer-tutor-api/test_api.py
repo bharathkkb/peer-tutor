@@ -129,6 +129,8 @@ def test_get_student_by_id_data(url):
     assert response.status_code == 200
     assert data["student_id"] == "02"
     assert data["name"] == "Lifeng"
+    assert data["security_answer"] == "doggy"
+    assert data["security_question"] == "Whats my pets name?"
     assert len(data["enrolled_classes"]) == 3
     for enrolled_class in data["enrolled_classes"]:
         assert str(enrolled_class["class-code"]) in ["24778", "30053", "29567"]
@@ -165,6 +167,8 @@ def test_put_student_data(url):
     putStudent["student_id"] = "07"
     putStudent["username"] = "bharathupdate@gmail.com"
     putStudent["password"] = "pass123"
+    putStudent["security_question"] = "new question"
+    putStudent["security_answer"] = "new answer"
     putStudent["enrolled_classes"] = [
         "22271", "28363", "22363", "21299"]
     headers = {'content-type': 'application/json'}
@@ -179,10 +183,43 @@ def test_put_student_data(url):
     assert data["name"] == putStudent["name"]
     assert data["password"] == putStudent["password"]
     assert data["username"] == putStudent["username"]
+    assert data["security_question"] == putStudent["security_question"]
+    assert data["security_answer"] == putStudent["security_answer"]
     assert len(data["enrolled_classes"]) == 4
     for enrolled_class in data["enrolled_classes"]:
         assert str(enrolled_class["class-code"]
                    ) in putStudent["enrolled_classes"]
+
+
+def test_put_student_data_fail_no_name(url):
+    putStudent = dict()
+    putStudent["student_id"] = "13407"
+    putStudent["username"] = "bharathupdate@gmail.com"
+    putStudent["password"] = "pass123"
+    putStudent["security_question"] = "new question"
+    putStudent["security_answer"] = "new answer"
+    putStudent["enrolled_classes"] = [
+        "22271", "28363", "22363", "21299"]
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/student', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 400
+
+
+def test_put_student_data_fail_no_security(url):
+    putStudent = dict()
+    putStudent["name"] = "BharathUpdate"
+    putStudent["student_id"] = "1307"
+    putStudent["username"] = "bharathupdate@gmail.com"
+    putStudent["password"] = "pass123"
+    putStudent["enrolled_classes"] = [
+        "22271", "28363", "22363", "21299"]
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.put(
+        testAPIBasePath + '/student', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 400
 
 # check modifying the student added above
 
@@ -194,6 +231,8 @@ def test_modify_student_data(url):
     putStudent["username"] = "bharathupdate2@gmail.com"
     putStudent["password"] = "pass12345"
     putStudent["enrolled_classes"] = ["22271"]
+    putStudent["security_question"] = "new updated question"
+    putStudent["security_answer"] = "new updated answer"
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.put(
@@ -206,6 +245,8 @@ def test_modify_student_data(url):
     assert data["name"] == putStudent["name"]
     assert data["password"] == putStudent["password"]
     assert data["username"] == putStudent["username"]
+    assert data["security_question"] == putStudent["security_question"]
+    assert data["security_answer"] == putStudent["security_answer"]
     assert len(data["enrolled_classes"]) == 1
     for enrolled_class in data["enrolled_classes"]:
         assert str(enrolled_class["class-code"]
@@ -223,6 +264,8 @@ putStudent["student_id"] = "123437"
 putStudent["username"] = "StudentUniClass@gmail.com"
 putStudent["password"] = "pass123"
 putStudent["enrolled_classes"] = ["22271", "28363", "22363", "21299", "28013"]
+putStudent["security_question"] = "new question2"
+putStudent["security_answer"] = "new answer2"
 
 
 def test_put_student_data_for_testing_class(url):
@@ -239,6 +282,8 @@ def test_put_student_data_for_testing_class(url):
     assert data["name"] == putStudent["name"]
     assert data["password"] == putStudent["password"]
     assert data["username"] == putStudent["username"]
+    assert data["security_answer"] == putStudent["security_answer"]
+    assert data["security_question"] == putStudent["security_question"]
     assert len(data["enrolled_classes"]) == 5
     for enrolled_class in data["enrolled_classes"]:
         assert str(enrolled_class["class-code"]
@@ -394,6 +439,8 @@ def test_register(url):
     putStudent["student_id"] = "17"
     putStudent["username"] = "newstudent@gmail.com"
     putStudent["password"] = "pass123"
+    putStudent["security_question"] = "new question reg"
+    putStudent["security_answer"] = "new answer reg"
     headers = {'content-type': 'application/json'}
     testAPIBasePath = "{}/test/api".format(url)
     putResponse = requests.post(
@@ -405,6 +452,8 @@ def test_register(url):
     assert data["name"] == putStudent["name"]
     assert data["username"] == putStudent["username"]
     assert data["password"] == putStudent["password"]
+    assert data["security_question"] == putStudent["security_question"]
+    assert data["security_answer"] == putStudent["security_answer"]
 
 # test logging in with the above student
 
@@ -484,6 +533,19 @@ def test_register_fail(url):
     data = json.loads(putResponse.content)
     # test if insert was success
     assert data["accountExists"] == True
+
+
+def test_register_fail_without_security(url):
+    putStudent = dict()
+    putStudent["name"] = "newstudent2"
+    putStudent["student_id"] = "1434357"
+    putStudent["username"] = "newstudent@gmail.com"
+    putStudent["password"] = "pass123"
+    headers = {'content-type': 'application/json'}
+    testAPIBasePath = "{}/test/api".format(url)
+    putResponse = requests.post(
+        testAPIBasePath + '/register', data=json.dumps(putStudent), headers=headers)
+    assert putResponse.status_code == 400
 
 
 """
@@ -859,6 +921,8 @@ putStudentA["student_id"] = "12321"
 putStudentA["username"] = "studentA@gmail.com"
 putStudentA["password"] = "pass123"
 putStudentA["enrolled_classes"] = ["27264", "28363"]
+putStudentA["security_question"] = "new questionA"
+putStudentA["security_answer"] = "new answerA"
 
 
 def test_multi_driver_test1_add_studentA(url):
@@ -874,6 +938,8 @@ def test_multi_driver_test1_add_studentA(url):
     assert data["name"] == putStudentA["name"]
     assert data["password"] == putStudentA["password"]
     assert data["username"] == putStudentA["username"]
+    assert data["security_question"] == putStudentA["security_question"]
+    assert data["security_answer"] == putStudentA["security_answer"]
     assert len(data["enrolled_classes"]) == len(
         putStudentA["enrolled_classes"])
     for enrolled_class in data["enrolled_classes"]:
@@ -887,6 +953,8 @@ putStudentB["student_id"] = "14435"
 putStudentB["username"] = "studentB@gmail.com"
 putStudentB["password"] = "pass1233"
 putStudentB["enrolled_classes"] = ["23381", "21808", "28013"]
+putStudentB["security_question"] = "new questionB"
+putStudentB["security_answer"] = "new answerB"
 
 
 def test_multi_driver_test1_add_studentB(url):
@@ -902,6 +970,8 @@ def test_multi_driver_test1_add_studentB(url):
     assert data["name"] == putStudentB["name"]
     assert data["password"] == putStudentB["password"]
     assert data["username"] == putStudentB["username"]
+    assert data["security_question"] == putStudentB["security_question"]
+    assert data["security_answer"] == putStudentB["security_answer"]
     assert len(data["enrolled_classes"]) == len(
         putStudentB["enrolled_classes"])
     for enrolled_class in data["enrolled_classes"]:
@@ -996,6 +1066,8 @@ putStudentC["student_id"] = "1232122"
 putStudentC["username"] = "StudentInClassA@gmail.com"
 putStudentC["password"] = "pass123"
 putStudentC["enrolled_classes"] = ["24415"]
+putStudentC["security_question"] = "new questionC"
+putStudentC["security_answer"] = "new answerC"
 
 putStudentD = dict()
 putStudentD["name"] = "StudentInClassB"
@@ -1003,6 +1075,8 @@ putStudentD["student_id"] = "1232123"
 putStudentD["username"] = "StudentInClassB@gmail.com"
 putStudentD["password"] = "pass123"
 putStudentD["enrolled_classes"] = ["24415"]
+putStudentD["security_question"] = "new questionD"
+putStudentD["security_answer"] = "new answerD"
 
 
 def test_multi_driver_test1_add_studentInClassA(url):
@@ -1018,6 +1092,8 @@ def test_multi_driver_test1_add_studentInClassA(url):
     assert data["name"] == putStudentC["name"]
     assert data["password"] == putStudentC["password"]
     assert data["username"] == putStudentC["username"]
+    assert data["security_question"] == putStudentC["security_question"]
+    assert data["security_answer"] == putStudentC["security_answer"]
     assert len(data["enrolled_classes"]) == len(
         putStudentC["enrolled_classes"])
     for enrolled_class in data["enrolled_classes"]:
@@ -1038,6 +1114,8 @@ def test_multi_driver_test1_add_studentInClassB(url):
     assert data["name"] == putStudentD["name"]
     assert data["password"] == putStudentD["password"]
     assert data["username"] == putStudentD["username"]
+    assert data["security_question"] == putStudentD["security_question"]
+    assert data["security_answer"] == putStudentD["security_answer"]
     assert len(data["enrolled_classes"]) == len(
         putStudentD["enrolled_classes"])
     for enrolled_class in data["enrolled_classes"]:
