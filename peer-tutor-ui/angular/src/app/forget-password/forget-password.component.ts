@@ -64,6 +64,8 @@ export class ForgetPasswordComponent implements OnInit {
     this.userService.getByStudentId(id).subscribe(
       u=>{
         this.tempStudentObj$ = u;
+        this.tempStudentObj$.enrolled_classes = this.tempStudentObj$.enrolled_classes.map(c=>c["class-code"])
+        this.tempStudentObj$.meetings = this.tempStudentObj$.meetings.map(m=>m["meeting_id"])
         this.secureQuestion$ = u.security_question;
 
         this.studentIdNotFoundFlag$ = false;
