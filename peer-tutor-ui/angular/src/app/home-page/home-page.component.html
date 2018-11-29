@@ -1,5 +1,10 @@
 <!-- Class Content -->
 <div class="row mt-4">
+    <div *ngIf="enrolledClasses$.length===0">
+        <div class="text-center display-4">
+            You haven't enrolled any class yet...
+        </div>
+    </div>
     <div *ngFor="let c of enrolledClasses$" class="col-sm-12 col-md-6 col-lg-4">
             <div class="card mb-4" routerLink="/class/{{c['class-code']}}">
                 <div class="card-body text-center">
@@ -11,7 +16,6 @@
                     
                 </div>
             </div>
-
     </div>
 </div>
 
@@ -87,6 +91,6 @@
 </div>
 
 <!-- Add Class Button -->
-<button (click)="addClassButtonOnClick()" mat-fab class="mat-button-bottom-right-fixed" data-toggle="modal" data-target="#myModal">
-    <mat-icon>add</mat-icon>
+<button (click)="addClassButtonOnClick()" mat-fab class="mat-button-bottom-right-fixed mat-btn-big" data-toggle="modal" data-target="#myModal">
+    <mat-icon class="mat-icon-big">add</mat-icon>
 </button>

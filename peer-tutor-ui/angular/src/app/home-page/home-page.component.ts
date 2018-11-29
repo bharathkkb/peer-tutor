@@ -40,7 +40,7 @@ export class HomePageComponent implements OnInit {
   addClasses$: Observable<UniClassSum[]>;
 
   /**Currently enrolled class */
-  enrolledClasses$: UniClassSum[];
+  enrolledClasses$: UniClassSum[] = [];
 
   constructor( 
     private classDataService:ClassDataService,

@@ -30,6 +30,8 @@
     </div>
   </div>
   <div *ngIf="!self_flag$">
+    <hr class="my-4">
+    <h3>Schedule a meeting with {{studentObj$["name"]}}</h3>
     <button class="btn btn-danger mt-4" (click)="schedule()">Schedule</button>
     <hr class="my-4">
     <h3>Rate This Peer</h3>
