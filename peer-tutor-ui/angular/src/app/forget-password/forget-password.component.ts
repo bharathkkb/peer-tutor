@@ -11,11 +11,20 @@ import { Router } from '@angular/router';
 })
 export class ForgetPasswordComponent implements OnInit {
 
+  /**1: student ID
+   * 2: secure question
+   * 3: password
+   */
+  showFormFlag$: 1|2|3 = 1;
+
   studentIdNotFoundFlag$ = false;
   searchedFlag$ = false;
 
   answerNotMatchedFlag$ = false;
   answerSubmittedFlag$ = false;
+
+  passwordNotMatchedFlag$ = false;
+  passwordSubmitFlag$ = false;
 
   secureQuestion$ = "";
 
@@ -41,9 +50,12 @@ export class ForgetPasswordComponent implements OnInit {
     })
 
     this.newPasswordFormGroup$ = this.formBuilder.group({
-      "newPassword": ["", Validators.required, Validators.minLength(8)],
-      "confirmPassword": ["", Validators.required, Validators.minLength(8)],
+      "newPassword": ["", [Validators.required, Validators.minLength(8)]],
+      "confirmPassword": ["", [Validators.required, Validators.minLength(8)]],
     })
+  }
+  matchValidator(group: FormGroup){
+    return group.get("newPassword").value === group.get("confirmPassword").value;
   }
 
   onSearchStudentId(){
@@ -56,6 +68,8 @@ export class ForgetPasswordComponent implements OnInit {
 
         this.studentIdNotFoundFlag$ = false;
         this.searchedFlag$ = true;
+        //next stage
+        this.showFormFlag$ = 2;
       },
       err=>{
         console.log(err);
@@ -71,10 +85,12 @@ export class ForgetPasswordComponent implements OnInit {
       if (this.tempStudentObj$.security_answer.toUpperCase() === ans.toUpperCase()) {
         this.answerNotMatchedFlag$ = false;
         this.answerSubmittedFlag$ = true;
+        //next stage
+        this.showFormFlag$ = 3;
       }
       else {
         this.answerNotMatchedFlag$ = true;
-        this.answerSubmittedFlag$ = false;
+        this.answerSubmittedFlag$ = true;
       }
     }
     else {
@@ -83,12 +99,20 @@ export class ForgetPasswordComponent implements OnInit {
   }
 
   onConfirmNewPassword(){
-    this.tempStudentObj$.password = <string>(this.newPasswordFormGroup$.get("newPassword").value)
-    this.userService.update(this.tempStudentObj$).subscribe(
-      s=>{this.router.navigate(['/login'])},
-      err=>{console.log(err)}
-    )
-    
+    if (this.matchValidator(this.newPasswordFormGroup$)) {
+      this.passwordNotMatchedFlag$ = false;
+      this.passwordSubmitFlag$ = true;
+
+      this.tempStudentObj$.password = <string>(this.newPasswordFormGroup$.get("newPassword").value)
+      this.userService.update(this.tempStudentObj$).subscribe(
+        s=>{this.router.navigate(['/login'])},
+        err=>{console.log(err)}
+      )
+    }
+    else {
+      this.passwordSubmitFlag$ = true;
+      this.passwordNotMatchedFlag$ = true;
+    }    
   }
 
 }
