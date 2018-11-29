@@ -11,6 +11,10 @@ body {
 // https://github.com/angular/material2/issues/5540
 .cdk-overlay-container { z-index: 9999; }
 
+.uniclass-card:hover{
+    background: #c4daff;
+}
+
 // .container {
 //     display: grid;
 //     grid-template-columns: 70px auto;

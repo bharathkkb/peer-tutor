@@ -6,7 +6,7 @@
         </div>
     </div>
     <div *ngFor="let c of enrolledClasses$" class="col-sm-12 col-md-6 col-lg-4">
-            <div class="card mb-4" routerLink="/class/{{c['class-code']}}">
+            <div class="card mb-4 uniclass-card" routerLink="/class/{{c['class-code']}}">
                 <div class="card-body text-center">
                     <h4 class="card-title">{{c["class-name"]}}</h4>
                     <h5 class="card-title">{{c.title}}</h5>
@@ -70,7 +70,7 @@
                         <h5>Select the Section</h5>
                     </div>
                     <div *ngFor="let ac of addClasses$ | async" class="col-sm-12 col-md-6">
-                        <div class="card mb-4" data-dismiss="modal" (click)="classSectionAdded(ac['class-code'])">
+                        <div class="card mb-4 uniclass-card" data-dismiss="modal" (click)="classSectionAdded(ac['class-code'])">
                             <div class="card-body text-center">
                                 <h4 class="card-title">{{ac["class-name"]}}</h4>
                                 <h5 class="card-title">{{ac.title}}</h5>
