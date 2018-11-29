@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatIconModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatIconModule, MatProgressSpinnerModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CURRENT_USER } from '../_services';
 
@@ -28,6 +28,7 @@ describe('HomePageComponent', () => {
         MatAutocompleteModule,
         BrowserAnimationsModule,
         MatIconModule,
+        MatProgressSpinnerModule,
       ],
     })
     .compileComponents();
