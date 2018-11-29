@@ -42,6 +42,9 @@ export class HomePageComponent implements OnInit {
   /**Currently enrolled class */
   enrolledClasses$: UniClassSum[] = [];
 
+  /**flag that control no enrolled Class Flag */
+  noUniClassEnrolledFlag$:boolean;
+
   constructor( 
     private classDataService:ClassDataService,
     private userService:UserService,
@@ -51,6 +54,8 @@ export class HomePageComponent implements OnInit {
   ) { }
 
   ngOnInit() {    
+    
+
     this.enrolledClassInitSubRoutine();
 
     this.modalForm = this.formBuilder.group({
@@ -81,6 +86,13 @@ export class HomePageComponent implements OnInit {
    */
   private enrolledClassInitSubRoutine(){
     //TODO: make an LocalStorage Behaviour Subject
+    let karmaShit:UniClass[] = this.localStorageService.getEnrolledClass(false) //hurr durr caNnOt reAd lEnGtH oF UNdeFIne
+    if (karmaShit) {
+      this.noUniClassEnrolledFlag$ = karmaShit.length === 0;
+    }
+    else {
+      this.noUniClassEnrolledFlag$ = true;
+    }
 
     if (this.localStorageService.getCurrentUser()){
       this.userService.getByStudentId(this.localStorageService.getCurrentUser()[CURRENT_USER.student_id.key]).pipe(
@@ -152,9 +164,36 @@ export class HomePageComponent implements OnInit {
     )
   }
 
+  onDeptSelect(dept:string){
+    this.modalFlag.className=true;
+
+    let deptName:string = dept
+    
+    this.classNameOpt$=[];
+
+    this.classDataService.getByDeptName(deptName).subscribe(
+      (d:UniClass[])=>{
+        this.classNameOpt$=d.map((c:UniClass) => c["class-name"]); //subcribe to get UniClass[], but we only need ["class-name"] for classNameOpt$
+      },
+      err => {
+        console.log(err);
+        this.modalFlag.classNameNotFound = true
+      }
+    )
+  }
+
   classClickSearch(){
     this.modalFlag.classSections = true;
     let pickedClassName:string = this.modalForm.get("className").value;
+
+    this.addClasses$ = this.classDataService.getByClassName(pickedClassName).pipe(
+      map(data=>data.map(c=>this.classDataService.toClassSum(c))) //map to a Observable<UniClassSum[]>
+    )
+  }
+
+  onClassSelect(optClass:string){
+    this.modalFlag.classSections = true;
+    let pickedClassName:string = optClass;
 
     this.addClasses$ = this.classDataService.getByClassName(pickedClassName).pipe(
       map(data=>data.map(c=>this.classDataService.toClassSum(c))) //map to a Observable<UniClassSum[]>

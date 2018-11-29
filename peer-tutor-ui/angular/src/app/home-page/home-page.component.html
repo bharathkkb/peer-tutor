@@ -1,12 +1,15 @@
 <!-- Class Content -->
 <div class="row mt-4">
-    <div *ngIf="enrolledClasses$.length===0">
+    <div *ngIf="noUniClassEnrolledFlag$">
         <div class="text-center display-4">
             You haven't enrolled any class yet...
         </div>
     </div>
+    <div *ngIf="!noUniClassEnrolledFlag$ && enrolledClasses$.length===0">
+        <mat-spinner></mat-spinner>
+    </div>
     <div *ngFor="let c of enrolledClasses$" class="col-sm-12 col-md-6 col-lg-4">
-            <div class="card mb-4" routerLink="/class/{{c['class-code']}}">
+            <div class="card mb-4 uniclass-card" routerLink="/class/{{c['class-code']}}">
                 <div class="card-body text-center">
                     <h4 class="card-title">{{c["class-name"]}}</h4>
                     <h5 class="card-title">{{c.title}}</h5>
@@ -37,12 +40,12 @@
                                 matInput formControlName="deptName" id="dept-input"
                                 [matAutocomplete]="deptAuto">
                             <mat-autocomplete autoActiveFirstOption #deptAuto="matAutocomplete">
-                                <mat-option *ngFor="let optDept of filteredDeptName | async" [value]="optDept">
+                                <mat-option *ngFor="let optDept of filteredDeptName | async" [value]="optDept" (onSelectionChange)="onDeptSelect(optDept)">
                                     {{optDept}}
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <button mat-button (click)="deptClickNext()">next</button>
+                        <!--<button mat-button (click)="deptClickNext()">next</button>-->
                     </div>
                     <!-- Select Class -->
                     <div class="form-group" *ngIf="modalFlag.className">
@@ -52,12 +55,12 @@
                                     matInput formControlName="className" id="class-input"
                                     [matAutocomplete]="classAuto">
                                 <mat-autocomplete autoActiveFirstOption #classAuto="matAutocomplete">
-                                    <mat-option *ngFor="let optClass of filteredClassName | async" [value]="optClass">
+                                    <mat-option *ngFor="let optClass of filteredClassName | async" [value]="optClass" (onSelectionChange)="onClassSelect(optClass)">
                                         {{optClass}}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
-                            <button mat-button (click)="classClickSearch()">search</button>
+                            <!--<button mat-button (click)="classClickSearch()">search</button>-->
                         </div>
                         <ng-template #no_class_found *ngIf="modalFlag.classNameNotFound">
                             <small class="text-danger">Cannot find any class!</small>
@@ -70,7 +73,7 @@
                         <h5>Select the Section</h5>
                     </div>
                     <div *ngFor="let ac of addClasses$ | async" class="col-sm-12 col-md-6">
-                        <div class="card mb-4" data-dismiss="modal" (click)="classSectionAdded(ac['class-code'])">
+                        <div class="card mb-4 uniclass-card" data-dismiss="modal" (click)="classSectionAdded(ac['class-code'])">
                             <div class="card-body text-center">
                                 <h4 class="card-title">{{ac["class-name"]}}</h4>
                                 <h5 class="card-title">{{ac.title}}</h5>

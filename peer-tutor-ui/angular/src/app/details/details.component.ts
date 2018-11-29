@@ -39,7 +39,7 @@ interface UniClassDetail{
  */
 interface StudentElement {
   name: string;
-  rating: "N/A"|number;
+  rating: "No Rating Yet"|number;
   rate_count: number;
   comment: string;
   student_id: string;
@@ -124,14 +124,14 @@ export class DetailsComponent implements OnInit{
         for (let s of this.uniClassDetail.students){
           let tempStudentElem:StudentElement={
             name: s.name,
-            rating: "N/A",
+            rating: "No Rating Yet",
             rate_count: 0,
-            comment: "N/A",
+            comment: "No Comment Yet",
             student_id: s.student_id.toString(),
           };
           this.ratingDataService.getRatingAvgByStudentId(tempStudentElem.student_id).subscribe(
             r=>{ // avg Rating exist
-              tempStudentElem.rating = r;
+              if (r!=0) {tempStudentElem.rating = r;}
               this.ratingDataService.getRatingsByReceivedStudentId(tempStudentElem.student_id).subscribe(
                 ratings=>{ //last comment exist
                   if (ratings.length>0) {
