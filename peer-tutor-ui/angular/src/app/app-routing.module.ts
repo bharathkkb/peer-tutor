@@ -9,6 +9,7 @@ import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import { StudentComponent } from './student/student.component';
+import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 
 const routes: Routes = [
   {
@@ -60,6 +61,10 @@ const routes: Routes = [
   {
     path: 'contact',
     component: ContactComponent,
+  },
+  {
+    path: 'forgetpassword',
+    component: ForgetPasswordComponent,
   },
   {
     path: '',
