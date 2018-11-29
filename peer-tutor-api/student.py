@@ -11,11 +11,13 @@ class Student:
 
     """
 
-    def __init__(self, student_id, name, username, password, enrolled_classes=list(),  meetings=list(), schedules=list()):
+    def __init__(self, student_id, name, username, password, security_question, security_answer, enrolled_classes=list(),  meetings=list(), schedules=list()):
         self.student_id = student_id
         self.name = name
         self.username = username
         self.password = password
+        self.security_question = security_question
+        self.security_answer = security_answer
         self.enrolled_classes = enrolled_classes
         self.schedules = schedules  # a Time block
         self.meetings = meetings
@@ -36,6 +38,8 @@ class Student:
         student_dict["name"] = self.name
         student_dict["username"] = self.username
         student_dict["password"] = self.password
+        student_dict["security_answer"] = self.security_answer
+        student_dict["security_question"] = self.security_question
         student_dict["enrolled_classes"] = list()  # "list(class1,class2,..)"
         for enrolled_class in self.enrolled_classes:
             student_dict["enrolled_classes"].append(str(enrolled_class))

@@ -11,7 +11,7 @@ class Tutor_testing(unittest.TestCase):
     """
     The basic class that inherits unittest.TestCase
     """
-    tutor = Tutor("123", "bharath", "bharath", "123456", ["class1", "class2"], [
+    tutor = Tutor("123", "bharath", "bharath", "123456", "security question?", "security ans", ["class1", "class2"], [
         "m1", "m2", "m3"], ["tb1", "tb2"], "002", "4.2")
 
     def test_get_tutor_id(self):

@@ -11,7 +11,7 @@ class Peer_testing(unittest.TestCase):
     """
     The basic class that inherits unittest.TestCase
     """
-    peer = Peer("123", "bharath", "bharath", "123456", ["class1", "class2"], [
+    peer = Peer("123", "bharath", "bharath", "123456", "security question?", "security ans", ["class1", "class2"], [
         "m1", "m2", "m3"], ["tb1", "tb2"], "123", "5")
 
     def test_get_peer_id(self):
