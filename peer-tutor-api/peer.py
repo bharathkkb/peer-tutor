@@ -10,7 +10,7 @@ class Peer:
 
     """
 
-    def __init__(self, student_id, name, username, password, enrolled_classes,  meetings, schedules, peer_id, peer_ratings):
+    def __init__(self, student_id, name, username, password, security_question, security_answer, enrolled_classes,  meetings, schedules, peer_id, peer_ratings):
         self.peer_id = peer_id
         self.peer_ratings = peer_ratings
         print("A peer object is created.")

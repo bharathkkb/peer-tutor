@@ -9,7 +9,7 @@ class Tutor:
     Returns a ```tutor``` object with the given tutor Id, tutor_ratings.
     """
 
-    def __init__(self, student_id, name, username, password, enrolled_classes,  meetings, schedules, tutor_id, tutor_ratings):
+    def __init__(self, student_id, name, username, password, security_question, security_answer, enrolled_classes,  meetings, schedules, tutor_id, tutor_ratings):
         self.tutor_id = tutor_id
         self.tutor_ratings = tutor_ratings
         print("A tutor object is created.")

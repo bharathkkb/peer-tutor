@@ -13,7 +13,7 @@ class Student_testing(unittest.TestCase):
     """
     The basic class that inherits unittest.TestCase
     """
-    student = Student("123", "bharath", "bharath", "123456", ["class1", "class2"], [
+    student = Student("123", "bharath", "bharath", "123456", "security question?", "security ans", ["class1", "class2"], [
                       "m1", "m2", "m3"], ["tb1", "tb2"])  # instantiate the student Class
 
     def test_get_student_id(self):
