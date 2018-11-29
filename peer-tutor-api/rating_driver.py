@@ -50,12 +50,15 @@ def getAllAvgRating(studentId):
     totalRatingForStudent = 0
     totalNumberStudent = 0
     minRatingToBeShown = 1
+
     for rating in allRatings:
         totalNumber += 1
         totalRatings += int(rating["rating_score"])
         if(studentId == rating["received"]):
             totalNumberStudent += 1
             totalRatingForStudent += int(rating["rating_score"])
+    if totalRatingForStudent == 0:
+        return 0, 200
     avgTotalRating = totalRatings / totalNumber
     avgStudentRating = totalRatingForStudent / totalNumberStudent
     weightedRating = ((totalNumberStudent / (totalNumberStudent + minRatingToBeShown)) * avgStudentRating) + \

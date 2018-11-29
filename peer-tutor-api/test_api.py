@@ -709,6 +709,15 @@ def test_get_avg_rating_by_id(url):
     response = requests.get(testAPIBasePath + '/rating/avg/04')
     assert response.status_code == 200
 
+# check get avg rating by id when there are no ratings for the user
+
+
+def test_get_avg_rating_by_id_no_ratings(url):
+    testAPIBasePath = "{}/test/api".format(url)
+    response = requests.get(testAPIBasePath + '/rating/avg/00012')
+    assert response.status_code == 200
+    assert int(response.content) == 0
+
 # check get rating by wrong id
 
 
