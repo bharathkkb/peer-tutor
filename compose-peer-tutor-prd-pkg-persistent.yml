@@ -1,0 +1,38 @@
+version: '3.5'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    restart: always
+    environment:
+      - MONGO_DATA_DIR=/usr/data/db
+      - MONGO_LOG_DIR=/usr/data/logs
+    volumes:
+      - ./data/db:/usr/data/db
+      - ./data/logs:/usr/data/logs
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles --dbpath=/usr/data/db --logpath=/usr/data/logs/log.txt # --quiet
+  peer-tutor-api:
+    restart: always
+    environment:
+      - AM_I_IN_A_DOCKER_CONTAINER=1
+    build:
+      context: .
+      dockerfile: ./Dockerfile-dev
+    container_name: peer-tutor-api
+    image: peer-tutor-api
+    ports:
+      - 5000:5000
+  peer-tutor-ui:
+    restart: always
+    build:
+      context: ./peer-tutor-ui/angular/
+      dockerfile: Dockerfile-prd-dist
+    image: peer-tutor-ui
+    container_name: peer-tutor-ui
+    ports:
+      - 8083:80
+networks:
+  default:
+   name: web_dev
