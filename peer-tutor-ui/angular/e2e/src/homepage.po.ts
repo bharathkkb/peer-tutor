@@ -27,15 +27,18 @@ export class HomePage {
    */
   login(){
     browser.get('/register');
-    element(by.css('input#firstname')).sendKeys("first1");
-    element(by.css('input#lastname')).sendKeys("last1");
-    element(by.css('input#studentid')).sendKeys("1");
-    element(by.css('input#email')).sendKeys("test1@gmail.com");
-    element(by.css('input#registerPassword')).sendKeys("password1");
+    element(by.css('input#firstname')).sendKeys("firstXX");
+    element(by.css('input#lastname')).sendKeys("lastXX");
+    element(by.css('input#studentid')).sendKeys("123456789");
+    element(by.css('input#email')).sendKeys("testX@gmail.com");
+    element(by.css('input#registerPassword')).sendKeys("passwordX");
+    element(by.css('input#securequestion')).sendKeys("XXX");
+    element(by.css('input#secureanswer')).sendKeys("XXX");
+
     element(by.css('button.btn.btn-primary')).click();
     browser.get('/login');
-    element(by.css('input#login-username')).sendKeys("test1@gmail.com");
-    element(by.css('input#login-password')).sendKeys("password1");
+    element(by.css('input#login-username')).sendKeys("testX@gmail.com");
+    element(by.css('input#login-password')).sendKeys("passwordX");
     element(by.css('button.btn.btn-primary')).click();
     //browser.get('/');
   }

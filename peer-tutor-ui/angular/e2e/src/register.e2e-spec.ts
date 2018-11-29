@@ -19,6 +19,8 @@ describe('workspace-project App', () => {
       studentId: "1235",
       email: "test1235@gmail.com",
       password: "password1235",
+      secure_question: "secure_question1235",
+      secure_answer: "secure_answer1235",
     };
     page.fillRegInfo(uniqueReg);
 
@@ -55,6 +57,8 @@ describe('workspace-project App', () => {
       studentId: "1234",
       email: "test1234@gmail.com",
       password: "1234567",
+      secure_question: "secure_question1235",
+      secure_answer: "secure_answer1235",
     };
     page.fillRegInfo(shortPasswordReg);
     page.clickAwayPasswordInput();
