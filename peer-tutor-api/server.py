@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 
 def parseArgs():
-    parser = argparse.ArgumentParser(description='TestBed API.')
+    parser = argparse.ArgumentParser(description='PeerTutor API.')
     parser.add_argument("-p", default=5000,
                         help="Specify port number", action="store")
     parser.add_argument("-t", action="store_true",
